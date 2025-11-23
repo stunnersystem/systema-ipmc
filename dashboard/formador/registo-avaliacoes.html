@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lançar Avaliações - IPM Caia</title>
+  <title>Registo de Avaliações - IPM Caia</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -129,10 +129,7 @@
     }
 
     .btn-primary { background: var(--gradient-primary); color: white; }
-
-    .status-aprovado { color: var(--success); font-weight: 600; }
-    .status-reprovado { color: var(--danger); font-weight: 600; }
-    .status-em-recuperacao { color: var(--warning); font-weight: 600; }
+    .btn-success { background: var(--success); color: white; }
 
     .info-box {
       background: #fffbeb;
@@ -186,7 +183,7 @@
         </div>
         <div class="form-group">
           <label for="disciplina">Disciplina *</label>
-          <select id="disciplina" class="form-control" onchange="carregarEstudantes()" disabled>
+          <select id="disciplina" class="form-control" onchange="carregarTurmas()" disabled>
             <option value="">Selecione primeiro o ano</option>
           </select>
         </div>
@@ -201,16 +198,15 @@
           <select id="tipoAvaliacao" class="form-control" required onchange="ajustarCampos()">
             <option value="">Selecione</option>
             <option value="ac">Avaliação Contínua</option>
-            <option value="trabalho">Trabalho Prático</option>
+            <option value="tp">Trabalho Prático</option>
             <option value="teste">Teste Parcial</option>
             <option value="exame">Exame Final</option>
             <option value="recuperacao">Exame de Recuperação</option>
-            <option value="estagio">Estágio</option>
           </select>
         </div>
         <div class="form-group">
           <label for="nomeAvaliacao">Nome da Avaliação *</label>
-          <input type="text" id="nomeAvaliacao" class="form-control" placeholder="Ex: AC1, Exame Final..." required>
+          <input type="text" id="nomeAvaliacao" class="form-control" placeholder="Ex: AC1, TP1, Exame..." required>
         </div>
         <div class="form-group">
           <label for="dataAvaliacao">Data da Avaliação *</label>
@@ -219,7 +215,7 @@
       </div>
 
       <div class="info-box">
-        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Notas ≤ 9 permitem reavaliação. O sistema calculará automaticamente médias e status de admissão.
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Após lançar todas as avaliações, gere a pauta final para envio à Secção Pedagógica.
       </div>
 
       <button id="btnCarregar" class="btn btn-primary" style="width:100%; display:none;" onclick="carregarEstudantes()">
@@ -239,10 +235,9 @@
           <tr>
             <th>Estudante</th>
             <th>Ano</th>
-            <th>Nota Original</th>
+            <th>Nota (0-20)</th>
             <th>Reavaliação (≤ 9)</th>
             <th>Nota Final</th>
-            <th>Status</th>
             <th>Observações</th>
           </tr>
         </thead>
@@ -252,7 +247,7 @@
       </table>
 
       <button class="btn btn-primary" style="width:100%; margin-top: 20px;" onclick="salvarNotas()">
-        <i class="fas fa-save"></i> Salvar Notas
+        <i class="fas fa-save"></i> Salvar Avaliação
       </button>
     </div>
   </div>
@@ -260,9 +255,10 @@
   <script>
     // Simular dados
     const estudantesDaTurma = [
-      { id: 1, nome: "João Silva", ano: "2º Ano", media_admissao: 14.5, admitido_exame: true, admitido_estagio: true },
-      { id: 2, nome: "Maria Costa", ano: "2º Ano", media_admissao: 8.7, admitido_exame: false, admitido_estagio: false },
-      { id: 3, nome: "Pedro Manguene", ano: "1º Ano", media_admissao: 16.0, admitido_exame: true, admitido_estagio: true }
+      { id: 1, nome: "João Silva", ano: "2º Ano" },
+      { id: 2, nome: "Maria Costa", ano: "2º Ano" },
+      { id: 3, nome: "Pedro Manguene", ano: "1º Ano" },
+      { id: 4, nome: "Ana Nhampossa", ano: "1º Ano" }
     ];
 
     function carregarAnos() {
@@ -289,6 +285,7 @@
 
       if (!ano) return;
 
+      // Simular disciplinas por ano
       const disciplinas = {
         '1': ['Matemática', 'Informática', 'Inglês'],
         '2': ['Programação', 'Estatística', 'Metodologia']
@@ -310,7 +307,7 @@
 
       if (!disciplina) return;
 
-      ['T1-2025', 'T2-2025'].forEach(t => {
+      ['T1A-2025', 'T1B-2025', 'T2A-2025', 'T2B-2025'].forEach(t => {
         const opt = document.createElement('option');
         opt.value = t;
         opt.textContent = t;
@@ -336,34 +333,12 @@
 
       estudantesDaTurma.forEach(est => {
         const tr = document.createElement('tr');
-        let campoNotaOriginal = '';
-        let campoReavaliacao = '';
-        let campoNotaFinal = '';
-
-        if (tipo === 'exame' && !est.admitido_exame) {
-          // Estudante não admitido ao exame
-          campoNotaOriginal = '<input type="text" class="form-control" value="—" readonly style="background:#f8fafc;">';
-          campoReavaliacao = '<input type="text" class="form-control" value="Bloqueado" readonly style="background:#fef2f2;">';
-          campoNotaFinal = '<span class="status-reprovado">Não Admitido</span>';
-        } else if (tipo === 'estagio' && !est.admitido_estagio) {
-          // Estudante não admitido ao estágio
-          campoNotaOriginal = '<input type="text" class="form-control" value="— (exame ≤ 9)" readonly style="background:#f8fafc;">';
-          campoReavaliacao = '<input type="text" class="form-control" value="—" readonly style="background:#fef2f2;">';
-          campoNotaFinal = '<span class="status-reprovado">Não Admitido</span>';
-        } else {
-          // Estudante admitido
-          campoNotaOriginal = `<input type="number" class="nota-input" min="0" max="20" step="0.1" placeholder="0-20" onchange="verificarReavaliacao(this, ${est.id})">`;
-          campoReavaliacao = `<input type="number" class="nota-input" min="0" max="20" step="0.1" placeholder="Reavaliação" disabled onchange="calcularNotaFinal(this, ${est.id})">`;
-          campoNotaFinal = `<span class="nota-final">—</span>`;
-        }
-
         tr.innerHTML = `
           <td>${est.nome}</td>
           <td>${est.ano}</td>
-          <td>${campoNotaOriginal}</td>
-          <td>${campoReavaliacao}</td>
-          <td>${campoNotaFinal}</td>
-          <td><span class="status-pendente">Pendente</span></td>
+          <td><input type="number" class="nota-input" min="0" max="20" step="0.1" placeholder="0-20" onchange="calcularNotaFinal(this)"></td>
+          <td><input type="number" class="nota-input" min="0" max="20" step="0.1" placeholder="Reavaliação" disabled onchange="calcularNotaFinal(this)"></td>
+          <td><span class="nota-final">—</span></td>
           <td><input type="text" class="form-control" style="width:100%; max-width:150px;" placeholder="Observações"></td>
         `;
         lista.appendChild(tr);
@@ -372,45 +347,28 @@
       document.getElementById('secaoNotas').style.display = 'block';
     }
 
-    function verificarReavaliacao(input, idEstudante) {
-      const nota = parseFloat(input.value);
-      if (!nota) return;
+    function calcularNotaFinal(input) {
+      const notaOriginal = parseFloat(input.value);
+      if (!notaOriginal) return;
 
       const row = input.closest('tr');
       const reavaliacaoInput = row.cells[3].querySelector('input');
-      const statusCell = row.cells[5];
-      const statusSpan = statusCell.querySelector('span');
+      const notaFinalSpan = row.cells[4].querySelector('span');
 
-      if (nota < 10) {
+      if (notaOriginal <= 9) {
         reavaliacaoInput.disabled = false;
         reavaliacaoInput.placeholder = 'Lançar Reavaliação';
-        statusSpan.className = 'status-em-recuperacao';
-        statusSpan.textContent = 'Em Recuperação';
-      } else {
-        statusSpan.className = 'status-aprovado';
-        statusSpan.textContent = 'Aprovado';
       }
-    }
 
-    function calcularNotaFinal(input, idEstudante) {
-      const notaOriginal = parseFloat(input.closest('tr').cells[2].querySelector('input').value);
-      const reavaliacao = parseFloat(input.value);
-
-      if (reavaliacao) {
-        const notaFinalSpan = input.closest('tr').cells[4].querySelector('span');
-        notaFinalSpan.textContent = reavaliacao.toFixed(1);
-
-        // Atualizar status
-        const statusCell = input.closest('tr').cells[5];
-        const statusSpan = statusCell.querySelector('span');
-        if (reavaliacao >= 10) {
-          statusSpan.className = 'status-aprovado';
-          statusSpan.textContent = 'Aprovado';
-        } else {
-          statusSpan.className = 'status-reprovado';
-          statusSpan.textContent = 'Reprovado';
+      if (reavaliacaoInput.value) {
+        const reavaliacao = parseFloat(reavaliacaoInput.value);
+        if (reavaliacao) {
+          notaFinalSpan.textContent = reavaliacao.toFixed(1);
+          return;
         }
       }
+
+      notaFinalSpan.textContent = notaOriginal.toFixed(1);
     }
 
     function salvarNotas() {
@@ -418,7 +376,7 @@
       const disciplina = document.getElementById('tituloDisciplina').textContent;
       const turma = document.getElementById('tituloTurma').textContent;
 
-      alert(`✅ Notas de "${tipo}" lançadas com sucesso!\n\nDisciplina: ${disciplina}\nTurma: ${turma}\n\nAs médias serão calculadas automaticamente.`);
+      alert(`✅ Avaliação "${tipo}" lançada com sucesso!\n\nDisciplina: ${disciplina}\nTurma: ${turma}\n\nAs notas serão consolidadas na pauta final.`);
     }
   </script>
 </body>
