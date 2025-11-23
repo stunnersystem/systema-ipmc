@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login - IPM Caia</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     /* (Seu CSS original permanece igual) */
     :root {
@@ -32,150 +33,15 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background: linear-gradient(to bottom, #e0e7ff, #ffffff); color: var(--gray-900); }
 
-    .login-container {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .login-container::before {
-      content: '';
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-      animation: float 15s infinite linear;
-    }
-
-    @keyframes float {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(360deg); }
-    }
-
-    .login-card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border-radius: var(--radius-lg);
-      padding: 40px;
-      width: 100%;
-      max-width: 450px;
-      box-shadow: var(--shadow-xl);
-      position: relative;
-      z-index: 10;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .login-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    }
-
-    .logo-section {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .logo {
-      width: 80px;
-      height: 80px;
-      background: var(--gradient-primary);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 15px;
-      color: white;
-      font-size: 32px;
-      box-shadow: var(--shadow-lg);
-    }
-
-    .logo img {
-      width: 60%;
-      height: 60%;
-      object-fit: contain;
-    }
-
-    .logo-section h1 {
-      font-size: 24px;
-      color: var(--primary-dark);
-      margin-bottom: 5px;
-    }
-
-    .logo-section p {
-      color: var(--gray-800);
-    }
-
-    .form-group { margin-bottom: 20px; }
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: var(--gray-800);
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 14px;
-      border: 2px solid var(--gray-200);
-      border-radius: var(--radius);
-      font-size: 15px;
-    }
-
-    .form-control:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
-    }
-
-    .btn-login {
-      width: 100%;
-      padding: 14px;
-      background: var(--gradient-primary);
-      color: white;
-      border: none;
-      border-radius: var(--radius);
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .btn-login:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(30, 64, 175, 0.3);
-    }
-
-    .info-box {
-      background: #fffbeb;
-      border-left: 4px solid var(--warning);
-      padding: 12px;
-      border-radius: 0 var(--radius) var(--radius) 0;
-      margin: 15px 0;
-      font-size: 14px;
-    }
-
-    .message {
-      padding: 12px;
-      border-radius: var(--radius);
-      margin: 15px 0;
-      text-align: center;
-      display: none;
-    }
-
-    .message.error {
-      background: #fef2f2;
-      color: #dc2626;
-      border: 1px solid #fecaca;
-    }
-
-    .message.success {
-      background: #ecfdf5;
-      color: #047857;
-      border: 1px solid #a7f3d0;
-    }
+    .dashboard-header { ... }
+    .login-container { ... }
+    .login-card { ... }
+    .form-group { ... }
+    .form-control { ... }
+    .btn-login { ... }
+    .info-box { ... }
+    .credenciais-teste { ... }
+    .credenciais-item { ... }
   </style>
 </head>
 <body>
@@ -190,13 +56,13 @@
       </div>
 
       <div class="info-box">
-        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Use seu email institucional do IPM Caia (ex: nome.123esipm@gmail.com).
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Use credenciais institucionais válidas.
       </div>
 
       <form id="loginForm">
         <div class="form-group">
           <label for="email">Email Institucional *</label>
-          <input type="email" id="email" class="form-control" placeholder="seu.nome.123esipm@gmail.com" required>
+          <input type="email" id="email" class="form-control" placeholder="ex: benj@ipm.co.mz" required>
         </div>
         <div class="form-group">
           <label for="password">Palavra-passe *</label>
@@ -207,31 +73,68 @@
         </button>
       </form>
 
-      <div id="loginMessage" class="message"></div>
-
-      <div style="text-align: center; margin-top: 20px;">
-        <a href="#" style="color: var(--primary); text-decoration: none;" onclick="mostrarRecuperacao()">
-          Esqueceu a palavra-passe?
-        </a>
+      <div class="credenciais-teste">
+        <h3><i class="fas fa-key"></i> Credenciais de Teste</h3>
+        <div class="credenciais-item">
+          <strong>Director:</strong> benj@ipm.co.mz | Senha: 123
+        </div>
+        <div class="credenciais-item">
+          <strong>Secretaria:</strong> ana@ipm.co.mz | Senha: 123
+        </div>
+        <div class="credenciais-item">
+          <strong>Formador:</strong> carlos@ipm.co.mz | Senha: 123
+        </div>
+        <div class="credenciais-item">
+          <strong>Estudante:</strong> joao@ipm.co.mz | Senha: 123
+        </div>
       </div>
+
+      <div id="loginMessage" class="message hidden"></div>
     </div>
   </div>
 
-  <script type="module">
-    import { login } from './js/auth.js';
+  <script>
+    // Configuração do Supabase
+    const supabaseUrl = 'https://gpzfucaiucbranbkpxfg.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwemZ1Y2FpdWNicmFuYmtweGZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MTI0ODksImV4cCI6MjA3OTM4ODQ4OX0.Dqv8c7xq-a6y084kLH5uQ1-LEzxHXwtJj2lMIEebQY0';
+    const { createClient } = supabase;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+    // Função de login
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      const message = document.getElementById('loginMessage');
 
       try {
-        const { papel } = await login(email, password);
+        // 1. Autenticar com Supabase Auth
+        const {  { session }, error: authError } = await supabase.auth.signInWithPassword({ email, password });
 
-        // Redirecionar com base no papel
-        const mapa = {
+        if (authError) throw authError;
+
+        // 2. Buscar papel do usuário no banco (tabela `usuarios`)
+        const userId = session.user.id;
+
+        const {  profile, error: profileError } = await supabase
+          .from('usuarios')
+          .select('role, nome')
+          .eq('auth_id', userId)
+          .single();
+
+        if (profileError || !profile) {
+          await supabase.auth.signOut();
+          alert('❌ Perfil não encontrado. Contacte o administrador.');
+          return;
+        }
+
+        // 3. Salvar dados na sessão
+        localStorage.setItem('ipm_user_auth_token', session.access_token);
+        localStorage.setItem('ipm_user_role', profile.role);
+        localStorage.setItem('ipm_user_nome', profile.nome);
+
+        // 4. Redirecionar com base no papel
+        const map = {
           'director': 'dashboard/director/home.html',
           'secretaria': 'dashboard/secretaria/home.html',
           'pedagogico': 'dashboard/pedagogico/home.html',
@@ -239,28 +142,17 @@
           'estudante': 'dashboard/estudante/home.html'
         };
 
-        const destino = mapa[papel];
+        const destino = map[profile.role];
         if (destino) {
           window.location.href = destino;
         } else {
-          message.textContent = 'Papel desconhecido. Contacte o administrador.';
-          message.className = 'message error';
-          message.style.display = 'block';
+          alert('❌ Papel desconhecido. Contacte o administrador.');
         }
       } catch (error) {
-        message.textContent = 'Erro: ' + error.message;
-        message.className = 'message error';
-        message.style.display = 'block';
+        console.error('Erro de login:', error);
+        alert('❌ Email ou senha inválidos.');
       }
     });
-
-    function mostrarRecuperacao() {
-      const email = prompt('Informe seu email institucional para recuperação:');
-      if (email) {
-        // Em produção: chamar supabase.auth.resetPasswordForEmail(...)
-        alert(`Instruções de recuperação enviadas para: ${email}`);
-      }
-    }
   </script>
 </body>
 </html>
