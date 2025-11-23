@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Validar Pautas - IPM Caia</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #1e40af;
@@ -122,6 +123,7 @@
 
     .btn-success { background: var(--success); color: white; }
     .btn-danger { background: var(--danger); color: white; }
+    .btn-warning { background: var(--warning); color: white; }
 
     .rejection-box {
       display: none;
@@ -198,7 +200,7 @@
       </div>
 
       <button id="btnCarregarPauta" class="btn btn-primary" style="width:100%; display:none;" onclick="carregarPautas()">
-        <i class="fas fa-list"></i> Carregar Pauta Final
+        <i class="fas fa-list"></i> Carregar Pauta
       </button>
     </div>
 
@@ -217,10 +219,8 @@
             <th>AC1</th>
             <th>AC2</th>
             <th>Trabalho</th>
-            <th>Média de Avaliações</th>
             <th>Exame</th>
             <th>Recuperação</th>
-            <th>Média de Admissão ao Estágio</th>
             <th>Estágio</th>
             <th>Média Final</th>
             <th>Status</th>
@@ -243,7 +243,7 @@
 
       <div id="rejeicaoBox" class="rejection-box">
         <label for="motivoRejeicao">Motivo da Rejeição *</label>
-        <textarea id="motivoRejeicao" class="form-control" rows="4" placeholder="Explique os motivos da rejeição..."></textarea>
+        <textarea id="motivoRejeicao" class="form-control" rows="4" placeholder="Explique o motivo da rejeição..."></textarea>
         <button class="btn btn-danger" style="margin-top:10px;" onclick="rejeitarPauta()">
           <i class="fas fa-times"></i> Confirmar Rejeição
         </button>
@@ -251,8 +251,14 @@
     </div>
   </div>
 
-  <script>
-    // Simular dados
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    const supabaseUrl = 'https://gpzfucaiucbranbkpxfg.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdwemZ1Y2FpdWNicmFuYmtweGZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MTI0ODksImV4cCI6MjA3OTM4ODQ4OX0.Dqv8c7xq-a6y084kLH5uQ1-LEzxHXwtJj2lMIEebQY0';
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    // Simular dados (em produção: virá do Supabase)
     const pautas = [
       { 
         estudante: "João Silva", 
@@ -260,13 +266,11 @@
         ac1: 14.0, 
         ac2: 15.0, 
         trabalho: 16.0, 
-        media_avaliacoes: 15.0, 
         exame: 16.0, 
         recuperacao: null, 
-        media_admissao_estagio: 15.5, 
         estagio: 17.0, 
-        media_final: 16.25, 
-        status: "aprovado" 
+        media_final: 15.75, 
+        status: "pendente" 
       },
       { 
         estudante: "Maria Costa", 
@@ -274,10 +278,8 @@
         ac1: 8.0, 
         ac2: 9.0, 
         trabalho: 7.5, 
-        media_avaliacoes: 8.2, 
         exame: 9.0, 
         recuperacao: 12.0, 
-        media_admissao_estagio: 10.6, 
         estagio: null, 
         media_final: 10.6, 
         status: "em_recuperacao" 
@@ -361,14 +363,12 @@
           <td>${est.ac1}</td>
           <td>${est.ac2}</td>
           <td>${est.trabalho}</td>
-          <td><strong>${est.media_avaliacoes}</strong></td>
           <td>${est.exame || '—'}</td>
           <td>${est.recuperacao || '—'}</td>
-          <td><strong>${est.media_admissao_estagio || '—'}</strong></td>
           <td>${est.estagio || '—'}</td>
-          <td><strong>${est.media_final}</strong></td>
-          <td><span class="status-${est.status === 'aprovado' ? 'aprovada' : est.status === 'em_recuperacao' ? 'pendente' : 'rejeitada'}">
-            ${est.status === 'aprovado' ? 'Aprovado' : est.status === 'em_recuperacao' ? 'Em Recuperação' : 'Reprovado'}
+          <td><strong>${est.media_final.toFixed(2)}</strong></td>
+          <td><span class="status-${est.status === 'pendente' ? 'pendente' : est.status === 'aprovado' ? 'aprovada' : 'rejeitada'}">
+            ${est.status === 'pendente' ? 'Pendente' : est.status === 'aprovado' ? 'Aprovado' : 'Reprovado'}
           </span></td>
           <td>
             <button class="btn btn-success" onclick="aprovarEstudante('${est.estudante}')">
@@ -391,7 +391,7 @@
 
       if (confirm(`Aprovar pauta de "${disciplina}" para "${turma}"?\n\nSerá encaminhada ao Director para validação final.`)) {
         alert(`✅ Pauta de "${disciplina}" aprovada com sucesso!`);
-        // Em produção: atualizar status no Supabase para 'aprovada'
+        // Em produção: atualizar Supabase com status='aprovada' e validado_por=auth.uid()
       }
     }
 
