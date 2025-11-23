@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Registo de Avaliações - IPM Caia</title>
+  <title>Lançar Avaliações - IPM Caia</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #1e40af;
@@ -129,7 +130,6 @@
     }
 
     .btn-primary { background: var(--gradient-primary); color: white; }
-    .btn-success { background: var(--success); color: white; }
 
     .info-box {
       background: #fffbeb;
@@ -139,6 +139,18 @@
       margin: 15px 0;
       font-size: 14px;
     }
+
+    .summary-box {
+      background: #f8fafc;
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-top: 20px;
+      border-left: 4px solid var(--accent);
+    }
+
+    .status-aprovado { color: var(--success); font-weight: 600; }
+    .status-reprovado { color: var(--danger); font-weight: 600; }
+    .status-em-recuperacao { color: var(--warning); font-weight: 600; }
   </style>
 </head>
 <body>
@@ -206,16 +218,20 @@
         </div>
         <div class="form-group">
           <label for="nomeAvaliacao">Nome da Avaliação *</label>
-          <input type="text" id="nomeAvaliacao" class="form-control" placeholder="Ex: AC1, TP1, Exame..." required>
+          <input type="text" id="nomeAvaliacao" class="form-control" placeholder="Ex: AC1, TP1, Exame Final..." required>
         </div>
         <div class="form-group">
           <label for="dataAvaliacao">Data da Avaliação *</label>
           <input type="date" id="dataAvaliacao" class="form-control" required>
         </div>
+        <div class="form-group">
+          <label for="pesoAvaliacao">Peso da Avaliação (opcional)</label>
+          <input type="number" id="pesoAvaliacao" class="form-control" placeholder="Ex: 1.0" step="0.1" min="0.1" max="10" value="1.0">
+        </div>
       </div>
 
       <div class="info-box">
-        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Após lançar todas as avaliações, gere a pauta final para envio à Secção Pedagógica.
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Notas ≤ 9 permitem reavaliação. O sistema calculará automaticamente a média da disciplina após lançamento de todas as avaliações.
       </div>
 
       <button id="btnCarregar" class="btn btn-primary" style="width:100%; display:none;" onclick="carregarEstudantes()">
@@ -235,7 +251,7 @@
           <tr>
             <th>Estudante</th>
             <th>Ano</th>
-            <th>Nota (0-20)</th>
+            <th>Nota Original (0-20)</th>
             <th>Reavaliação (≤ 9)</th>
             <th>Nota Final</th>
             <th>Observações</th>
@@ -246,6 +262,16 @@
         </tbody>
       </table>
 
+      <div class="summary-box">
+        <h3 style="margin-bottom: 15px; color: var(--primary-dark);"><i class="fas fa-calculator"></i> Resumo da Avaliação</h3>
+        <p><strong>Disciplina:</strong> <span id="resumoDisciplina">—</span></p>
+        <p><strong>Turma:</strong> <span id="resumoTurma">—</span></p>
+        <p><strong>Tipo:</strong> <span id="resumoTipo">—</span></p>
+        <p><strong>Nome:</strong> <span id="resumoNome">—</span></p>
+        <p><strong>Total de Estudantes:</strong> <span id="totalEstudantes">0</span></p>
+        <p><strong>Média da Turma:</strong> <span id="mediaTurma">—</span></p>
+      </div>
+
       <button class="btn btn-primary" style="width:100%; margin-top: 20px;" onclick="salvarNotas()">
         <i class="fas fa-save"></i> Salvar Avaliação
       </button>
@@ -253,12 +279,17 @@
   </div>
 
   <script>
-    // Simular dados
+    // Configuração do Supabase
+    const supabaseUrl = 'https://SEU_PROJETO.supabase.co';
+    const supabaseAnonKey = 'SEU_ANON_KEY';
+    const { createClient } = supabase;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    // Simular dados (em produção: virá do Supabase)
     const estudantesDaTurma = [
       { id: 1, nome: "João Silva", ano: "2º Ano" },
       { id: 2, nome: "Maria Costa", ano: "2º Ano" },
-      { id: 3, nome: "Pedro Manguene", ano: "1º Ano" },
-      { id: 4, nome: "Ana Nhampossa", ano: "1º Ano" }
+      { id: 3, nome: "Pedro Manguene", ano: "1º Ano" }
     ];
 
     function carregarAnos() {
@@ -307,7 +338,7 @@
 
       if (!disciplina) return;
 
-      ['T1A-2025', 'T1B-2025', 'T2A-2025', 'T2B-2025'].forEach(t => {
+      ['T1-2025', 'T2-2025'].forEach(t => {
         const opt = document.createElement('option');
         opt.value = t;
         opt.textContent = t;
@@ -320,13 +351,20 @@
     function carregarEstudantes() {
       const disciplina = document.getElementById('disciplina').options[document.getElementById('disciplina').selectedIndex].text;
       const turma = document.getElementById('turma').value;
-      const tipo = document.getElementById('tipoAvaliacao').value;
+      const tipo = document.getElementById('tipoAvaliacao').options[document.getElementById('tipoAvaliacao').selectedIndex].text;
+      const nome = document.getElementById('nomeAvaliacao').value;
 
-      if (!disciplina || !turma || !tipo) return;
+      if (!disciplina || !turma || !tipo || !nome) return;
 
       document.getElementById('tituloDisciplina').textContent = disciplina;
       document.getElementById('tituloTurma').textContent = turma;
-      document.getElementById('tituloTipoAvaliacao').textContent = tipo.toUpperCase();
+      document.getElementById('tituloTipoAvaliacao').textContent = `${tipo} - ${nome}`;
+
+      // Resumo
+      document.getElementById('resumoDisciplina').textContent = disciplina;
+      document.getElementById('resumoTurma').textContent = turma;
+      document.getElementById('resumoTipo').textContent = tipo;
+      document.getElementById('resumoNome').textContent = nome;
 
       const lista = document.getElementById('listaEstudantes');
       lista.innerHTML = '';
@@ -344,6 +382,7 @@
         lista.appendChild(tr);
       });
 
+      document.getElementById('totalEstudantes').textContent = estudantesDaTurma.length;
       document.getElementById('secaoNotas').style.display = 'block';
     }
 
@@ -371,12 +410,15 @@
       notaFinalSpan.textContent = notaOriginal.toFixed(1);
     }
 
-    function salvarNotas() {
+    async function salvarNotas() {
       const tipo = document.getElementById('tituloTipoAvaliacao').textContent;
       const disciplina = document.getElementById('tituloDisciplina').textContent;
       const turma = document.getElementById('tituloTurma').textContent;
 
-      alert(`✅ Avaliação "${tipo}" lançada com sucesso!\n\nDisciplina: ${disciplina}\nTurma: ${turma}\n\nAs notas serão consolidadas na pauta final.`);
+      // Em produção: salvar no Supabase
+      // await supabase.from('notas').insert([...])
+
+      alert(`✅ Notas de "${tipo}" lançadas com sucesso!\n\nDisciplina: ${disciplina}\nTurma: ${turma}\n\nAs médias serão calculadas automaticamente.`);
     }
   </script>
 </body>
