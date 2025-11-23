@@ -359,7 +359,7 @@
     const { createClient } = supabase;
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-    // Verificar papel real no banco
+    // Verificar papel real do usuário logado
     window.onload = async () => {
       const {  { session }, error } = await supabase.auth.getSession();
       if (error || !session) {
@@ -369,56 +369,31 @@
 
       const userId = session.user.id;
 
-      const { data, error: profileError } = await supabase
+      // Buscar papel do usuário no banco
+      const {  profile, error: profileError } = await supabase
         .from('usuarios')
         .select('role, nome')
         .eq('auth_id', userId)
         .single();
 
-      if (profileError || !data || data.role !== 'director') {
+      if (profileError || !profile || profile.role !== 'director') {
+        // Se papel não for director, redirecionar
         window.location.href = '../../index.html';
         return;
       }
 
-      document.getElementById('nomeUsuario').textContent = data.nome;
-
-      // Carregar estatísticas reais
-      carregarEstatisticas();
+      // Atualizar interface
+      document.getElementById('infoUsuario').innerHTML = `
+        <span style="font-size: 14px;">${profile.nome}</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      `;
     };
-
-    async function carregarEstatisticas() {
-      try {
-        // Total de estudantes activos
-        const { count: estudantesCount } = await supabase
-          .from('estudantes')
-          .select('*', { count: 'exact', head: true });
-
-        // Total de funcionários
-        const { count: funcionariosCount } = await supabase
-          .from('usuarios')
-          .select('*', { count: 'exact', head: true })
-          .in('role', ['secretaria', 'pedagogico', 'formador']);
-
-        // Total de pagamentos recebidos (em produção: somar valores do ano)
-        const { count: pagamentosCount } = await supabase
-          .from('pagamentos')
-          .select('*', { count: 'exact', head: true });
-
-        // Taxa de aprovação (em produção: cálculo real)
-        const taxaAprovacao = 78; // Simulado
-
-        document.getElementById('totalEstudantes').textContent = estudantesCount || 0;
-        document.getElementById('totalFuncionarios').textContent = funcionariosCount || 0;
-        document.getElementById('totalPagamentos').textContent = (pagamentosCount * 3500).toFixed(0) + ' MZN'; // Simulado
-        document.getElementById('taxaAprovacao').textContent = taxaAprovacao + '%';
-      } catch (error) {
-        console.error('Erro ao carregar estatísticas:', error);
-      }
-    }
 
     async function logout() {
       await supabase.auth.signOut();
-      localStorage.removeItem('ipm_user_logged');
+      localStorage.removeItem('ipm_user_auth_token');
       localStorage.removeItem('ipm_user_role');
       localStorage.removeItem('ipm_user_nome');
       window.location.href = '../../index.html';
@@ -426,3 +401,5 @@
   </script>
 </body>
 </html>
+
+ 
