@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gerar Pauta Final - IPM Caia</title>
+  <title>Gerar Pauta - IPM Caia</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -111,14 +111,6 @@
       color: var(--primary-dark);
     }
 
-    .nota-input {
-      width: 80px;
-      padding: 8px;
-      border: 1px solid var(--gray-200);
-      border-radius: 4px;
-      text-align: center;
-    }
-
     .btn {
       padding: 12px 24px;
       border: none;
@@ -130,11 +122,16 @@
 
     .btn-primary { background: var(--gradient-primary); color: white; }
     .btn-success { background: var(--success); color: white; }
+    .btn-warning { background: var(--warning); color: white; }
 
-    .status-aprovado { color: var(--success); font-weight: 600; }
-    .status-reprovado { color: var(--danger); font-weight: 600; }
-    .status-em-recuperacao { color: var(--warning); font-weight: 600; }
-    .status-nao-admitido { color: var(--danger); font-weight: 600; }
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+      padding: 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 15px 0;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -145,7 +142,7 @@
       </div>
       <div>
         <h2>Instituto Politécnico Makhetele - Caia</h2>
-        <p>Gerar Pauta Final</p>
+        <p>Gerar Pauta Final para Validação</p>
       </div>
       <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
         <span style="font-size: 14px;">Dr. Carlos Santos</span>
@@ -160,7 +157,6 @@
     <div class="card">
       <div class="card-header">
         <h2><i class="fas fa-file-alt"></i> Selecionar Disciplina e Turma</h2>
-        <p>Formador: Dr. Carlos Santos | Departamento: Ciências Exactas</p>
       </div>
 
       <div class="form-grid">
@@ -196,18 +192,14 @@
             <option value="">Selecione primeiro a turma</option>
           </select>
         </div>
-        <div class="form-group">
-          <label for="anoLectivo">Ano Lectivo *</label>
-          <input type="number" id="anoLectivo" class="form-control" value="2025" min="2020" max="2030" readonly>
-        </div>
       </div>
 
-      <div style="margin-top: 20px; padding: 15px; background: #fffbeb; border-radius: var(--radius); border-left: 4px solid var(--warning);">
-        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Esta pauta será enviada à Secção Pedagógica para validação após preenchimento. As médias são calculadas automaticamente com base nas avaliações lançadas anteriormente.
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Esta pauta será enviada à Secção Pedagógica para validação após preenchimento.
       </div>
 
-      <button id="btnCarregarPauta" class="btn btn-primary" style="width:100%; display:none; margin-top: 20px;" onclick="carregarPauta()">
-        <i class="fas fa-users"></i> Carregar Pauta de Estudantes
+      <button id="btnCarregarPauta" class="btn btn-primary" style="width:100%; display:none;" onclick="carregarPauta()">
+        <i class="fas fa-users"></i> Carregar Estudantes e Notas
       </button>
     </div>
 
@@ -229,163 +221,54 @@
             <th>Média de Avaliações</th>
             <th>Exame</th>
             <th>Recuperação</th>
-            <th>Média de Admissão ao Estágio</th>
-            <th>Estágio</th>
             <th>Média Final</th>
             <th>Status</th>
-            <th>Observações</th>
           </tr>
         </thead>
         <tbody id="listaPauta">
-          <!-- Será preenchido dinamicamente via fetch (simulado) -->
+          <!-- Será preenchido dinamicamente -->
         </tbody>
       </table>
 
-      <div style="margin-top: 20px; padding: 15px; background: #f8fafc; border-radius: var(--radius); border-left: 4px solid var(--accent);">
-        <strong>Resumo da Pauta:</strong>  
-        <ul style="margin-top: 10px; margin-left: 20px;">
-          <li>Total de Estudantes: <strong id="totalEstudantes">0</strong></li>
-          <li>Aprovados: <strong id="totalAprovados">0</strong></li>
-          <li>Reprovados: <strong id="totalReprovados">0</strong></li>
-          <li>Em Recuperação: <strong id="totalRecuperacao">0</strong></li>
-          <li>Em Dívida ao Estágio: <strong id="totalNaoAdmitidos">0</strong></li>
-        </ul>
+      <div style="margin-top: 20px; display:flex; gap:15px;">
+        <button class="btn btn-success" onclick="enviarPauta()">
+          <i class="fas fa-paper-plane"></i> Enviar Pauta para Validação
+        </button>
+        <button class="btn btn-warning" onclick="imprimirPauta()">
+          <i class="fas fa-print"></i> Imprimir Pauta
+        </button>
       </div>
-
-      <button class="btn btn-success" style="width:100%; margin-top: 20px;" onclick="enviarPauta()">
-        <i class="fas fa-paper-plane"></i> Enviar Pauta para Validação
-      </button>
     </div>
   </div>
 
   <script>
-    // Simular dados vindos do Supabase (fetch real em produção)
-    async function carregarPauta() {
-      const curso = document.getElementById('curso').options[document.getElementById('curso').selectedIndex].text;
-      const ano = document.getElementById('anoFrequencia').value;
-      const disciplina = document.getElementById('disciplina').options[document.getElementById('disciplina').selectedIndex].text;
-      const turma = document.getElementById('turma').value;
-      const semestre = document.getElementById('semestre').value;
-
-      if (!curso || !ano || !disciplina || !turma || !semestre) {
-        alert('Selecione todos os filtros.');
-        return;
+    // Simular dados
+    const pauta = [
+      { 
+        estudante: "João Silva", 
+        ano: "2º Ano", 
+        ac1: 14.0, 
+        ac2: 15.0, 
+        trabalho: 16.0, 
+        media_avaliacoes: 15.0, 
+        exame: 16.0, 
+        recuperacao: null, 
+        media_final: 15.5, 
+        status: "aprovado" 
+      },
+      { 
+        estudante: "Maria Costa", 
+        ano: "2º Ano", 
+        ac1: 8.0, 
+        ac2: 9.0, 
+        trabalho: 7.5, 
+        media_avaliacoes: 8.2, 
+        exame: 9.0, 
+        recuperacao: 12.0, 
+        media_final: 10.1, 
+        status: "em_recuperacao" 
       }
-
-      document.getElementById('tituloCurso').textContent = curso;
-      document.getElementById('tituloDisciplina').textContent = disciplina;
-      document.getElementById('tituloTurma').textContent = turma;
-      document.getElementById('tituloSemestre').textContent = semestre;
-
-      // Simular fetch para obter dados do banco (em produção: substituir por Supabase)
-      const dadosPauta = await obterPautaDoBanco(curso, ano, disciplina, turma, semestre);
-
-      const lista = document.getElementById('listaPauta');
-      lista.innerHTML = '';
-
-      let totalEstudantes = 0;
-      let totalAprovados = 0;
-      let totalReprovados = 0;
-      let totalRecuperacao = 0;
-      let totalNaoAdmitidos = 0;
-
-      dadosPauta.forEach(est => {
-        totalEstudantes++;
-
-        // Cálculos de média (em produção: feitos no backend)
-        const mediaAvaliacoes = ((est.ac1 || 0) + (est.ac2 || 0) + (est.trabalho || 0)) / 3;
-        const exameFinal = est.exame || 0;
-        const recuperacao = est.recuperacao || 0;
-        const mediaAdmissaoEstagio = (mediaAvaliacoes + (recuperacao > 0 ? recuperacao : exameFinal)) / 2;
-        const notaEstagio = est.estagio || 0;
-        const mediaFinal = notaEstagio ? (mediaAdmissaoEstagio + notaEstagio) / 2 : mediaAdmissaoEstagio;
-
-        let status = 'pendente';
-        if (mediaFinal >= 10) {
-          status = 'aprovado';
-          totalAprovados++;
-        } else if (exameFinal < 10 && recuperacao > 0 && recuperacao >= 10) {
-          status = 'em_recuperacao';
-          totalRecuperacao++;
-        } else if (mediaAdmissaoEstagio < 10) {
-          status = 'nao_admitido_estagio';
-          totalNaoAdmitidos++;
-        } else {
-          status = 'reprovado';
-          totalReprovados++;
-        }
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${est.nome}</td>
-          <td>${est.ano}</td>
-          <td>${est.ac1 || '—'}</td>
-          <td>${est.ac2 || '—'}</td>
-          <td>${est.trabalho || '—'}</td>
-          <td><strong>${mediaAvaliacoes.toFixed(2)}</strong></td>
-          <td>${est.exame || '—'}</td>
-          <td>${est.recuperacao || '—'}</td>
-          <td><strong>${mediaAdmissaoEstagio.toFixed(2)}</strong></td>
-          <td>${est.estagio || '—'}</td>
-          <td><strong>${mediaFinal.toFixed(2)}</strong></td>
-          <td><span class="status-${status.replace('_', '-')}">${traduzirStatus(status)}</span></td>
-          <td><input type="text" class="form-control" style="width:100%; max-width:150px;" placeholder="Observações"></td>
-        `;
-        lista.appendChild(tr);
-      });
-
-      // Atualizar resumo
-      document.getElementById('totalEstudantes').textContent = totalEstudantes;
-      document.getElementById('totalAprovados').textContent = totalAprovados;
-      document.getElementById('totalReprovados').textContent = totalReprovados;
-      document.getElementById('totalRecuperacao').textContent = totalRecuperacao;
-      document.getElementById('totalNaoAdmitidos').textContent = totalNaoAdmitidos;
-
-      document.getElementById('secaoPauta').style.display = 'block';
-    }
-
-    function traduzirStatus(status) {
-      const map = {
-        'aprovado': 'Aprovado',
-        'reprovado': 'Reprovado',
-        'em_recuperacao': 'Em Recuperação',
-        'nao_admitido_estagio': 'Não Admitido ao Estágio'
-      };
-      return map[status] || status;
-    }
-
-    // Simular obtenção de dados do banco (em produção: substituir por Supabase)
-    async function obterPautaDoBanco(curso, ano, disciplina, turma, semestre) {
-      // Em produção: substituir por:
-      // const { data, error } = await supabase
-      //   .from('notas')
-      //   .select(`
-      //     estudante:estudantes(nome, ano_frequencia_id),
-      //     ac1, ac2, trabalho, exame, recuperacao, estagio
-      //   `)
-      //   .eq('curso', curso)
-      //   .eq('turma', turma)
-      //   .eq('disciplina', disciplina)
-      //   .eq('semestre', semestre);
-
-      return [
-        { id: 1, nome: "João Silva", ano: "2º Ano", ac1: 14.0, ac2: 15.5, trabalho: 16.0, exame: 16.0, recuperacao: null, estagio: 17.0 },
-        { id: 2, nome: "Maria Costa", ano: "2º Ano", ac1: 8.0, ac2: 9.0, trabalho: 7.5, exame: 8.5, recuperacao: 12.0, estagio: null },
-        { id: 3, nome: "Pedro Manguene", ano: "1º Ano", ac1: 16.0, ac2: 15.0, trabalho: 17.0, exame: 14.0, recuperacao: null, estagio: null }
-      ];
-    }
-
-    function enviarPauta() {
-      const disciplina = document.getElementById('tituloDisciplina').textContent;
-      const turma = document.getElementById('tituloTurma').textContent;
-
-      if (confirm(`Enviar pauta de "${disciplina}" para "${turma}"?\n\nSerá encaminhada à Secção Pedagógica para validação.`)) {
-        // Em produção: enviar para Supabase
-        // await supabase.from('pautas').insert({...})
-
-        alert(`✅ Pauta de "${disciplina}" para "${turma}" enviada com sucesso!\n\nAguardando validação do Pedagógico.`);
-      }
-    }
+    ];
 
     function carregarAnos() {
       const select = document.getElementById('curso');
@@ -432,7 +315,7 @@
 
       if (!disciplina) return;
 
-      ['T1-2025', 'T2-2025'].forEach(t => {
+      ['T1A-2025', 'T1B-2025', 'T2A-2025', 'T2B-2025'].forEach(t => {
         const opt = document.createElement('option');
         opt.value = t;
         opt.textContent = t;
@@ -441,6 +324,71 @@
 
       document.getElementById('semestre').disabled = false;
     }
+
+    function carregarSemestres() {
+      const select = document.getElementById('turma');
+      const semestre = document.getElementById('semestre');
+      semestre.disabled = !select.value;
+      semestre.innerHTML = '<option value="">Selecione o semestre</option>';
+
+      if (!select.value) return;
+
+      for (let i = 1; i <= 2; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `${i}º Semestre`;
+        semestre.appendChild(opt);
+      }
+
+      document.getElementById('btnCarregarPauta').style.display = 'block';
+    }
+
+    function carregarPauta() {
+      const disciplina = document.getElementById('disciplina').options[document.getElementById('disciplina').selectedIndex].text;
+      const turma = document.getElementById('turma').value;
+      const semestre = document.getElementById('semestre').value;
+
+      if (!disciplina || !turma || !semestre) return;
+
+      document.getElementById('tituloDisciplina').textContent = disciplina;
+      document.getElementById('tituloTurma').textContent = turma;
+      document.getElementById('tituloSemestre').textContent = semestre;
+
+      const lista = document.getElementById('listaPauta');
+      lista.innerHTML = '';
+
+      pauta.forEach(est => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${est.estudante}</td>
+          <td>${est.ano}</td>
+          <td>${est.ac1}</td>
+          <td>${est.ac2}</td>
+          <td>${est.trabalho}</td>
+          <td><strong>${est.media_avaliacoes}</strong></td>
+          <td>${est.exame || '—'}</td>
+          <td>${est.recuperacao || '—'}</td>
+          <td><strong>${est.media_final}</strong></td>
+          <td><span class="status-${est.status.replace('_', '-') || 'pendente'}">${est.status === 'aprovado' ? 'Aprovado' : est.status === 'em_recuperacao' ? 'Em Recuperação' : 'Reprovado'}</span></td>
+        `;
+        lista.appendChild(tr);
+      });
+
+      document.getElementById('secaoPauta').style.display = 'block';
+    }
+
+    function enviarPauta() {
+      const disciplina = document.getElementById('tituloDisciplina').textContent;
+      const turma = document.getElementById('tituloTurma').textContent;
+
+      if (confirm(`Enviar pauta de "${disciplina}" para "${turma}"?\n\nSerá encaminhada à Secção Pedagógica para validação.`)) {
+        alert(`✅ Pauta de "${disciplina}" enviada com sucesso!\n\nAguardando validação do Pedagógico.`);
+      }
+    }
+
+    function imprimirPauta() {
+      window.print();
+    }
   </script>
 </body>
-  </html>
+</html>
