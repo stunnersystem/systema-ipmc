@@ -71,14 +71,28 @@
       margin-bottom: 20px;
     }
 
+    .history-section {
+      margin-bottom: 30px;
+    }
+
+    .year-header {
+      background: var(--gray-100);
+      padding: 15px;
+      border-radius: var(--radius);
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      margin-top: 15px;
     }
 
     th, td {
-      padding: 14px;
+      padding: 12px;
       text-align: left;
       border-bottom: 1px solid var(--gray-200);
     }
@@ -89,27 +103,16 @@
       color: var(--primary-dark);
     }
 
-    .status-aprovado { color: var(--success); font-weight: 600; }
-    .status-reprovado { color: var(--danger); font-weight: 600; }
-    .status-em-recuperacao { color: var(--warning); font-weight: 600; }
-
     .summary-box {
       background: #f8fafc;
-      border-left: 4px solid var(--accent);
+      border-radius: var(--radius);
       padding: 20px;
       margin-top: 20px;
-      border-radius: 0 var(--radius) var(--radius) 0;
+      border-left: 4px solid var(--accent);
     }
 
-    .btn {
-      padding: 12px 24px;
-      background: var(--gradient-primary);
-      color: white;
-      border: none;
-      border-radius: var(--radius);
-      font-weight: 600;
-      cursor: pointer;
-    }
+    .status-aprovado { color: var(--success); font-weight: 600; }
+    .status-reprovado { color: var(--danger); font-weight: 600; }
   </style>
 </head>
 <body>
@@ -134,74 +137,103 @@
   <div class="container">
     <div class="card">
       <div class="card-header">
-        <h2><i class="fas fa-file-alt"></i> Histórico de Disciplinas Cursadas</h2>
-        <p>Estudante: <strong>João Silva</strong> | Curso: <strong>Técnico de Informática</strong> | Ano: <strong>2º Ano</strong></p>
+        <h2><i class="fas fa-file-alt"></i> Histórico Escolar de João Silva</h2>
+        <p>Curso: Técnico de Informática | Ano de Ingresso: 2024</p>
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Disciplina</th>
-            <th>Ano</th>
-            <th>Semestre</th>
-            <th>Créditos</th>
-            <th>Média de Avaliações</th>
-            <th>Exame</th>
-            <th>Média de Admissão ao Estágio</th>
-            <th>Estágio</th>
-            <th>Média Final</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Matemática</td>
-            <td>1º Ano</td>
-            <td>1º Sem</td>
-            <td>4</td>
-            <td>13.7</td>
-            <td>12.0 (Recuperação)</td>
-            <td>12.9</td>
-            <td>14.5</td>
-            <td>13.7</td>
-            <td><span class="status-aprovado">Aprovado</span></td>
-          </tr>
-          <tr>
-            <td>Informática</td>
-            <td>2º Ano</td>
-            <td>2º Sem</td>
-            <td>6</td>
-            <td>16.5</td>
-            <td>14.0</td>
-            <td>15.2</td>
-            <td>16.0</td>
-            <td>15.6</td>
-            <td><span class="status-aprovado">Aprovado</span></td>
-          </tr>
-          <tr>
-            <td>Inglês</td>
-            <td>2º Ano</td>
-            <td>2º Sem</td>
-            <td>2</td>
-            <td>8.7</td>
-            <td>9.0</td>
-            <td>8.8</td>
-            <td>—</td>
-            <td>8.8</td>
-            <td><span class="status-reprovado">Reprovado</span></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="year-section">
+        <div class="year-header">
+          <h3>1º Ano (2024/2025)</h3>
+          <div style="color: var(--success); font-weight: 600;">Média: 13.2 | Situação: Aprovado</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Disciplina</th>
+              <th>Semestre</th>
+              <th>Média Final</th>
+              <th>Status</th>
+              <th>Creditos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Matemática</td>
+              <td>1º Sem</td>
+              <td>14.5</td>
+              <td><span class="status-aprovado">Aprovado</span></td>
+              <td>4</td>
+            </tr>
+            <tr>
+              <td>Informática</td>
+              <td>1º Sem</td>
+              <td>16.0</td>
+              <td><span class="status-aprovado">Aprovado</span></td>
+              <td>6</td>
+            </tr>
+            <tr>
+              <td>Inglês</td>
+              <td>2º Sem</td>
+              <td>12.8</td>
+              <td><span class="status-aprovado">Aprovado</span></td>
+              <td>2</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="year-section">
+        <div class="year-header">
+          <h3>2º Ano (2025/2026)</h3>
+          <div style="color: var(--success); font-weight: 600;">Média: 14.8 | Situação: Em Curso</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Disciplina</th>
+              <th>Semestre</th>
+              <th>Média Final</th>
+              <th>Status</th>
+              <th>Creditos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Programação</td>
+              <td>1º Sem</td>
+              <td>15.5</td>
+              <td><span class="status-aprovado">Aprovado</span></td>
+              <td>6</td>
+            </tr>
+            <tr>
+              <td>Estatística</td>
+              <td>1º Sem</td>
+              <td>14.0</td>
+              <td><span class="status-aprovado">Aprovado</span></td>
+              <td>4</td>
+            </tr>
+            <tr>
+              <td>Metodologia</td>
+              <td>2º Sem</td>
+              <td>—</td>
+              <td><span style="color: var(--warning);">Em Curso</span></td>
+              <td>4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <div class="summary-box">
-        <h3 style="margin-bottom: 15px; color: var(--primary-dark);"><i class="fas fa-calculator"></i> Resumo do Curso</h3>
-        <p><strong>Créditos Concluídos:</strong> 12 de 14</p>
-        <p><strong>Disciplinas Aprovadas:</strong> 2 de 3</p>
-        <p><strong>Média Global Actual:</strong> <span style="color: var(--success); font-weight: 600;">13.1</span></p>
+        <h3 style="margin-bottom: 15px; color: var(--primary-dark);"><i class="fas fa-calculator"></i> Resumo Final</h3>
+        <p><strong>Total de Disciplinas Cursadas:</strong> 12</p>
+        <p><strong>Total de Disciplinas Aprovadas:</strong> 10</p>
+        <p><strong>Total de Disciplinas Reprovadas:</strong> 2</p>
+        <p><strong>Média Global Actual:</strong> <span style="color: var(--success); font-weight: 600;">14.0</span></p>
         <p><strong>Menção:</strong> <span style="color: var(--warning); font-weight: 600;">Bom</span></p>
+        <p><strong>Situação Actual:</strong> <span class="status-aprovado">Em Curso</span></p>
       </div>
 
-      <button class="btn" style="margin-top: 20px; width:100%;" onclick="alert('Função em desenvolvimento')">
+      <button class="btn btn-primary" style="width:100%; margin-top: 20px;" onclick="alert('Função em desenvolvimento')">
         <i class="fas fa-download"></i> Baixar Histórico em PDF
       </button>
     </div>
