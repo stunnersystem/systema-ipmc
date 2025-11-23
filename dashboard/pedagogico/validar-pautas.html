@@ -111,10 +111,6 @@
       color: var(--primary-dark);
     }
 
-    .status-aprovado { color: var(--success); font-weight: 600; }
-    .status-reprovado { color: var(--danger); font-weight: 600; }
-    .status-pendente { color: var(--warning); font-weight: 600; }
-
     .btn {
       padding: 12px 24px;
       border: none;
@@ -126,6 +122,20 @@
 
     .btn-success { background: var(--success); color: white; }
     .btn-danger { background: var(--danger); color: white; }
+
+    .status-aprovado { color: var(--success); font-weight: 600; }
+    .status-reprovado { color: var(--danger); font-weight: 600; }
+    .status-em-recuperacao { color: var(--warning); font-weight: 600; }
+    .status-pendente { color: var(--warning); font-weight: 600; }
+
+    .rejection-box {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background: #fef3c7;
+      border-radius: var(--radius);
+      border-left: 4px solid var(--warning);
+    }
   </style>
 </head>
 <body>
@@ -156,7 +166,7 @@
       <div class="form-grid">
         <div class="form-group">
           <label for="cursoPauta">Curso *</label>
-          <select id="cursoPauta" class="form-control" onchange="carregarAnosPauta()">
+          <select id="cursoPauta" class="form-control" onchange="carregarAnos()">
             <option value="">Selecione um curso</option>
             <option value="info">Técnico de Informática</option>
             <option value="agri">Técnico Agrícola</option>
@@ -164,7 +174,7 @@
         </div>
         <div class="form-group">
           <label for="anoFrequenciaPauta">Ano de Frequência *</label>
-          <select id="anoFrequenciaPauta" class="form-control" onchange="carregarDisciplinasPauta()" disabled>
+          <select id="anoFrequenciaPauta" class="form-control" onchange="carregarDisciplinas()" disabled>
             <option value="">Selecione primeiro o curso</option>
           </select>
         </div>
@@ -187,12 +197,16 @@
           </select>
         </div>
       </div>
+
+      <button id="btnCarregarPauta" class="btn btn-primary" style="width:100%; display:none;" onclick="carregarPauta()">
+        <i class="fas fa-list"></i> Carregar Pauta Final
+      </button>
     </div>
 
     <!-- Tabela de Pauta -->
     <div class="card" id="secaoPauta" style="display:none;">
       <div class="card-header">
-        <h2><i class="fas fa-list"></i> Pauta de <span id="tituloDisciplinaPauta">—</span></h2>
+        <h2><i class="fas fa-list"></i> Pauta Final de <span id="tituloDisciplinaPauta">—</span></h2>
         <p>Curso: <strong id="tituloCursoPauta">—</strong> | Turma: <strong id="tituloTurmaPauta">—</strong> | Semestre: <strong id="tituloSemestrePauta">—</strong></p>
       </div>
 
@@ -207,11 +221,9 @@
             <th>Média de Avaliações</th>
             <th>Exame</th>
             <th>Recuperação</th>
-            <th>Média de Admissão ao Estágio</th>
-            <th>Estágio</th>
             <th>Média Final</th>
             <th>Status</th>
-            <th>Ações</th>
+            <th>Acções</th>
           </tr>
         </thead>
         <tbody id="listaPauta">
@@ -228,7 +240,7 @@
         </button>
       </div>
 
-      <div id="rejeicaoBox" style="display:none; margin-top:20px; padding:20px; background:#fef3c7; border-radius:var(--radius);">
+      <div id="rejeicaoBox" class="rejection-box">
         <label for="motivoRejeicao">Motivo da Rejeição *</label>
         <textarea id="motivoRejeicao" class="form-control" rows="4" placeholder="Explique os motivos da rejeição..."></textarea>
         <button class="btn btn-danger" style="margin-top:10px;" onclick="rejeitarPauta()">
@@ -240,7 +252,7 @@
 
   <script>
     // Simular dados
-    const pautas = [
+    const pauta = [
       { 
         estudante: "João Silva", 
         ano: "2º Ano", 
@@ -250,9 +262,7 @@
         media_avaliacoes: 15.0, 
         exame: 16.0, 
         recuperacao: null, 
-        media_admissao_estagio: 15.5, 
-        estagio: 17.0, 
-        media_final: 16.25, 
+        media_final: 15.5, 
         status: "aprovado" 
       },
       { 
@@ -262,16 +272,14 @@
         ac2: 9.0, 
         trabalho: 7.5, 
         media_avaliacoes: 8.2, 
-        exame: null, 
-        recuperacao: null, 
-        media_admissao_estagio: null, 
-        estagio: null, 
-        media_final: null, 
-        status: "nao_admitido" 
+        exame: 9.0, 
+        recuperacao: 12.0, 
+        media_final: 10.1, 
+        status: "em_recuperacao" 
       }
     ];
 
-    function carregarAnosPauta() {
+    function carregarAnos() {
       const select = document.getElementById('cursoPauta');
       const ano = document.getElementById('anoFrequenciaPauta');
       ano.disabled = !select.value;
@@ -287,7 +295,7 @@
       }
     }
 
-    function carregarDisciplinasPauta() {
+    function carregarDisciplinas() {
       const ano = document.getElementById('anoFrequenciaPauta').value;
       const select = document.getElementById('disciplinaPauta');
       select.disabled = !ano;
@@ -306,24 +314,44 @@
         opt.textContent = d;
         select.appendChild(opt);
       });
+
+      document.getElementById('turmaPauta').disabled = false;
     }
 
-    function carregarTurmasPauta() {
-      const disciplina = document.getElementById('disciplinaPauta').value;
-      const select = document.getElementById('turmaPauta');
-      select.disabled = !disciplina;
-      select.innerHTML = '<option value="">Selecione a turma</option>';
+    function carregarTurmas() {
+      const select = document.getElementById('disciplinaPauta');
+      const turma = document.getElementById('turmaPauta');
+      turma.disabled = !select.value;
+      turma.innerHTML = '<option value="">Selecione a turma</option>';
 
-      if (!disciplina) return;
+      if (!select.value) return;
 
-      ['T1-2025', 'T2-2025'].forEach(t => {
+      ['T1A-2025', 'T1B-2025', 'T2A-2025', 'T2B-2025'].forEach(t => {
         const opt = document.createElement('option');
         opt.value = t;
         opt.textContent = t;
-        select.appendChild(opt);
+        turma.appendChild(opt);
       });
 
       document.getElementById('semestrePauta').disabled = false;
+    }
+
+    function carregarSemestres() {
+      const select = document.getElementById('turmaPauta');
+      const semestre = document.getElementById('semestrePauta');
+      semestre.disabled = !select.value;
+      semestre.innerHTML = '<option value="">Selecione o semestre</option>';
+
+      if (!select.value) return;
+
+      for (let i = 1; i <= 2; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `${i}º Semestre`;
+        semestre.appendChild(opt);
+      }
+
+      document.getElementById('btnCarregarPauta').style.display = 'block';
     }
 
     function carregarPauta() {
@@ -340,7 +368,7 @@
       const lista = document.getElementById('listaPauta');
       lista.innerHTML = '';
 
-      pautas.forEach(est => {
+      pauta.forEach(est => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${est.estudante}</td>
@@ -348,15 +376,11 @@
           <td>${est.ac1}</td>
           <td>${est.ac2}</td>
           <td>${est.trabalho}</td>
-          <td><strong>${est.media_avaliacoes || '—'}</strong></td>
+          <td><strong>${est.media_avaliacoes}</strong></td>
           <td>${est.exame || '—'}</td>
           <td>${est.recuperacao || '—'}</td>
-          <td><strong>${est.media_admissao_estagio || '—'}</strong></td>
-          <td>${est.estagio || '—'}</td>
-          <td><strong>${est.media_final || '—'}</strong></td>
-          <td><span class="status-${est.status === 'aprovado' ? 'aprovado' : est.status === 'nao_admitido' ? 'reprovado' : 'pendente'}">
-            ${est.status === 'aprovado' ? 'Aprovado' : est.status === 'nao_admitido' ? 'Não Admitido' : 'Pendente'}
-          </span></td>
+          <td><strong>${est.media_final}</strong></td>
+          <td><span class="status-${est.status.replace('_', '-') || 'pendente'}">${est.status === 'aprovado' ? 'Aprovado' : est.status === 'em_recuperacao' ? 'Em Recuperação' : 'Reprovado'}</span></td>
           <td>
             <button class="btn btn-success" onclick="aprovarEstudante('${est.estudante}')">
               <i class="fas fa-check"></i>
