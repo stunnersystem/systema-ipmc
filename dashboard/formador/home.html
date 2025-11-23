@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Portal do Formador - IPM Caia</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #1e40af;
@@ -119,11 +120,6 @@
       box-shadow: var(--shadow-xl);
     }
 
-    .welcome-card h2 {
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -156,8 +152,8 @@
     }
 
     .icon-primary { background: var(--gradient-primary); }
-    .icon-success { background: var(--gradient-success); }
-    .icon-warning { background: var(--gradient-warning); }
+    .icon-success { background: var(--success); }
+    .icon-warning { background: var(--warning); }
     .icon-accent { background: var(--gradient-accent); }
 
     .stat-info h3 {
@@ -216,8 +212,8 @@
         <h2>Instituto Politécnico Makhetele - Caia</h2>
         <p>Portal do Formador</p>
       </div>
-      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
-        <span style="font-size: 14px;">Dr. Carlos Santos</span>
+      <div id="infoUsuario" style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">Carregando...</span>
         <a href="../../index.html" style="color: white; text-decoration: none;">
           <i class="fas fa-sign-out-alt"></i>
         </a>
@@ -236,128 +232,199 @@
           <a href="registo-avaliacoes.html" class="nav-item">
             <i class="fas fa-clipboard-list"></i> Lançar Avaliações
           </a>
-          <a href="gerar-pauta.html" class="nav-item">
-  <i class="fas fa-list-alt"></i> Gerar Pauta(s)
-</a>
-          <a href="enviar-aviso.html" class="nav-item">
-            <i class="fas fa-paper-plane"></i> Enviar Avisos
+          <a href="minhas-turmas.html" class="nav-item">
+            <i class="fas fa-users"></i> Minhas Turmas
           </a>
-          <a href="#" class="nav-item">
-            <i class="fas fa-chalkboard-teacher"></i> Minhas Turmas
+          <a href="pautas-lancadas.html" class="nav-item">
+            <i class="fas fa-file-alt"></i> Minhas Pautas
           </a>
-          <a href="#" class="nav-item">
+          <a href="controle-frequencia.html" class="nav-item">
+            <i class="fas fa-user-check"></i> Controlo de Frequência
+          </a>
+          <a href="materials.html" class="nav-item">
             <i class="fas fa-book-open"></i> Materiais de Apoio
           </a>
-          <a href="#" class="nav-item">
-            <i class="fas fa-calendar-alt"></i> Meu Horário
-          </a>
-          <a href="ver-minhas-notas.html" class="nav-item">
-            <i class="fas fa-chart-bar"></i> Ver Minhas Notas Lançadas
-          </a>
-          <a href="meus-dados.html" class="nav-item">
-  <i class="fas fa-user"></i> Meus Dados
-          </a>
-          <a href="../meu-perfil.html" class="nav-item">
-           <i class="fas fa-user"></i> Meu Perfil
+          <a href="meu-perfil.html" class="nav-item">
+            <i class="fas fa-user"></i> Meu Perfil
           </a>
         </nav>
       </aside>
 
       <section class="content">
         <div class="welcome-card">
-          <h2>Bem-vindo, Dr. Carlos Santos!</h2>
-          <p>Formador de Matemática e Informática | Técnico de Informática</p>
+          <h2>Bem-vindo, Formador!</h2>
+          <p>Gerir avaliações, turmas e estudantes</p>
         </div>
 
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-icon icon-primary">
-              <i class="fas fa-users"></i>
+              <i class="fas fa-chalkboard-teacher"></i>
             </div>
             <div class="stat-info">
-              <h3>42</h3>
-              <p>Estudantes Afectos</p>
+              <h3 id="totalTurmas">0</h3>
+              <p>Turmas Atribuídas</p>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon icon-success">
-              <i class="fas fa-book-open"></i>
+              <i class="fas fa-user-graduate"></i>
             </div>
             <div class="stat-info">
-              <h3>2</h3>
-              <p>Disciplinas</p>
+              <h3 id="totalEstudantes">0</h3>
+              <p>Estudantes a Lecionar</p>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon icon-warning">
-              <i class="fas fa-chalkboard-teacher"></i>
+              <i class="fas fa-clipboard-list"></i>
             </div>
             <div class="stat-info">
-              <h3>2</h3>
-              <p>Turmas Atribuídas</p>
+              <h3 id="totalAvaliacoes">0</h3>
+              <p>Avaliações Lançadas</p>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon icon-accent">
               <i class="fas fa-file-alt"></i>
             </div>
-            <div class="module-card" onclick="location.href='ver-minhas-notas.html'">
-  <div class="module-icon">
-    <i class="fas fa-chart-bar"></i>
-  </div>
-  <h3>Ver Minhas Notas Lançadas</h3>
-  <p>Consulte notas lançadas por curso, disciplina e tipo de avaliação</p>
+            <div class="stat-info">
+              <h3 id="totalPautas">0</h3>
+              <p>Pautas Pendentes de Validação</p>
             </div>
           </div>
         </div>
 
-        <h2 style="margin: 25px 0 20px; color: var(--primary-dark);">Atividades Rápidas</h2>
+        <h2 style="margin: 25px 0 20px; color: var(--primary-dark);">Acesso Rápido</h2>
         <div class="modules-grid">
           <div class="module-card" onclick="location.href='registo-avaliacoes.html'">
             <div class="module-icon">
               <i class="fas fa-clipboard-list"></i>
             </div>
-            <h3>Lançar Avaliação</h3>
-            <p>Registe notas de testes, trabalhos e exames</p>
+            <h3>Lançar Avaliações</h3>
+            <p>Notas de AC, TP, Testes, Exames</p>
           </div>
-          <div class="module-card" onclick="location.href='enviar-aviso.html'">
+          <div class="module-card" onclick="location.href='minhas-turmas.html'">
             <div class="module-icon">
-              <i class="fas fa-paper-plane"></i>
-            </div>
-            <h3>Enviar Aviso</h3>
-            <p>Comunique sua turma sobre aulas, provas, etc.</p>
-          </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
-            <div class="module-icon">
-              <i class="fas fa-chalkboard-teacher"></i>
+              <i class="fas fa-users"></i>
             </div>
             <h3>Minhas Turmas</h3>
-            <p>Veja lista de turmas e estudantes afectos</p>
+            <p>Ver estudantes e disciplinas atribuídas</p>
           </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
+          <div class="module-card" onclick="location.href='pautas-lancadas.html'">
+            <div class="module-icon">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <h3>Minhas Pautas</h3>
+            <p>Ver pautas lançadas e status</p>
+          </div>
+          <div class="module-card" onclick="location.href='controle-frequencia.html'">
+            <div class="module-icon">
+              <i class="fas fa-user-check"></i>
+            </div>
+            <h3>Controlo de Frequência</h3>
+            <p>Marcar presenças e ausências</p>
+          </div>
+          <div class="module-card" onclick="location.href='materials.html'">
             <div class="module-icon">
               <i class="fas fa-book-open"></i>
             </div>
             <h3>Materiais de Apoio</h3>
-            <p>Envie PDFs, links e recursos para estudantes</p>
+            <p>Enviar PDFs, links e recursos</p>
           </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
+          <div class="module-card" onclick="location.href='meu-perfil.html'">
             <div class="module-icon">
-              <i class="fas fa-chart-bar"></i>
+              <i class="fas fa-user"></i>
             </div>
-            <h3>Ver Notas Lançadas</h3>
-            <p>Consulte histórico de avaliações lançadas</p>
-          </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
-            <div class="module-icon">
-              <i class="fas fa-calendar-alt"></i>
-            </div>
-            <h3>Meu Horário</h3>
-            <p>Veja sua grade de aulas</p>
+            <h3>Meu Perfil</h3>
+            <p>Ver e actualizar dados pessoais</p>
           </div>
         </div>
       </section>
     </div>
   </div>
+
+  <script>
+    // Configuração do Supabase
+    const supabaseUrl = 'https://SEU_PROJETO.supabase.co';
+    const supabaseAnonKey = 'SEU_ANON_KEY';
+    const { createClient } = supabase;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    // Verificar papel real do usuário
+    window.onload = async () => {
+      const {  { session }, error } = await supabase.auth.getSession();
+      if (error || !session) {
+        window.location.href = '../../index.html';
+        return;
+      }
+
+      const userId = session.user.id;
+
+      const { data, error: profileError } = await supabase
+        .from('usuarios')
+        .select('role, nome')
+        .eq('auth_id', userId)
+        .single();
+
+      if (profileError || !data || data.role !== 'formador') {
+        window.location.href = '../../index.html';
+        return;
+      }
+
+      document.getElementById('infoUsuario').innerHTML = `
+        <span style="font-size: 14px;">${data.nome}</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      `;
+
+      // Carregar estatísticas reais do formador
+      carregarEstatisticas();
+    };
+
+    async function carregarEstatisticas() {
+      try {
+        const userId = (await supabase.auth.getUser()).data.user.id;
+
+        // Total de turmas atribuídas ao formador
+        const { count: turmasCount } = await supabase
+          .from('turmas_formadores')
+          .select('*, turmas(*)', { count: 'exact', head: true })
+          .eq('formador_id', userId);
+
+        // Total de estudantes (em todas as turmas do formador)
+        const { count: estudantesCount } = await supabase
+          .from('estudantes')
+          .select('*', { count: 'exact', head: true })
+          .in('turma_id', (
+            await supabase
+              .from('turmas_formadores')
+              .select('turma_id')
+              .eq('formador_id', userId)
+          ).data.map(tf => tf.turma_id));
+
+        // Total de avaliações lançadas (em produção: contar notas lançadas por este formador)
+        const { count: avaliacoesCount } = await supabase
+          .from('notas')
+          .select('*', { count: 'exact', head: true })
+          .eq('lancado_por', userId);
+
+        // Total de pautas pendentes (enviadas pelo formador)
+        const { count: pautasCount } = await supabase
+          .from('pautas')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'pendente')
+          .eq('lancado_por', userId);
+
+        document.getElementById('totalTurmas').textContent = turmasCount || 0;
+        document.getElementById('totalEstudantes').textContent = estudantesCount || 0;
+        document.getElementById('totalAvaliacoes').textContent = avaliacoesCount || 0;
+        document.getElementById('totalPautas').textContent = pautasCount || 0;
+      } catch (error) {
+        console.error('Erro ao carregar estatísticas:', error);
+      }
+    }
+  </script>
 </body>
-  </html>
+</html>
