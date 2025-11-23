@@ -198,14 +198,14 @@
       </div>
 
       <button id="btnCarregarPauta" class="btn btn-primary" style="width:100%; display:none;" onclick="carregarPautas()">
-        <i class="fas fa-list"></i> Carregar Pauta
+        <i class="fas fa-list"></i> Carregar Pauta Final
       </button>
     </div>
 
     <!-- Tabela de Pauta -->
     <div class="card" id="secaoPauta" style="display:none;">
       <div class="card-header">
-        <h2><i class="fas fa-list"></i> Pauta de <span id="tituloDisciplinaPauta">—</span></h2>
+        <h2><i class="fas fa-list"></i> Pauta Final de <span id="tituloDisciplinaPauta">—</span></h2>
         <p>Curso: <strong id="tituloCursoPauta">—</strong> | Turma: <strong id="tituloTurmaPauta">—</strong> | Semestre: <strong id="tituloSemestrePauta">—</strong></p>
       </div>
 
@@ -217,8 +217,11 @@
             <th>AC1</th>
             <th>AC2</th>
             <th>Trabalho</th>
+            <th>Média de Avaliações</th>
             <th>Exame</th>
             <th>Recuperação</th>
+            <th>Média de Admissão ao Estágio</th>
+            <th>Estágio</th>
             <th>Média Final</th>
             <th>Status</th>
             <th>Acções</th>
@@ -240,7 +243,7 @@
 
       <div id="rejeicaoBox" class="rejection-box">
         <label for="motivoRejeicao">Motivo da Rejeição *</label>
-        <textarea id="motivoRejeicao" class="form-control" rows="4" placeholder="Explique o motivo da rejeição..."></textarea>
+        <textarea id="motivoRejeicao" class="form-control" rows="4" placeholder="Explique os motivos da rejeição..."></textarea>
         <button class="btn btn-danger" style="margin-top:10px;" onclick="rejeitarPauta()">
           <i class="fas fa-times"></i> Confirmar Rejeição
         </button>
@@ -249,7 +252,7 @@
   </div>
 
   <script>
-    // Simular dados (em produção: virá do Supabase)
+    // Simular dados
     const pautas = [
       { 
         estudante: "João Silva", 
@@ -257,10 +260,13 @@
         ac1: 14.0, 
         ac2: 15.0, 
         trabalho: 16.0, 
+        media_avaliacoes: 15.0, 
         exame: 16.0, 
         recuperacao: null, 
-        media_final: 15.25, 
-        status: "pendente" 
+        media_admissao_estagio: 15.5, 
+        estagio: 17.0, 
+        media_final: 16.25, 
+        status: "aprovado" 
       },
       { 
         estudante: "Maria Costa", 
@@ -268,8 +274,11 @@
         ac1: 8.0, 
         ac2: 9.0, 
         trabalho: 7.5, 
+        media_avaliacoes: 8.2, 
         exame: 9.0, 
         recuperacao: 12.0, 
+        media_admissao_estagio: 10.6, 
+        estagio: null, 
         media_final: 10.6, 
         status: "em_recuperacao" 
       }
@@ -352,9 +361,12 @@
           <td>${est.ac1}</td>
           <td>${est.ac2}</td>
           <td>${est.trabalho}</td>
+          <td><strong>${est.media_avaliacoes}</strong></td>
           <td>${est.exame || '—'}</td>
           <td>${est.recuperacao || '—'}</td>
-          <td><strong>${est.media_final.toFixed(2)}</strong></td>
+          <td><strong>${est.media_admissao_estagio || '—'}</strong></td>
+          <td>${est.estagio || '—'}</td>
+          <td><strong>${est.media_final}</strong></td>
           <td><span class="status-${est.status === 'aprovado' ? 'aprovada' : est.status === 'em_recuperacao' ? 'pendente' : 'rejeitada'}">
             ${est.status === 'aprovado' ? 'Aprovado' : est.status === 'em_recuperacao' ? 'Em Recuperação' : 'Reprovado'}
           </span></td>
@@ -379,7 +391,7 @@
 
       if (confirm(`Aprovar pauta de "${disciplina}" para "${turma}"?\n\nSerá encaminhada ao Director para validação final.`)) {
         alert(`✅ Pauta de "${disciplina}" aprovada com sucesso!`);
-        // Em produção: atualizar Supabase com status = 'aprovada'
+        // Em produção: atualizar status no Supabase para 'aprovada'
       }
     }
 
