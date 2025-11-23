@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Secretaria - IPM Caia</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    /* (Mesmo CSS do director) */
     :root {
       --primary: #1e40af;
       --primary-dark: #1e3a8a;
@@ -20,11 +22,7 @@
       --gray-200: #e5e7eb;
       --gray-800: #1f2937;
       --gray-900: #111827;
-      
       --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
-      --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-      --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
       --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
       --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
       --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
@@ -32,17 +30,8 @@
       --radius-lg: 16px;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: var(--gray-50);
-      color: var(--gray-900);
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
 
     .dashboard-header {
       background: var(--gradient-primary);
@@ -57,16 +46,6 @@
       gap: 15px;
       max-width: 1200px;
       margin: 0 auto;
-    }
-
-    .header-logo {
-      width: 50px;
-      height: 50px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .header-logo img {
@@ -142,11 +121,6 @@
       box-shadow: var(--shadow-xl);
     }
 
-    .welcome-card h2 {
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -179,10 +153,9 @@
     }
 
     .icon-primary { background: var(--gradient-primary); }
-    .icon-success { background: var(--gradient-success); }
-    .icon-warning { background: var(--gradient-warning); }
+    .icon-success { background: var(--success); }
+    .icon-warning { background: var(--warning); }
     .icon-accent { background: var(--gradient-accent); }
-    .icon-danger { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
 
     .stat-info h3 {
       font-size: 24px;
@@ -241,8 +214,8 @@
         <p>Secretaria Académica</p>
       </div>
       <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
-        <span style="font-size: 14px;">Ana Ferreira</span>
-        <a href="../../index.html" style="color: white; text-decoration: none;">
+        <span style="font-size: 14px;" id="nomeUsuario">—</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;" onclick="logout()">
           <i class="fas fa-sign-out-alt"></i>
         </a>
       </div>
@@ -264,34 +237,16 @@
             <i class="fas fa-user-cog"></i> Gerir Estudantes
           </a>
           <a href="registo-pagamento.html" class="nav-item">
-            <i class="fas fa-file-invoice-dollar"></i> Registo de Pagamentos
+            <i class="fas fa-file-invoice-dollar"></i> Registo de Pagamento
           </a>
-          <a href="gerir-cursos.html" class="nav-item">
-            <i class="fas fa-book"></i> Cursos e Turmas
-          </a>
-          <a href="atribuir-turmas-estudantes.html" class="nav-item">
-  <i class="fas fa-user-plus"></i> Atribuir Turmas a Estudantes
-</a>
-<a href="ver-estudantes-atribuidos.html" class="nav-item">
-  <i class="fas fa-users"></i> Ver Estudantes por Turma
-</a>
-          <a href="acompanhar-estudantes.html" class="nav-item">
-            <i class="fas fa-id-card"></i> Cartões de Estudante
-          </a>
-          <a href="#" class="nav-item">
+          <a href="emitir-documentos.html" class="nav-item">
             <i class="fas fa-file-certificate"></i> Emitir Documentos
           </a>
-          <a href="#" class="nav-item">
-            <i class="fas fa-chart-bar"></i> Relatórios
+          <a href="gerir-cursos.html" class="nav-item">
+            <i class="fas fa-book"></i> Gerir Cursos e Turmas
           </a>
-          <a href="../director/exportar-dados.html" class="nav-item">
-            <i class="fas fa-archive"></i> Exportar Dados
-          </a>
-          <a href="enviar-aviso.html" class="nav-item">
-            <i class="fas fa-bullhorn"></i> Enviar Aviso Geral
-          </a>
-          <a href="../meu-perfil.html" class="nav-item">
-            <i class="fas fa-user"></i> Meu Perfil
+          <a href="relatorios-admin.html" class="nav-item">
+            <i class="fas fa-chart-bar"></i> Relatórios Administrativos
           </a>
         </nav>
       </aside>
@@ -308,8 +263,8 @@
               <i class="fas fa-user-graduate"></i>
             </div>
             <div class="stat-info">
-              <h3>248</h3>
-              <p>Estudantes Matriculados</p>
+              <h3 id="totalEstudantes">0</h3>
+              <p>Estudantes Activos</p>
             </div>
           </div>
           <div class="stat-card">
@@ -317,8 +272,8 @@
               <i class="fas fa-file-invoice-dollar"></i>
             </div>
             <div class="stat-info">
-              <h3>85%</h3>
-              <p>Pagamentos em Dia</p>
+              <h3 id="totalPagamentos">0 MZN</h3>
+              <p>Recebido em 2025</p>
             </div>
           </div>
           <div class="stat-card">
@@ -326,68 +281,155 @@
               <i class="fas fa-exclamation-triangle"></i>
             </div>
             <div class="stat-info">
-              <h3>37</h3>
+              <h3 id="totalEmDivida">0</h3>
               <p>Estudantes em Dívida</p>
             </div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon icon-danger">
-              <i class="fas fa-file-alt"></i>
+            <div class="stat-icon icon-accent">
+              <i class="fas fa-percentage"></i>
             </div>
             <div class="stat-info">
-              <h3>124</h3>
-              <p>Documentos Emitidos</p>
+              <h3 id="taxaPagamentos">0%</h3>
+              <p>Taxa de Pagamentos</p>
             </div>
           </div>
         </div>
 
-        <h2 style="margin: 25px 0 20px; color: var(--primary-dark);">Atividades Administrativas</h2>
+        <h2 style="margin: 25px 0 20px; color: var(--primary-dark);">Acesso Rápido</h2>
         <div class="modules-grid">
           <div class="module-card" onclick="location.href='inscrever-estudante.html'">
             <div class="module-icon">
-              <i class="fas fa-edit"></i>
+              <i class="fas fa-user-plus"></i>
             </div>
             <h3>Inscrição de Estudantes</h3>
-            <p>Registar novos candidatos ao instituto</p>
+            <p>Registrar novos estudantes no sistema</p>
           </div>
           <div class="module-card" onclick="location.href='gerir-estudantes.html'">
             <div class="module-icon">
-              <i class="fas fa-random"></i>
+              <i class="fas fa-user-cog"></i>
             </div>
             <h3>Gerir Estudantes</h3>
-            <p>Mudança de curso, turma, transferência, desistência</p>
+            <p>Mudanças de turma, desistências, transferências</p>
           </div>
           <div class="module-card" onclick="location.href='registo-pagamento.html'">
             <div class="module-icon">
-              <i class="fas fa-cash-register"></i>
+              <i class="fas fa-file-invoice-dollar"></i>
             </div>
             <h3>Registo de Pagamentos</h3>
             <p>Confirmar propinas e gerar comprovantes</p>
           </div>
+          <div class="module-card" onclick="location.href='emitir-documentos.html'">
+            <div class="module-icon">
+              <i class="fas fa-file-certificate"></i>
+            </div>
+            <h3>Emitir Documentos</h3>
+            <p>Declarações, históricos, cartões de estudante</p>
+          </div>
           <div class="module-card" onclick="location.href='gerir-cursos.html'">
             <div class="module-icon">
-              <i class="fas fa-school"></i>
+              <i class="fas fa-book"></i>
             </div>
-            <h3>Cursos e Turmas</h3>
-            <p>Criar cursos e organizar turmas</p>
+            <h3>Gerir Cursos e Turmas</h3>
+            <p>Criar cursos, turmas e organizar estudantes</p>
           </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
+          <div class="module-card" onclick="location.href='relatorios-admin.html'">
             <div class="module-icon">
-              <i class="fas fa-file-pdf"></i>
+              <i class="fas fa-chart-bar"></i>
             </div>
-            <h3>Emitir Declarações</h3>
-            <p>Gerar históricos, frequências e certificados</p>
-          </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
-            <div class="module-icon">
-              <i class="fas fa-id-badge"></i>
-            </div>
-            <h3>Cartões de Estudante</h3>
-            <p>Emitir e gerir cartões institucionais</p>
+            <h3>Relatórios Administrativos</h3>
+            <p>Matrículas, pagamentos, desistências</p>
           </div>
         </div>
       </section>
     </div>
   </div>
+
+  <script>
+    // Configuração do Supabase
+    const supabaseUrl = 'https://SEU_PROJETO.supabase.co';
+    const supabaseAnonKey = 'SEU_ANON_KEY';
+    const { createClient } = supabase;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    // Verificar papel real no banco
+    window.onload = async () => {
+      const {  { session }, error } = await supabase.auth.getSession();
+      if (error || !session) {
+        window.location.href = '../../index.html';
+        return;
+      }
+
+      const userId = session.user.id;
+
+      const { data, error: profileError } = await supabase
+        .from('usuarios')
+        .select('role, nome')
+        .eq('auth_id', userId)
+        .single();
+
+      if (profileError || !data || data.role !== 'secretaria') {
+        window.location.href = '../../index.html';
+        return;
+      }
+
+      document.getElementById('nomeUsuario').textContent = data.nome;
+
+      // Carregar estatísticas reais
+      carregarEstatisticas();
+    };
+
+    async function carregarEstatisticas() {
+      try {
+        // Total de estudantes activos
+        const { count: estudantesCount } = await supabase
+          .from('estudantes')
+          .select('*', { count: 'exact', head: true });
+
+        // Total de pagamentos (ex: valor recebido)
+        const { data: pagamentos, error: pagError } = await supabase
+          .from('pagamentos')
+          .select('valor_pago');
+
+        let totalPago = 0;
+        if (!pagError) {
+          totalPago = pagamentos.reduce((acc, p) => acc + p.valor_pago, 0);
+        }
+
+        // Estudantes em dívida
+        const { count: dividaCount } = await supabase
+          .from('pagamentos')
+          .select('*', { count: 'exact', head: true })
+          .gt('valor_em_divida', 0);
+
+        // Taxa de pagamentos
+        const { count: totalPagamentos } = await supabase
+          .from('pagamentos')
+          .select('*', { count: 'exact', head: true });
+
+        const { count: pagamentosFeitos } = await supabase
+          .from('pagamentos')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'pago');
+
+        const taxa = totalPagamentos > 0 ? (pagamentosFeitos / totalPagamentos) * 100 : 0;
+
+        document.getElementById('totalEstudantes').textContent = estudantesCount || 0;
+        document.getElementById('totalPagamentos').textContent = totalPago.toLocaleString('pt-MZ') + ' MZN';
+        document.getElementById('totalEmDivida').textContent = dividaCount || 0;
+        document.getElementById('taxaPagamentos').textContent = taxa.toFixed(1) + '%';
+      } catch (error) {
+        console.error('Erro ao carregar estatísticas:', error);
+      }
+    }
+
+    async function logout() {
+      await supabase.auth.signOut();
+      localStorage.removeItem('ipm_user_logged');
+      localStorage.removeItem('ipm_user_role');
+      localStorage.removeItem('ipm_user_nome');
+      window.location.href = '../../index.html';
+    }
+  </script>
 </body>
 </html>
