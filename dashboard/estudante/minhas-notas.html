@@ -124,6 +124,15 @@
     .status-em-recuperacao { color: var(--warning); font-weight: 600; }
     .status-admitido { color: var(--success); font-weight: 600; }
     .status-nao-admitido { color: var(--danger); font-weight: 600; }
+
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+      padding: 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 15px 0;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -149,7 +158,7 @@
     <div class="card">
       <div class="card-header">
         <h2><i class="fas fa-chart-bar"></i> Resumo Académico</h2>
-        <p>Curso: Técnico de Informática | Turma: T1A-2025 | 2º Ano</p>
+        <p>Curso: Técnico de Informática | Turma: T1-2025 | 2º Ano</p>
       </div>
 
       <div class="stats-grid">
@@ -172,11 +181,11 @@
       </div>
     </div>
 
-    <!-- Disciplina 1 -->
+    <!-- Disciplina 1: Com estágio -->
     <div class="disciplina-card">
       <div class="disciplina-header">
         <div class="disciplina-title">Matemática</div>
-        <div class="disciplina-media">Média Final: <span style="color: var(--success);">14.5</span></div>
+        <div class="disciplina-media">Média Final: <span style="color: var(--success);">15.25</span></div>
       </div>
       <table>
         <thead>
@@ -208,22 +217,28 @@
           </tr>
           <tr>
             <td>Exame Final</td>
-            <td>15.0</td>
+            <td>17.0</td>
             <td>15/11/2025</td>
+            <td><span class="status-aprovado">Aprovado</span></td>
+          </tr>
+          <tr>
+            <td>Estágio</td>
+            <td>16.5</td>
+            <td>05/12/2025</td>
             <td><span class="status-aprovado">Aprovado</span></td>
           </tr>
         </tbody>
       </table>
       <div style="margin-top: 15px; padding: 10px; background: #ecfdf5; border-radius: var(--radius); border-left: 4px solid var(--success);">
-        <strong>Resumo:</strong> Média de Avaliações: 14.2 | <span class="status-admitido">Admitido ao Estágio</span> | Média Final: 14.5 | <span class="status-aprovado">Aprovado</span>
+        <strong>Resumo:</strong> Média de Avaliações: 14.5 | Média de Admissão ao Estágio: 15.75 | <span class="status-admitido">Admitido ao Estágio</span> | Média Final: 15.25 | <span class="status-aprovado">Aprovado</span>
       </div>
     </div>
 
-    <!-- Disciplina 2 -->
+    <!-- Disciplina 2: Sem estágio -->
     <div class="disciplina-card">
       <div class="disciplina-header">
-        <div class="disciplina-title">Informática</div>
-        <div class="disciplina-media">Média Final: <span style="color: var(--warning);">9.8</span></div>
+        <div class="disciplina-title">Inglês</div>
+        <div class="disciplina-media">Média Final: <span style="color: var(--warning);">9.75</span></div>
       </div>
       <table>
         <thead>
@@ -262,7 +277,7 @@
         </tbody>
       </table>
       <div style="margin-top: 15px; padding: 10px; background: #fef3c7; border-radius: var(--radius); border-left: 4px solid var(--warning);">
-        <strong>Resumo:</strong> Média de Avaliações: 7.8 | <span class="status-nao-admitido">Não Admitido ao Estágio</span> | Média Final: 9.9 | <span class="status-reprovado">Reprovado</span>
+        <strong>Resumo:</strong> Média de Avaliações: 7.8 | <span class="status-nao-admitido">Não Admitido ao Estágio</span> | Média Final: 10.75 | <span class="status-aprovado">Aprovado</span>
       </div>
     </div>
   </div>
