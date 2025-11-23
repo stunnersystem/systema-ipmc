@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ver Estudantes Atribuídos - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .form-group { margin-bottom: 15px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    th {
+      background: var(--gray-100);
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-primary { background: var(--gradient-primary); color: white; }
+    .btn-warning { background: var(--warning); color: white; }
+    .btn-success { background: var(--success); color: white; }
+
+    .status-activo { color: var(--success); font-weight: 600; }
+    .status-em-divida { color: var(--warning); font-weight: 600; }
+    .status-reprovado { color: var(--danger); font-weight: 600; }
+    .status-suspenso { color: var(--gray-600); font-weight: 600; }
+
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+      padding: 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Ver Estudantes Atribuídos às Turmas</p>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">Ana Ferreira</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-users"></i> Filtros de Turma</h2>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="curso">Curso *</label>
+          <select id="curso" class="form-control" onchange="carregarAnos()">
+            <option value="">Selecione um curso</option>
+            <option value="info">Técnico de Informática</option>
+            <option value="agri">Técnico Agrícola</option>
+            <option value="saude">Técnico de Saúde</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="anoFrequencia">Ano de Frequência *</label>
+          <select id="anoFrequencia" class="form-control" onchange="carregarTurmas()" disabled>
+            <option value="">Selecione primeiro o curso</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="turma">Turma *</label>
+          <select id="turma" class="form-control" onchange="carregarEstudantes()" disabled>
+            <option value="">Selecione primeiro o ano</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Esta página exibe estudantes com turma actual e possibilidade de promoção para próximo ano.
+      </div>
+
+      <button id="btnCarregar" class="btn btn-primary" style="width:100%; display:none;" onclick="carregarEstudantes()">
+        <i class="fas fa-users"></i> Carregar Estudantes da Turma
+      </button>
+    </div>
+
+    <!-- Tabela de Estudantes -->
+    <div class="card" id="secaoEstudantes" style="display:none;">
+      <div class="card-header">
+        <h2><i class="fas fa-list"></i> Estudantes da Turma <span id="tituloTurma">—</span></h2>
+        <p>Curso: <strong id="tituloCurso">—</strong> | Ano: <strong id="tituloAno">—</strong> | Total: <strong id="totalEstudantes">0</strong></p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Estudante</th>
+            <th>Nº Estudante</th>
+            <th>Ano Actual</th>
+            <th>Turma Actual</th>
+            <th>Status Financeiro</th>
+            <th>Status Académico</th>
+            <th>Próximo Ano?</th>
+            <th>Acções</th>
+          </tr>
+        </thead>
+        <tbody id="listaEstudantes">
+          <!-- Será preenchido dinamicamente -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Simular dados
+    const estudantesDaTurma = [
+      { 
+        id: 1, 
+        nome: "João Silva", 
+        codigo: "IPM2530147J", 
+        ano_actual: "1º Ano", 
+        turma_actual: "T1A-Informatica-2025", 
+        status_financeiro: "em_dia", 
+        status_academico: "aprovado", 
+        proximo_ano: "T2A-Informatica-2026", 
+        promovido: true 
+      },
+      { 
+        id: 2, 
+        nome: "Maria Costa", 
+        codigo: "IPM2531158M", 
+        ano_actual: "1º Ano", 
+        turma_actual: "T1A-Informatica-2025", 
+        status_financeiro: "em_atraso", 
+        status_academico: "reprovado", 
+        proximo_ano: "Repetir 1º Ano", 
+        promovido: false 
+      },
+      { 
+        id: 3, 
+        nome: "Pedro Manguene", 
+        codigo: "IPM2532169P", 
+        ano_actual: "2º Ano", 
+        turma_actual: "T2A-Informatica-2025", 
+        status_financeiro: "em_dia", 
+        status_academico: "em_recuperacao", 
+        proximo_ano: "T2A-Informatica-2026 (recuperação)", 
+        promovido: false 
+      }
+    ];
+
+    function carregarAnos() {
+      const select = document.getElementById('curso');
+      const ano = document.getElementById('anoFrequencia');
+      ano.disabled = !select.value;
+      ano.innerHTML = '<option value="">Selecione o ano</option>';
+
+      if (!select.value) return;
+
+      for (let i = 1; i <= 3; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `${i}º Ano`;
+        ano.appendChild(opt);
+      }
+    }
+
+    function carregarTurmas() {
+      const ano = document.getElementById('anoFrequencia').value;
+      const select = document.getElementById('turma');
+      select.disabled = !ano;
+      select.innerHTML = '<option value="">Selecione a turma</option>';
+
+      if (!ano) return;
+
+      // Simular turmas por ano e curso
+      const turmas = {
+        '1': ['T1A-Informatica-2025', 'T1B-Informatica-2025'],
+        '2': ['T2A-Informatica-2025', 'T2B-Informatica-2025'],
+        '3': ['T3A-Informatica-2025']
+      };
+
+      (turmas[ano] || []).forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        select.appendChild(opt);
+      });
+
+      document.getElementById('btnCarregar').style.display = 'block';
+    }
+
+    function carregarEstudantes() {
+      const curso = document.getElementById('curso').options[document.getElementById('curso').selectedIndex].text;
+      const ano = document.getElementById('anoFrequencia').value;
+      const turma = document.getElementById('turma').value;
+
+      if (!curso || !ano || !turma) return;
+
+      document.getElementById('tituloCurso').textContent = curso;
+      document.getElementById('tituloAno').textContent = `${ano}º Ano`;
+      document.getElementById('tituloTurma').textContent = turma;
+
+      const lista = document.getElementById('listaEstudantes');
+      lista.innerHTML = '';
+
+      estudantesDaTurma.forEach(est => {
+        if (est.turma_actual === turma) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${est.nome}</td>
+            <td>${est.codigo}</td>
+            <td>${est.ano_actual}</td>
+            <td>${est.turma_actual}</td>
+            <td><span class="status-${est.status_financeiro === 'em_dia' ? 'activo' : 'em-divida'}">
+              ${est.status_financeiro === 'em_dia' ? 'Em Dia' : 'Em Atraso'}
+            </span></td>
+            <td><span class="status-${est.status_academico === 'aprovado' ? 'activo' : est.status_academico === 'em_recuperacao' ? 'em-divida' : 'reprovado'}">
+              ${est.status_academico === 'aprovado' ? 'Aprovado' : est.status_academico === 'em_recuperacao' ? 'Em Recuperação' : 'Reprovado'}
+            </span></td>
+            <td>
+              ${est.promovido ? 
+                `<span class="status-activo">✅ ${est.proximo_ano}</span>` : 
+                `<span class="status-reprovado">❌ ${est.proximo_ano}</span>`}
+            </td>
+            <td>
+              <button class="btn btn-warning" onclick="moverEstudante(${est.id})">
+                <i class="fas fa-exchange-alt"></i>
+              </button>
+              <button class="btn btn-success" onclick="promoverEstudante(${est.id})">
+                <i class="fas fa-arrow-up"></i>
+              </button>
+            </td>
+          `;
+          lista.appendChild(tr);
+        }
+      });
+
+      document.getElementById('totalEstudantes').textContent = lista.children.length;
+      document.getElementById('secaoEstudantes').style.display = 'block';
+    }
+
+    function moverEstudante(id) {
+      alert(`Mover estudante ID ${id} para outra turma.`);
+    }
+
+    function promoverEstudante(id) {
+      alert(`Promover estudante ID ${id} para o próximo ano.`);
+    }
+  </script>
+</body>
+</html>
