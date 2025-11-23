@@ -124,15 +124,6 @@
     .status-em-recuperacao { color: var(--warning); font-weight: 600; }
     .status-admitido { color: var(--success); font-weight: 600; }
     .status-nao-admitido { color: var(--danger); font-weight: 600; }
-
-    .info-box {
-      background: #f0f9ff;
-      border-left: 4px solid var(--primary);
-      padding: 12px;
-      border-radius: 0 var(--radius) var(--radius) 0;
-      margin: 15px 0;
-      font-size: 14px;
-    }
   </style>
 </head>
 <body>
@@ -181,11 +172,11 @@
       </div>
     </div>
 
-    <!-- Disciplina 1: Com estágio -->
+    <!-- Disciplina 1 -->
     <div class="disciplina-card">
       <div class="disciplina-header">
         <div class="disciplina-title">Matemática</div>
-        <div class="disciplina-media">Média Final: <span style="color: var(--success);">15.25</span></div>
+        <div class="disciplina-media">Média Final: <span style="color: var(--success);">13.7</span></div>
       </div>
       <table>
         <thead>
@@ -199,46 +190,46 @@
         <tbody>
           <tr>
             <td>AC1</td>
-            <td>13.0</td>
+            <td>12.0</td>
             <td>10/10/2025</td>
             <td><span class="status-aprovado">Aprovado</span></td>
           </tr>
           <tr>
             <td>AC2</td>
-            <td>14.5</td>
+            <td>14.0</td>
             <td>25/10/2025</td>
             <td><span class="status-aprovado">Aprovado</span></td>
           </tr>
           <tr>
             <td>Trabalho Prático</td>
-            <td>16.0</td>
+            <td>15.0</td>
             <td>05/11/2025</td>
             <td><span class="status-aprovado">Aprovado</span></td>
           </tr>
           <tr>
             <td>Exame Final</td>
-            <td>17.0</td>
+            <td>8.0 → 12.0 (Recuperação)</td>
             <td>15/11/2025</td>
-            <td><span class="status-aprovado">Aprovado</span></td>
+            <td><span class="status-em-recuperacao">Aprovado (Recuperação)</span></td>
           </tr>
           <tr>
             <td>Estágio</td>
-            <td>16.5</td>
+            <td>14.5</td>
             <td>05/12/2025</td>
             <td><span class="status-aprovado">Aprovado</span></td>
           </tr>
         </tbody>
       </table>
       <div style="margin-top: 15px; padding: 10px; background: #ecfdf5; border-radius: var(--radius); border-left: 4px solid var(--success);">
-        <strong>Resumo:</strong> Média de Avaliações: 14.5 | Média de Admissão ao Estágio: 15.75 | <span class="status-admitido">Admitido ao Estágio</span> | Média Final: 15.25 | <span class="status-aprovado">Aprovado</span>
+        <strong>Resumo:</strong> Média de Avaliações: 13.7 | Média de Admissão ao Estágio: 12.9 | Média Final: 13.7 | <span class="status-aprovado">Aprovado</span>
       </div>
     </div>
 
-    <!-- Disciplina 2: Sem estágio -->
+    <!-- Disciplina 2 -->
     <div class="disciplina-card">
       <div class="disciplina-header">
-        <div class="disciplina-title">Inglês</div>
-        <div class="disciplina-media">Média Final: <span style="color: var(--warning);">9.75</span></div>
+        <div class="disciplina-title">Informática</div>
+        <div class="disciplina-media">Média Final: <span style="color: var(--success);">15.6</span></div>
       </div>
       <table>
         <thead>
@@ -252,32 +243,73 @@
         <tbody>
           <tr>
             <td>AC1</td>
-            <td>8.0</td>
+            <td>16.0</td>
             <td>12/10/2025</td>
+            <td><span class="status-aprovado">Aprovado</span></td>
+          </tr>
+          <tr>
+            <td>Trabalho Final</td>
+            <td>17.0</td>
+            <td>20/11/2025</td>
+            <td><span class="status-aprovado">Aprovado</span></td>
+          </tr>
+          <tr>
+            <td>Exame Final</td>
+            <td>14.0</td>
+            <td>18/11/2025</td>
+            <td><span class="status-aprovado">Aprovado</span></td>
+          </tr>
+          <tr>
+            <td>Estágio</td>
+            <td>16.0</td>
+            <td>10/12/2025</td>
+            <td><span class="status-aprovado">Aprovado</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top: 15px; padding: 10px; background: #ecfdf5; border-radius: var(--radius); border-left: 4px solid var(--success);">
+        <strong>Resumo:</strong> Média de Avaliações: 16.5 | Média de Admissão ao Estágio: 15.2 | Média Final: 15.6 | <span class="status-aprovado">Aprovado</span>
+      </div>
+    </div>
+
+    <!-- Disciplina 3 (sem estágio) -->
+    <div class="disciplina-card">
+      <div class="disciplina-header">
+        <div class="disciplina-title">Inglês</div>
+        <div class="disciplina-media">Média Final: <span style="color: var(--danger);">8.8</span></div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Avaliação</th>
+            <th>Nota</th>
+            <th>Data</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>AC1</td>
+            <td>7.0</td>
+            <td>08/10/2025</td>
             <td><span class="status-reprovado">Reprovado</span></td>
           </tr>
           <tr>
             <td>AC2</td>
-            <td>7.5</td>
-            <td>28/10/2025</td>
+            <td>8.0</td>
+            <td>22/10/2025</td>
             <td><span class="status-reprovado">Reprovado</span></td>
           </tr>
           <tr>
             <td>Exame Final</td>
             <td>9.0</td>
-            <td>18/11/2025</td>
+            <td>12/11/2025</td>
             <td><span class="status-nao-admitido">Não Admitido ao Estágio</span></td>
-          </tr>
-          <tr>
-            <td>Exame de Recuperação</td>
-            <td>12.0</td>
-            <td>22/11/2025</td>
-            <td><span class="status-em-recuperacao">Aprovado (Recuperação)</span></td>
           </tr>
         </tbody>
       </table>
-      <div style="margin-top: 15px; padding: 10px; background: #fef3c7; border-radius: var(--radius); border-left: 4px solid var(--warning);">
-        <strong>Resumo:</strong> Média de Avaliações: 7.8 | <span class="status-nao-admitido">Não Admitido ao Estágio</span> | Média Final: 10.75 | <span class="status-aprovado">Aprovado</span>
+      <div style="margin-top: 15px; padding: 10px; background: #fef2f2; border-radius: var(--radius); border-left: 4px solid var(--danger);">
+        <strong>Resumo:</strong> Média de Avaliações: 7.5 | <span class="status-nao-admitido">Não Admitido ao Estágio</span> | Média Final: 8.8 | <span class="status-reprovado">Reprovado</span>
       </div>
     </div>
   </div>
