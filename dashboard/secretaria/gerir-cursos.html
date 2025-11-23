@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gerir Cursos - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .form-group { margin-bottom: 15px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 15px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-primary { background: var(--gradient-primary); color: white; }
+
+    .ano-section {
+      background: #f8fafc;
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid var(--primary);
+    }
+
+    .disciplina-item {
+      background: white;
+      border-radius: var(--radius);
+      padding: 15px;
+      margin: 10px 0;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid var(--success);
+    }
+
+    .disciplina-info h4 {
+      color: var(--primary-dark);
+      margin-bottom: 5px;
+    }
+
+    .disciplina-periodo {
+      font-size: 14px;
+      color: var(--warning);
+      font-weight: 600;
+    }
+
+    .disciplina-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+      padding: 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+
+    .success-message {
+      background: #d1fae5;
+      color: var(--success);
+      padding: 12px;
+      border-radius: var(--radius);
+      margin: 15px 0;
+      font-size: 14px;
+      display: none;
+    }
+
+    .ano-disciplinas {
+      background: #f8fafc;
+      border-radius: var(--radius);
+      padding: 15px;
+      margin-top: 20px;
+      border-left: 4px solid var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Gerir Cursos e Disciplinas</p>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">Ana Ferreira</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-book"></i> Dados do Curso</h2>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nomeCurso">Nome do Curso *</label>
+          <input type="text" id="nomeCurso" class="form-control" placeholder="Ex: Técnico de Informática" required>
+        </div>
+        <div class="form-group">
+          <label for="areaActuacao">Área de Actuação *</label>
+          <select id="areaActuacao" class="form-control" required>
+            <option value="">Selecione</option>
+            <option value="saude">Saúde</option>
+            <option value="agricultura">Agricultura</option>
+            <option value="educacao">Educação</option>
+            <option value="financas_gestao">Finanças e Gestão</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="duracaoCurso">Duração do Curso (em meses) *</label>
+          <select id="duracaoCurso" class="form-control" required onchange="calcularAnos()">
+            <option value="">Selecione</option>
+            <option value="18">18 meses (1,5 anos)</option>
+            <option value="24">24 meses (2 anos)</option>
+            <option value="30">30 meses (2,5 anos)</option>
+            <option value="36">36 meses (3 anos)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="taxaMensal">Taxa Mensal (MZN) *</label>
+          <input type="number" id="taxaMensal" class="form-control" placeholder="Ex: 3500" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="taxaMulta">Taxa de Multa por Atraso (%) *</label>
+          <input type="number" id="taxaMulta" class="form-control" placeholder="Ex: 5" min="0" max="100" step="0.1" required>
+        </div>
+      </div>
+      <button id="btnCriarCurso" class="btn btn-primary">➕ Criar Curso</button>
+    </div>
+
+    <!-- Seção de Disciplinas por Ano -->
+    <div class="card" id="secaoDisciplinas" style="display:none;">
+      <div class="card-header">
+        <h2><i class="fas fa-chalkboard-teacher"></i> Disciplinas por Ano e Semestre</h2>
+        <p>Curso: <strong id="tituloCurso">—</strong></p>
+      </div>
+
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Disciplinas podem ter duração de 1 a 5 semestres consecutivos, começando em qualquer semestre.
+      </div>
+
+      <div id="mensagemSucesso" class="success-message">
+        ✅ Disciplina adicionada com sucesso!
+      </div>
+
+      <!-- Ano 1 -->
+      <div class="ano-section">
+        <h3>1º Ano</h3>
+
+        <!-- 1º Semestre -->
+        <div class="form-group">
+          <label for="disciplina1S1">Disciplinas do 1º Semestre</label>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <input type="text" id="disciplina1S1" class="form-control" placeholder="Nome da Disciplina">
+            <select id="duracao1S1" class="form-control" style="width:150px;">
+              <option value="1">1 Semestre</option>
+              <option value="2">2 Semestres</option>
+              <option value="3">3 Semestres</option>
+              <option value="4">4 Semestres</option>
+              <option value="5">5 Semestres</option>
+            </select>
+            <button class="btn btn-primary" onclick="adicionarDisciplina('1', 'S1')">
+              <i class="fas fa-plus"></i> Adicionar
+            </button>
+          </div>
+        </div>
+
+        <!-- 2º Semestre -->
+        <div class="form-group">
+          <label for="disciplina1S2">Disciplinas do 2º Semestre</label>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <input type="text" id="disciplina1S2" class="form-control" placeholder="Nome da Disciplina">
+            <select id="duracao1S2" class="form-control" style="width:150px;">
+              <option value="1">1 Semestre</option>
+              <option value="2">2 Semestres</option>
+              <option value="3">3 Semestres</option>
+              <option value="4">4 Semestres</option>
+            </select>
+            <button class="btn btn-primary" onclick="adicionarDisciplina('1', 'S2')">
+              <i class="fas fa-plus"></i> Adicionar
+            </button>
+          </div>
+        </div>
+
+        <!-- Lista de Disciplinas do 1º Ano -->
+        <div class="ano-disciplinas">
+          <h4 style="margin-bottom: 15px; color: var(--primary-dark);"><i class="fas fa-list"></i> Disciplinas do 1º Ano</h4>
+          <div id="listaDisciplinasAno1"></div>
+        </div>
+      </div>
+
+      <!-- Ano 2 -->
+      <div class="ano-section">
+        <h3>2º Ano</h3>
+
+        <!-- 1º Semestre -->
+        <div class="form-group">
+          <label for="disciplina2S1">Disciplinas do 1º Semestre</label>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <input type="text" id="disciplina2S1" class="form-control" placeholder="Nome da Disciplina">
+            <select id="duracao2S1" class="form-control" style="width:150px;">
+              <option value="1">1 Semestre</option>
+              <option value="2">2 Semestres</option>
+              <option value="3">3 Semestres</option>
+            </select>
+            <button class="btn btn-primary" onclick="adicionarDisciplina('2', 'S1')">
+              <i class="fas fa-plus"></i> Adicionar
+            </button>
+          </div>
+        </div>
+
+        <!-- 2º Semestre -->
+        <div class="form-group">
+          <label for="disciplina2S2">Disciplinas do 2º Semestre</label>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <input type="text" id="disciplina2S2" class="form-control" placeholder="Nome da Disciplina">
+            <select id="duracao2S2" class="form-control" style="width:150px;">
+              <option value="1">1 Semestre</option>
+              <option value="2">2 Semestres</option>
+              <option value="3">3 Semestres</option>
+            </select>
+            <button class="btn btn-primary" onclick="adicionarDisciplina('2', 'S2')">
+              <i class="fas fa-plus"></i> Adicionar
+            </button>
+          </div>
+        </div>
+
+        <!-- Lista de Disciplinas do 2º Ano -->
+        <div class="ano-disciplinas">
+          <h4 style="margin-bottom: 15px; color: var(--primary-dark);"><i class="fas fa-list"></i> Disciplinas do 2º Ano</h4>
+          <div id="listaDisciplinasAno2"></div>
+        </div>
+      </div>
+
+      <!-- Ano 3 -->
+      <div class="ano-section" id="ano3Section" style="display:none;">
+        <h3>3º Ano</h3>
+
+        <!-- 1º Semestre -->
+        <div class="form-group">
+          <label for="disciplina3S1">Disciplinas do 1º Semestre</label>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <input type="text" id="disciplina3S1" class="form-control" placeholder="Nome da Disciplina">
+            <select id="duracao3S1" class="form-control" style="width:150px;">
+              <option value="1">1 Semestre</option>
+              <option value="2">2 Semestres</option>
+            </select>
+            <button class="btn btn-primary" onclick="adicionarDisciplina('3', 'S1')">
+              <i class="fas fa-plus"></i> Adicionar
+            </button>
+          </div>
+        </div>
+
+        <!-- 2º Semestre -->
+        <div class="form-group">
+          <label for="disciplina3S2">Disciplinas do 2º Semestre</label>
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <input type="text" id="disciplina3S2" class="form-control" placeholder="Nome da Disciplina">
+            <select id="duracao3S2" class="form-control" style="width:150px;">
+              <option value="1">1 Semestre</option>
+            </select>
+            <button class="btn btn-primary" onclick="adicionarDisciplina('3', 'S2')">
+              <i class="fas fa-plus"></i> Adicionar
+            </button>
+          </div>
+        </div>
+
+        <!-- Lista de Disciplinas do 3º Ano -->
+        <div class="ano-disciplinas">
+          <h4 style="margin-bottom: 15px; color: var(--primary-dark);"><i class="fas fa-list"></i> Disciplinas do 3º Ano</h4>
+          <div id="listaDisciplinasAno3"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="salvarCursoEDisciplinas()">
+        <i class="fas fa-save"></i> Salvar Curso e Disciplinas
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let todasDisciplinas = [];
+
+    function calcularAnos() {
+      const duracao = parseInt(document.getElementById('duracaoCurso').value);
+      const anos = Math.ceil(duracao / 12);
+      document.getElementById('ano3Section').style.display = anos >= 3 ? 'block' : 'none';
+    }
+
+    function adicionarDisciplina(ano, semestre) {
+      const nome = document.getElementById(`disciplina${ano}S${semestre === 'S1' ? 1 : 2}`).value;
+      const duracao = document.getElementById(`duracao${ano}S${semestre === 'S1' ? 1 : 2}`).value;
+
+      if (!nome || !duracao) {
+        alert('Preencha o nome e duração da disciplina.');
+        return;
+      }
+
+      const id = Date.now();
+      const disciplina = {
+        id,
+        nome,
+        ano_inicio: parseInt(ano),
+        semestre_inicio: semestre, // 'S1' ou 'S2'
+        duracao_semestres: parseInt(duracao),
+        ano_fim: calcularAnoFim(parseInt(ano), semestre, parseInt(duracao)),
+        semestre_fim: calcularSemestreFim(semestre, parseInt(duracao))
+      };
+
+      todasDisciplinas.push(disciplina);
+
+      // Mostrar mensagem de sucesso
+      const msg = document.getElementById('mensagemSucesso');
+      msg.style.display = 'block';
+      setTimeout(() => msg.style.display = 'none', 3000);
+
+      // Limpar campos
+      document.getElementById(`disciplina${ano}S${semestre === 'S1' ? 1 : 2}`).value = '';
+
+      // Atualizar lista do ano
+      atualizarListaAno(ano);
+    }
+
+    function calcularAnoFim(anoInicio, semestreInicio, duracao) {
+      let offset = semestreInicio === 'S1' ? 0 : 1;
+      let total = offset + (duracao - 1);
+      return anoInicio + Math.floor(total / 2);
+    }
+
+    function calcularSemestreFim(semestreInicio, duracao) {
+      let inicioNum = semestreInicio === 'S1' ? 1 : 2;
+      let total = inicioNum + (duracao - 1);
+      return (total % 2 === 1) ? 'S1' : 'S2';
+    }
+
+    function atualizarListaAno(ano) {
+      const lista = document.getElementById(`listaDisciplinasAno${ano}`);
+      lista.innerHTML = '';
+
+      const disciplinasDoAno = todasDisciplinas.filter(d => d.ano_inicio == ano);
+
+      if (disciplinasDoAno.length === 0) {
+        lista.innerHTML = '<p style="color: var(--gray-600); font-style: italic;">Nenhuma disciplina adicionada ainda.</p>';
+        return;
+      }
+
+      disciplinasDoAno.forEach(d => {
+        const div = document.createElement('div');
+        div.className = 'disciplina-item';
+        div.innerHTML = `
+          <div class="disciplina-info">
+            <h4>${d.nome}</h4>
+            <div class="disciplina-periodo">
+              <i class="fas fa-calendar-alt"></i> Duração: ${d.duracao_semestres} semestre${d.duracao_semestres > 1 ? 's' : ''}
+              <br>
+              <i class="fas fa-arrow-right"></i> ${d.semestre_inicio === 'S1' ? '1º sem.' : '2º sem.'} ${d.ano_inicio}º ano → ${d.semestre_fim === 'S1' ? '1º sem.' : '2º sem.'} ${d.ano_fim}º ano
+            </div>
+          </div>
+          <div class="disciplina-actions">
+            <button class="btn btn-danger" onclick="removerDisciplina(${d.id}, ${d.ano_inicio})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    function removerDisciplina(id, ano) {
+      todasDisciplinas = todasDisciplinas.filter(d => d.id !== id);
+      atualizarListaAno(ano);
+    }
+
+    document.getElementById('btnCriarCurso').addEventListener('click', () => {
+      const nome = document.getElementById('nomeCurso').value;
+      if (!nome) {
+        alert('Preencha o nome do curso.');
+        return;
+      }
+
+      document.getElementById('tituloCurso').textContent = nome;
+      document.getElementById('secaoDisciplinas').style.display = 'block';
+    });
+
+    function salvarCursoEDisciplinas() {
+      alert(`✅ Curso "${document.getElementById('tituloCurso').textContent}" e ${todasDisciplinas.length} disciplina(s) salva(s) com sucesso!`);
+    }
+  </script>
+</body>
+</html>

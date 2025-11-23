@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registo de Pagamento - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--gray-50);
+      color: var(--gray-900);
+    }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 15px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-warning {
+      background: var(--warning);
+      color: white;
+    }
+
+    .summary-box {
+      background: #f8fafc;
+      border: 1px dashed var(--primary);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      font-size: 16px;
+    }
+
+    .summary-total {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--primary-dark);
+      border-top: 2px solid var(--gray-200);
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+      padding: 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+
+    .search-box {
+      background: #fffbeb;
+      border-left: 4px solid var(--warning);
+      padding: 15px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 15px 0;
+    }
+
+    .search-controls {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .search-controls input, .search-controls select, .search-controls button {
+      padding: 10px;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-200);
+    }
+
+    .search-controls button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .comprovante {
+      display: none;
+      width: 100%;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 30px;
+      border: 1px solid #000;
+      font-family: 'Times New Roman', serif;
+      background: white;
+      color: black;
+    }
+
+    .comprovante-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .comprovante-logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 10px;
+      object-fit: contain;
+    }
+
+    .comprovante h2 {
+      font-size: 24px;
+      margin: 10px 0;
+      color: var(--primary-dark);
+    }
+
+    .comprovante h3 {
+      font-size: 18px;
+      margin: 15px 0;
+      color: var(--gray-800);
+      text-decoration: underline;
+    }
+
+    .comprovante p {
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    .comprovante-line {
+      display: flex;
+      justify-content: space-between;
+      margin: 6px 0;
+      font-size: 14px;
+    }
+
+    .comprovante-total {
+      font-weight: bold;
+      margin-top: 15px;
+      padding-top: 10px;
+      border-top: 1px solid #000;
+      font-size: 16px;
+    }
+
+    .comprovante-assinatura {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .comprovante, .comprovante * {
+        visibility: visible;
+      }
+      .comprovante {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Registo de Pagamento de Mensalidade</p>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">Ana Ferreira</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-file-invoice-dollar"></i> Dados do Pagamento</h2>
+        <p><i class="fas fa-user"></i> Funcionário Logado: <strong id="funcionarioLogado">Ana Ferreira (Secretaria)</strong></p>
+      </div>
+
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Selecione estudante por curso/turma ou busque por código.
+      </div>
+
+      <!-- Busca Avançada -->
+      <div class="search-box">
+        <h3 style="margin-bottom: 10px; color: var(--warning);"><i class="fas fa-search"></i> Buscar Estudante</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="cursoBusca">Curso</label>
+            <select id="cursoBusca" class="form-control" onchange="carregarAnosBusca()">
+              <option value="">Todos os cursos</option>
+              <option value="info">Técnico de Informática</option>
+              <option value="agri">Técnico Agrícola</option>
+              <option value="saude">Técnico de Saúde</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="anoBusca">Ano de Frequência</label>
+            <select id="anoBusca" class="form-control" onchange="carregarTurmasBusca()" disabled>
+              <option value="">Todos os anos</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="turmaBusca">Turma</label>
+            <select id="turmaBusca" class="form-control" onchange="carregarEstudantesPorTurma()" disabled>
+              <option value="">Todas as turmas</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-top: 15px;">
+          <label for="codigoBusca">Ou buscar por Código do Estudante</label>
+          <div class="search-controls">
+            <input type="text" id="codigoBusca" class="form-control" placeholder="Ex: IPM2530147J">
+            <button onclick="buscarPorCodigo()">
+              <i class="fas fa-search"></i> Buscar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seleção de Estudante -->
+      <div class="form-group">
+        <label for="estudante">Estudante *</label>
+        <select id="estudante" class="form-control" onchange="carregarDadosEstudante()">
+          <option value="">Selecione um estudante</option>
+          <!-- Será preenchido dinamicamente -->
+        </select>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="anoLectivo">Ano Lectivo *</label>
+          <input type="text" id="anoLectivo" class="form-control" value="2025" readonly>
+        </div>
+        <div class="form-group">
+          <label for="idRecibo">ID do Recibo do Banco *</label>
+          <input type="text" id="idRecibo" class="form-control" placeholder="Ex: REC202511001" required>
+        </div>
+        <div class="form-group">
+          <label for="dataDeposito">Data de Depósito *</label>
+          <input type="date" id="dataDeposito" class="form-control" required onchange="calcularMulta()">
+        </div>
+        <div class="form-group">
+          <label for="tipoPagamento">Tipo de Pagamento *</label>
+          <select id="tipoPagamento" class="form-control" required onchange="ajustarCampos()">
+            <option value="">Selecione</option>
+            <option value="mensalidade">Mensalidade</option>
+            <option value="taxa_estagio">Taxa de Estágio</option>
+            <option value="taxa_exame">Taxa de Exame</option>
+            <option value="matricula">Taxa de Matrícula</option>
+          </select>
+        </div>
+        <div class="form-group" id="divMesPagamento" style="display:none;">
+          <label for="mesPagamento">Mês de Pagamento *</label>
+          <select id="mesPagamento" class="form-control">
+            <option value="">Selecione o mês</option>
+            <option value="janeiro">Janeiro</option>
+            <option value="fevereiro">Fevereiro</option>
+            <option value="marco">Março</option>
+            <option value="abril">Abril</option>
+            <option value="maio">Maio</option>
+            <option value="junho">Junho</option>
+            <option value="julho">Julho</option>
+            <option value="agosto">Agosto</option>
+            <option value="setembro">Setembro</option>
+            <option value="outubro">Outubro</option>
+            <option value="novembro">Novembro</option>
+            <option value="dezembro">Dezembro</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="summary-box" id="resumoPagamento" style="display:none;">
+        <h3 style="margin-bottom: 15px; color: var(--primary-dark);"><i class="fas fa-calculator"></i> Resumo do Pagamento</h3>
+        
+        <div class="summary-row">
+          <span>Estudante:</span>
+          <strong id="resumoEstudante">—</strong>
+        </div>
+        <div class="summary-row">
+          <span>Código do Estudante:</span>
+          <strong id="resumoCodigo">—</strong>
+        </div>
+        <div class="summary-row">
+          <span>Curso:</span>
+          <strong id="resumoCurso">—</strong>
+        </div>
+        <div class="summary-row">
+          <span>Ano de Frequência:</span>
+          <strong id="resumoAno">—</strong>
+        </div>
+        <div class="summary-row">
+          <span>Tipo de Pagamento:</span>
+          <strong id="resumoTipo">—</strong>
+        </div>
+        <div class="summary-row" id="linhaMesResumo" style="display:none;">
+          <span>Mês:</span>
+          <strong id="resumoMes">—</strong>
+        </div>
+        <div class="summary-row">
+          <span>Taxa Base:</span>
+          <strong id="resumoTaxa">—</strong> MZN
+        </div>
+        <div class="summary-row" id="linhaMulta" style="display:none; color: var(--warning);">
+          <span>Multa por Atraso (<span id="taxaMultaResumo"></span>%):</span>
+          <strong id="valorMulta">—</strong> MZN
+        </div>
+        <div class="summary-row summary-total">
+          <span>Total a Pagar:</span>
+          <strong id="totalPagar">—</strong> MZN
+        </div>
+      </div>
+
+      <button id="btnRegistar" class="btn btn-primary" style="width:100%; margin-top: 20px; display:none;" onclick="registrarPagamento()">
+        <i class="fas fa-check-circle"></i> Confirmar Pagamento
+      </button>
+    </div>
+
+    <!-- Comprovante de Pagamento -->
+    <div class="comprovante" id="comprovantePDF">
+      <div class="comprovante-header">
+        <img src="../../iconeipm.png" alt="IPM Caia" class="comprovante-logo">
+        <h2>INSTITUTO POLITÉCNICO MAKHETELE - CAIA</h2>
+        <p>Av. Principal, Caia, Sofala, Moçambique</p>
+        <p>Tel: +258 84 XXX XXXX | Email: info@ipm.co.mz</p>
+        <p style="margin-top:15px; font-weight:bold; text-decoration:underline;">COMPROVANTE DE PAGAMENTO</p>
+      </div>
+
+      <div class="comprovante-line">
+        <span><strong>Recibo N°:</strong> <span id="pdfRecibo">—</span></span>
+        <span><strong>Data:</strong> <span id="pdfData">—</span></span>
+      </div>
+      <div class="comprovante-line">
+        <span><strong>Estudante:</strong> <span id="pdfEstudante">—</span></span>
+      </div>
+      <div class="comprovante-line">
+        <span><strong>Código do Estudante:</strong> <span id="pdfCodigo">—</span></span>
+      </div>
+      <div class="comprovante-line">
+        <span><strong>Curso:</strong> <span id="pdfCurso">—</span></span>
+      </div>
+      <div class="comprovante-line">
+        <span><strong>Ano de Frequência:</strong> <span id="pdfAno">—</span></span>
+      </div>
+      <div class="comprovante-line">
+        <span><strong>Ano Lectivo:</strong> <span id="pdfAnoLectivo">—</span></span>
+      </div>
+      <div class="comprovante-line">
+        <span><strong>Tipo de Pagamento:</strong> <span id="pdfTipo">—</span></span>
+      </div>
+      <div class="comprovante-line" id="pdfLinhaMes" style="display:none;">
+        <span><strong>Mês:</strong> <span id="pdfMes">—</span></span>
+      </div>
+      <div class="comprovante-line">
+        <span><strong>Taxa Base:</strong> <span id="pdfTaxa">—</span> MZN</span>
+      </div>
+      <div class="comprovante-line" id="pdfLinhaMulta" style="display:none; color:#d97706;">
+        <span><strong>Multa por Atraso:</strong> <span id="pdfMulta">—</span> MZN</span>
+      </div>
+      <div class="comprovante-line comprovante-total">
+        <span><strong>TOTAL PAGO:</strong> <span id="pdfTotal">—</span> MZN</span>
+      </div>
+
+      <div class="comprovante-assinatura">
+        <p>Assinatura do Funcionário: _________________________</p>
+        <p>Este comprovante é válido somente com selo institucional.</p>
+        <p style="margin-top:20px; font-size:12px; color:#666;">
+          Gerado em: <span id="pdfDataGeracao">—</span> •© Powered by Stunner School System (3S_Benjanuário)
+        </p>
+      </div>
+    </div>
+
+    <div id="botoesComprovante" style="display:none; text-align:center; margin-top:20px;">
+      <button class="btn btn-success" onclick="imprimirComprovante()">
+        <i class="fas fa-print"></i> Imprimir Comprovante
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Simular dados
+    const estudantesPorTurma = {
+      'T1-2025': [
+        { id: 1, nome: "João Silva", ano: "2º Ano", curso: "Técnico de Informática", codigo: "IPM2530147J", taxa: 3500, multa: 5 },
+        { id: 2, nome: "Maria Costa", ano: "2º Ano", curso: "Técnico de Informática", codigo: "IPM2531158M", taxa: 3500, multa: 5 }
+      ],
+      'T2-2025': [
+        { id: 3, nome: "Pedro Manguene", ano: "1º Ano", curso: "Técnico Agrícola", codigo: "IPM2532169P", taxa: 3000, multa: 5 }
+      ]
+    };
+
+    const turmasPorAno = {
+      'info': {
+        '1': ['T1-Informatica-1A-2025', 'T2-Informatica-1B-2025'],
+        '2': ['T1-Informatica-2A-2025']
+      },
+      'agri': {
+        '1': ['T1-Agricola-1A-2025']
+      }
+    };
+
+    let dadosEstudante = null;
+
+    function carregarAnosBusca() {
+      const curso = document.getElementById('cursoBusca').value;
+      const select = document.getElementById('anoBusca');
+      select.disabled = !curso;
+      select.innerHTML = '<option value="">Todos os anos</option>';
+
+      if (!curso) return;
+
+      for (let i = 1; i <= 3; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `${i}º Ano`;
+        select.appendChild(opt);
+      }
+    }
+
+    function carregarTurmasBusca() {
+      const curso = document.getElementById('cursoBusca').value;
+      const ano = document.getElementById('anoBusca').value;
+      const select = document.getElementById('turmaBusca');
+      select.disabled = !ano;
+      select.innerHTML = '<option value="">Todas as turmas</option>';
+
+      if (!ano) return;
+
+      const turmas = turmasPorAno[curso]?.[ano] || [];
+      turmas.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        select.appendChild(opt);
+      });
+    }
+
+    function carregarEstudantesPorTurma() {
+      const turma = document.getElementById('turmaBusca').value;
+      const select = document.getElementById('estudante');
+      select.innerHTML = '<option value="">Selecione um estudante</option>';
+
+      if (!turma) return;
+
+      const estudantes = estudantesPorTurma[turma] || [];
+      estudantes.forEach(est => {
+        const opt = document.createElement('option');
+        opt.value = est.id;
+        opt.textContent = `${est.nome} (${est.codigo})`;
+        opt.dataset.nome = est.nome;
+        opt.dataset.curso = est.curso;
+        opt.dataset.ano = est.ano;
+        opt.dataset.codigo = est.codigo;
+        opt.dataset.taxa = est.taxa;
+        opt.dataset.multa = est.multa;
+        select.appendChild(opt);
+      });
+    }
+
+    function buscarPorCodigo() {
+      const codigo = document.getElementById('codigoBusca').value.toUpperCase();
+      const select = document.getElementById('estudante');
+      select.innerHTML = '<option value="">Selecione um estudante</option>';
+
+      // Simular busca por código
+      for (let turma in estudantesPorTurma) {
+        const estudante = estudantesPorTurma[turma].find(e => e.codigo === codigo);
+        if (estudante) {
+          const opt = document.createElement('option');
+          opt.value = estudante.id;
+          opt.textContent = `${estudante.nome} (${estudante.codigo})`;
+          opt.dataset.nome = estudante.nome;
+          opt.dataset.curso = estudante.curso;
+          opt.dataset.ano = estudante.ano;
+          opt.dataset.codigo = estudante.codigo;
+          opt.dataset.taxa = estudante.taxa;
+          opt.dataset.multa = estudante.multa;
+          select.appendChild(opt);
+          select.value = estudante.id;
+          carregarDadosEstudante();
+          return;
+        }
+      }
+
+      alert('❌ Estudante com código "' + codigo + '" não encontrado.');
+    }
+
+    function carregarDadosEstudante() {
+      const select = document.getElementById('estudante');
+      const option = select.options[select.selectedIndex];
+      
+      if (option.value) {
+        dadosEstudante = {
+          nome: option.dataset.nome,
+          curso: option.dataset.curso,
+          ano: option.dataset.ano,
+          codigo: option.dataset.codigo,
+          taxa: parseFloat(option.dataset.taxa),
+          multaPercentual: parseFloat(option.dataset.multa)
+        };
+
+        document.getElementById('resumoEstudante').textContent = dadosEstudante.nome;
+        document.getElementById('resumoCodigo').textContent = dadosEstudante.codigo;
+        document.getElementById('resumoCurso').textContent = dadosEstudante.curso;
+        document.getElementById('resumoAno').textContent = dadosEstudante.ano;
+        document.getElementById('resumoTaxa').textContent = dadosEstudante.taxa.toFixed(2);
+        
+        document.getElementById('resumoPagamento').style.display = 'block';
+        calcularMulta();
+      } else {
+        document.getElementById('resumoPagamento').style.display = 'none';
+        document.getElementById('btnRegistar').style.display = 'none';
+      }
+    }
+
+    function ajustarCampos() {
+      const tipo = document.getElementById('tipoPagamento').value;
+      const div = document.getElementById('divMesPagamento');
+      const linha = document.getElementById('linhaMesResumo');
+      const pdfLinha = document.getElementById('pdfLinhaMes');
+
+      div.style.display = tipo === 'mensalidade' ? 'block' : 'none';
+      linha.style.display = tipo === 'mensalidade' ? 'flex' : 'none';
+      pdfLinha.style.display = tipo === 'mensalidade' ? 'block' : 'none';
+    }
+
+    function calcularMulta() {
+      if (!dadosEstudante || !document.getElementById('dataDeposito').value) return;
+
+      const dataDeposito = new Date(document.getElementById('dataDeposito').value);
+      const hoje = new Date();
+      const ano = hoje.getFullYear();
+      const mes = hoje.getMonth();
+      const dataLimite = new Date(ano, mes, 10); // 10º dia do mês
+
+      let multa = 0;
+      const mostrarMulta = dataDeposito > dataLimite;
+
+      if (mostrarMulta) {
+        multa = dadosEstudante.taxa * (dadosEstudante.multaPercentual / 100);
+        document.getElementById('linhaMulta').style.display = 'flex';
+        document.getElementById('taxaMultaResumo').textContent = dadosEstudante.multaPercentual;
+        document.getElementById('valorMulta').textContent = multa.toFixed(2);
+      } else {
+        document.getElementById('linhaMulta').style.display = 'none';
+      }
+
+      const total = dadosEstudante.taxa + multa;
+      document.getElementById('totalPagar').textContent = total.toFixed(2);
+      document.getElementById('btnRegistar').style.display = 'block';
+    }
+
+    function registrarPagamento() {
+      const idRecibo = document.getElementById('idRecibo').value;
+      const tipo = document.getElementById('tipoPagamento').options[document.getElementById('tipoPagamento').selectedIndex].text;
+      const mes = document.getElementById('mesPagamento').value;
+
+      if (!idRecibo || !dadosEstudante) {
+        alert('Preencha todos os campos obrigatórios.');
+        return;
+      }
+
+      // Preencher comprovante
+      document.getElementById('pdfRecibo').textContent = idRecibo;
+      document.getElementById('pdfData').textContent = new Date(document.getElementById('dataDeposito').value).toLocaleDateString('pt-MZ');
+      document.getElementById('pdfEstudante').textContent = dadosEstudante.nome;
+      document.getElementById('pdfCodigo').textContent = dadosEstudante.codigo;
+      document.getElementById('pdfCurso').textContent = dadosEstudante.curso;
+      document.getElementById('pdfAno').textContent = dadosEstudante.ano;
+      document.getElementById('pdfAnoLectivo').textContent = document.getElementById('anoLectivo').value;
+      document.getElementById('pdfTipo').textContent = tipo;
+      document.getElementById('pdfMes').textContent = mes || '—';
+      document.getElementById('pdfTaxa').textContent = dadosEstudante.taxa.toFixed(2);
+
+      const temMulta = document.getElementById('linhaMulta').style.display === 'flex';
+      if (temMulta) {
+        const valorMulta = parseFloat(document.getElementById('valorMulta').textContent);
+        document.getElementById('pdfMulta').textContent = valorMulta.toFixed(2);
+        document.getElementById('pdfLinhaMulta').style.display = 'block';
+        document.getElementById('pdfTotal').textContent = (dadosEstudante.taxa + valorMulta).toFixed(2);
+      } else {
+        document.getElementById('pdfLinhaMulta').style.display = 'none';
+        document.getElementById('pdfTotal').textContent = dadosEstudante.taxa.toFixed(2);
+      }
+
+      document.getElementById('pdfDataGeracao').textContent = new Date().toLocaleDateString('pt-MZ') + ' ' + new Date().toLocaleTimeString('pt-MZ');
+
+      // Mostrar comprovante
+      document.getElementById('comprovantePDF').style.display = 'block';
+      document.getElementById('botoesComprovante').style.display = 'block';
+
+      alert(`✅ Pagamento registado com sucesso!\n\nEstudante: ${dadosEstudante.nome}\nCódigo: ${dadosEstudante.codigo}\nTotal: ${(dadosEstudante.taxa + (temMulta ? parseFloat(document.getElementById('valorMulta').textContent) : 0)).toFixed(2)} MZN`);
+    }
+
+    function imprimirComprovante() {
+      window.print();
+    }
+  </script>
+</body>
+</html>

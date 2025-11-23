@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meu Perfil - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--gray-50);
+      color: var(--gray-900);
+    }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .profile-section {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .profile-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+      color: var(--primary);
+    }
+
+    .profile-info h3 {
+      font-size: 22px;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+    }
+
+    .profile-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .detail-item {
+      background: var(--gray-50);
+      padding: 15px;
+      border-radius: var(--radius);
+      border-left: 4px solid var(--primary);
+    }
+
+    .detail-label {
+      font-size: 14px;
+      color: var(--gray-600);
+      margin-bottom: 5px;
+    }
+
+    .detail-value {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .section-title {
+      background: var(--gray-100);
+      padding: 10px 15px;
+      border-radius: var(--radius);
+      margin: 25px 0 15px;
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .code-card {
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+      padding: 20px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 15px 0;
+      text-align: center;
+    }
+
+    .student-code {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--primary-dark);
+      background: white;
+      padding: 15px;
+      border-radius: var(--radius);
+      display: inline-block;
+      font-family: monospace;
+    }
+
+    .info-box {
+      background: #fffbeb;
+      border-left: 4px solid var(--warning);
+      padding: 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Meu Perfil Académico</p>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">João Silva</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-user"></i> Informações Pessoais</h2>
+      </div>
+
+      <div class="profile-section">
+        <div class="profile-photo">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="profile-info">
+          <h3>João António Silva</h3>
+          <p><i class="fas fa-envelope"></i> joao.1912esipm@gmail.com</p>
+          <p><i class="fas fa-phone"></i> +258 84 123 4567</p>
+          <p><i class="fas fa-calendar"></i> Matriculado em: 15 de Setembro de 2025</p>
+        </div>
+      </div>
+
+      <!-- Código do Estudante -->
+      <div class="code-card">
+        <h3 style="margin-bottom: 10px; color: var(--primary-dark);">Código do Estudante</h3>
+        <div class="student-code" id="codigoEstudante">—</div>
+        <p style="margin-top: 10px; font-size: 14px; color: var(--gray-700);">
+          Este código foi gerado automaticamente após sua matrícula.
+        </p>
+      </div>
+
+      <div class="profile-details">
+        <div class="detail-item">
+          <div class="detail-label">Nome Completo</div>
+          <div class="detail-value">João António Silva</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Data de Nascimento</div>
+          <div class="detail-value">15/06/1998</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Sexo</div>
+          <div class="detail-value">Masculino</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Naturalidade</div>
+          <div class="detail-value">Caia, Manica</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Residência</div>
+          <div class="detail-value">Rua da Escola, Bairro Central, Caia</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Tipo de Documento</div>
+          <div class="detail-value">Bilhete de Identidade</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Número de Identificação</div>
+          <div class="detail-value">BI-123456789-MZ</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">ID do Recibo de Matrícula</div>
+          <div class="detail-value">MAT2025001</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-graduation-cap"></i> Informações Académicas</h2>
+      </div>
+
+      <div class="profile-details">
+        <div class="detail-item">
+          <div class="detail-label">Curso</div>
+          <div class="detail-value">Técnico de Informática</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Área de Actuação</div>
+          <div class="detail-value">Finanças e Gestão</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Ano de Frequência</div>
+          <div class="detail-value">2º Ano</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Turma</div>
+          <div class="detail-value">T1-Informatica-2A-2025</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Nível Académico Anterior</div>
+          <div class="detail-value">Ensino Médio</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Ano Lectivo</div>
+          <div class="detail-value">2025</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-user-tie"></i> Encarregado de Educação</h2>
+      </div>
+
+      <div class="profile-details">
+        <div class="detail-item">
+          <div class="detail-label">Nome</div>
+          <div class="detail-value">Maria Antónia Silva</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Parentesco</div>
+          <div class="detail-value">Mãe</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Contactos</div>
+          <div class="detail-value">+258 84 987 6543</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-file-invoice"></i> Documentos e Pagamentos</h2>
+      </div>
+
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Acesse a secção "Minhas Finanças" para ver histórico de pagamentos e baixar comprovantes.
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Documento</th>
+            <th>ID</th>
+            <th>Data</th>
+            <th>Valor (MZN)</th>
+            <th>Status</th>
+            <th>Acções</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Comprovante de Matrícula</td>
+            <td>MAT2025001</td>
+            <td>15/09/2025</td>
+            <td>8.000,00</td>
+            <td><span class="status-aprovado">✅ Pago</span></td>
+            <td><button class="btn btn-primary" onclick="alert('Download do comprovante')"><i class="fas fa-download"></i> Baixar</button></td>
+          </tr>
+          <tr>
+            <td>Mensalidade - Outubro</td>
+            <td>OUT2025001</td>
+            <td>05/10/2025</td>
+            <td>3.500,00</td>
+            <td><span class="status-aprovado">✅ Pago</span></td>
+            <td><button class="btn btn-primary" onclick="alert('Download do comprovante')"><i class="fas fa-download"></i> Baixar</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Gerar código do estudante automaticamente
+    function gerarCodigoEstudante(nome) {
+      const ano = new Date().getFullYear().toString().slice(-2); // últimos 2 dígitos do ano
+      const segundo = new Date().getSeconds().toString().padStart(2, '0');
+      const hora = new Date().getHours().toString().padStart(2, '0');
+      const numeroAleatorio = Math.floor(Math.random() * 10); // 0 a 9
+      const inicialNome = nome.charAt(0).toUpperCase(); // Primeira letra do nome
+
+      return `IPM${ano}${segundo}${hora}${numeroAleatorio}${inicialNome}`;
+    }
+
+    // Preencher código ao carregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+      const nome = "João Silva"; // Virá do banco em produção
+      const codigo = gerarCodigoEstudante(nome);
+      document.getElementById('codigoEstudante').textContent = codigo;
+    });
+  </script>
+</body>
+  </html>

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gerir Usuários - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--gray-50);
+      color: var(--gray-900);
+    }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin: 0 auto 15px;
+      color: white;
+    }
+
+    .icon-primary { background: var(--gradient-primary); }
+    .icon-success { background: var(--gradient-success); }
+    .icon-warning { background: var(--gradient-warning); }
+    .icon-danger { background: var(--gradient-danger); }
+
+    .stat-info h3 {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .control-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    th {
+      background: var(--gray-100);
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .status-activo { color: var(--success); font-weight: 600; }
+    .status-suspenso { color: var(--warning); font-weight: 600; }
+    .status-inactivo { color: var(--danger); font-weight: 600; }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-success { background: var(--success); color: white; }
+    .btn-warning { background: var(--warning); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-outline { border: 1px solid var(--primary); color: var(--primary); background: white; }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: var(--shadow-xl);
+    }
+
+    .modal-header {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Gerir Usuários do Sistema</p>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">Benjanuário João</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-users-cog"></i> Gestão de Usuários</h2>
+        <p>Director Geral | Acesso Total ao Sistema</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon icon-primary">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-info">
+            <h3>128</h3>
+            <p>Total de Usuários</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-success">
+            <i class="fas fa-user-check"></i>
+          </div>
+          <div class="stat-info">
+            <h3>112</h3>
+            <p>Activos</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-warning">
+            <i class="fas fa-user-clock"></i>
+          </div>
+          <div class="stat-info">
+            <h3>16</h3>
+            <p>Suspensos</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-danger">
+            <i class="fas fa-user-slash"></i>
+          </div>
+          <div class="stat-info">
+            <h3>0</h3>
+            <p>Eliminados</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="control-group">
+          <label for="filtroPapel">Filtrar por Papel</label>
+          <select id="filtroPapel" class="form-control" onchange="filtrarUsuarios()">
+            <option value="">Todos os Papéis</option>
+            <option value="director">Director</option>
+            <option value="secretaria">Secretaria</option>
+            <option value="pedagogico">Pedagógico</option>
+            <option value="formador">Formador</option>
+            <option value="estudante">Estudante</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label for="filtroStatus">Filtrar por Status</label>
+          <select id="filtroStatus" class="form-control" onchange="filtrarUsuarios()">
+            <option value="">Todos os Status</option>
+            <option value="activo">Activo</option>
+            <option value="suspenso">Suspenso</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label for="pesquisarUsuario">Pesquisar</label>
+          <input type="text" id="pesquisarUsuario" class="form-control" placeholder="Nome ou email..." oninput="filtrarUsuarios()">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-list"></i> Lista de Usuários</h2>
+        <p>Mostrando <span id="contadorUsuarios">128</span> usuários</p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Usuário</th>
+            <th>Email</th>
+            <th>Papel</th>
+            <th>Status</th>
+            <th>Data de Criação</th>
+            <th>Último Acesso</th>
+            <th>Acções</th>
+          </tr>
+        </thead>
+        <tbody id="listaUsuarios">
+          <!-- Será preenchido dinamicamente -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal de Ações -->
+  <div class="modal" id="modalAcoes">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="tituloModal">Ações para Usuário</h3>
+      </div>
+      <div id="conteudoModal">
+        <!-- Preenchido dinamicamente -->
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+        <button class="btn btn-success" onclick="executarAcao()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dados simulados (em produção: virá do Supabase)
+    const usuarios = [
+      {
+        id: 1,
+        nome: "Benjanuário João",
+        email: "benj@ipm.co.mz",
+        papel: "director",
+        status: "activo",
+        criado_em: "2023-01-01",
+        ultimo_acesso: "Hoje"
+      },
+      {
+        id: 2,
+        nome: "Ana Ferreira",
+        email: "ana.845esipm@gmail.com",
+        papel: "secretaria",
+        status: "activo",
+        criado_em: "2023-02-15",
+        ultimo_acesso: "Ontem"
+      },
+      {
+        id: 3,
+        nome: "Dr. Carlos Santos",
+        email: "carlos.123ipmtt@gmail.com",
+        papel: "pedagogico",
+        status: "activo",
+        criado_em: "2023-03-10",
+        ultimo_acesso: "2 horas atrás"
+      },
+      {
+        id: 4,
+        nome: "Prof. Maria Lima",
+        email: "maria.456esipm@gmail.com",
+        papel: "formador",
+        status: "suspenso",
+        criado_em: "2024-01-05",
+        ultimo_acesso: "Semana passada"
+      },
+      {
+        id: 5,
+        nome: "João Silva",
+        email: "joao.789esipm@gmail.com",
+        papel: "estudante",
+        status: "activo",
+        criado_em: "2024-09-01",
+        ultimo_acesso: "Agora"
+      }
+    ];
+
+    let usuarioSelecionado = null;
+
+    function carregarUsuarios() {
+      const tbody = document.getElementById('listaUsuarios');
+      tbody.innerHTML = '';
+
+      usuarios.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${u.nome}</td>
+          <td>${u.email}</td>
+          <td>${traduzirPapel(u.papel)}</td>
+          <td><span class="status-${u.status}">${u.status === 'activo' ? 'Activo' : u.status === 'suspenso' ? 'Suspenso' : 'Inactivo'}</span></td>
+          <td>${u.criado_em}</td>
+          <td>${u.ultimo_acesso}</td>
+          <td class="action-buttons">
+            <button class="btn btn-success" onclick="alterarPapel(${u.id})">
+              <i class="fas fa-user-tag"></i>
+            </button>
+            <button class="btn btn-warning" onclick="suspenderUsuario(${u.id})">
+              <i class="fas fa-user-slash"></i>
+            </button>
+            <button class="btn btn-danger" onclick="eliminarUsuario(${u.id})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('contadorUsuarios').textContent = usuarios.length;
+    }
+
+    function traduzirPapel(papel) {
+      const map = {
+        'director': 'Director Geral',
+        'secretaria': 'Secretaria',
+        'pedagogico': 'Secção Pedagógica',
+        'formador': 'Formador',
+        'estudante': 'Estudante'
+      };
+      return map[papel] || papel;
+    }
+
+    function suspenderUsuario(id) {
+      usuarioSelecionado = usuarios.find(u => u.id === id);
+      document.getElementById('tituloModal').textContent = `Suspender Conta de ${usuarioSelecionado.nome}`;
+      document.getElementById('conteudoModal').innerHTML = `
+        <p>Tem certeza que deseja suspender a conta de <strong>${usuarioSelecionado.nome}</strong>?</p>
+        <p>Email: <strong>${usuarioSelecionado.email}</strong></p>
+        <p>Papel: <strong>${traduzirPapel(usuarioSelecionado.papel)}</strong></p>
+        <label for="motivoSuspensao">Motivo da Suspensão:</label>
+        <textarea id="motivoSuspensao" class="form-control" rows="3" placeholder="Justifique a suspensão..."></textarea>
+      `;
+      document.getElementById('modalAcoes').style.display = 'flex';
+    }
+
+    function alterarPapel(id) {
+      usuarioSelecionado = usuarios.find(u => u.id === id);
+      document.getElementById('tituloModal').textContent = `Alterar Papel de ${usuarioSelecionado.nome}`;
+      document.getElementById('conteudoModal').innerHTML = `
+        <p>Usuário: <strong>${usuarioSelecionado.nome}</strong></p>
+        <p>Email: <strong>${usuarioSelecionado.email}</strong></p>
+        <label for="novoPapel">Novo Papel:</label>
+        <select id="novoPapel" class="form-control">
+          <option value="director" ${usuarioSelecionado.papel === 'director' ? 'selected' : ''}>Director</option>
+          <option value="secretaria" ${usuarioSelecionado.papel === 'secretaria' ? 'selected' : ''}>Secretaria</option>
+          <option value="pedagogico" ${usuarioSelecionado.papel === 'pedagogico' ? 'selected' : ''}>Pedagógico</option>
+          <option value="formador" ${usuarioSelecionado.papel === 'formador' ? 'selected' : ''}>Formador</option>
+          <option value="estudante" ${usuarioSelecionado.papel === 'estudante' ? 'selected' : ''}>Estudante</option>
+        </select>
+      `;
+      document.getElementById('modalAcoes').style.display = 'flex';
+    }
+
+    function eliminarUsuario(id) {
+      usuarioSelecionado = usuarios.find(u => u.id === id);
+      document.getElementById('tituloModal').textContent = `Eliminar Conta de ${usuarioSelecionado.nome}`;
+      document.getElementById('conteudoModal').innerHTML = `
+        <p style="color: var(--danger);"><i class="fas fa-exclamation-triangle"></i> <strong>Atenção:</strong> Esta acção é irreversível!</p>
+        <p>Tem certeza que deseja eliminar permanentemente a conta de <strong>${usuarioSelecionado.nome}</strong>?</p>
+        <p>Email: <strong>${usuarioSelecionado.email}</strong></p>
+        <p>Papel: <strong>${traduzirPapel(usuarioSelecionado.papel)}</strong></p>
+      `;
+      document.getElementById('modalAcoes').style.display = 'flex';
+    }
+
+    function executarAcao() {
+      if (!usuarioSelecionado) return;
+
+      const acao = document.querySelector('.modal-content h3').textContent;
+      let msg = '';
+
+      if (acao.includes('Suspender')) {
+        const motivo = document.getElementById('motivoSuspensao').value;
+        if (!motivo.trim()) {
+          alert('Informe o motivo da suspensão.');
+          return;
+        }
+        usuarioSelecionado.status = 'suspenso';
+        msg = `✅ Conta de ${usuarioSelecionado.nome} suspensa com sucesso.`;
+      } else if (acao.includes('Alterar Papel')) {
+        const novoPapel = document.getElementById('novoPapel').value;
+        usuarioSelecionado.papel = novoPapel;
+        msg = `✅ Papel de ${usuarioSelecionado.nome} alterado para ${traduzirPapel(novoPapel)}.`;
+      } else if (acao.includes('Eliminar')) {
+        msg = `❌ Conta de ${usuarioSelecionado.nome} eliminada permanentemente.`;
+        usuarios.splice(usuarios.indexOf(usuarioSelecionado), 1); // Remover da lista
+      }
+
+      alert(msg);
+      fecharModal();
+      carregarUsuarios(); // Atualizar lista
+    }
+
+    function fecharModal() {
+      document.getElementById('modalAcoes').style.display = 'none';
+      usuarioSelecionado = null;
+    }
+
+    function filtrarUsuarios() {
+      const papel = document.getElementById('filtroPapel').value;
+      const status = document.getElementById('filtroStatus').value;
+      const pesquisa = document.getElementById('pesquisarUsuario').value.toLowerCase();
+
+      let filtrados = usuarios;
+
+      if (papel) {
+        filtrados = filtrados.filter(u => u.papel === papel);
+      }
+      if (status) {
+        filtrados = filtrados.filter(u => u.status === status);
+      }
+      if (pesquisa) {
+        filtrados = filtrados.filter(u => 
+          u.nome.toLowerCase().includes(pesquisa) || 
+          u.email.toLowerCase().includes(pesquisa)
+        );
+      }
+
+      // Atualizar contador
+      document.getElementById('contadorUsuarios').textContent = filtrados.length;
+
+      // Atualizar tabela
+      const tbody = document.getElementById('listaUsuarios');
+      tbody.innerHTML = '';
+
+      filtrados.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${u.nome}</td>
+          <td>${u.email}</td>
+          <td>${traduzirPapel(u.papel)}</td>
+          <td><span class="status-${u.status}">${u.status === 'activo' ? 'Activo' : u.status === 'suspenso' ? 'Suspenso' : 'Inactivo'}</span></td>
+          <td>${u.criado_em}</td>
+          <td>${u.ultimo_acesso}</td>
+          <td class="action-buttons">
+            <button class="btn btn-success" onclick="alterarPapel(${u.id})">
+              <i class="fas fa-user-tag"></i>
+            </button>
+            <button class="btn btn-warning" onclick="suspenderUsuario(${u.id})">
+              <i class="fas fa-user-slash"></i>
+            </button>
+            <button class="btn btn-danger" onclick="eliminarUsuario(${u.id})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Carregar dados ao iniciar
+    window.onload = carregarUsuarios;
+  </script>
+</body>
+</html>

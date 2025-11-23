@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Exportar Dados - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 15px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary { background: var(--gradient-primary); color: white; }
+    .btn-success { background: var(--success); color: white; }
+    .btn-warning { background: var(--warning); color: white; }
+
+    .backup-section {
+      margin-bottom: 30px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .backup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .backup-title {
+      font-size: 20px;
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+      padding: 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+
+    .export-options {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .export-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .export-pdf { background: #d946ef; color: white; }
+    .export-csv { background: #f59e0b; color: white; }
+    .export-json { background: #6b7280; color: white; }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Exportar Dados Consolidados</p>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">Benjanuário João</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-download"></i> Exportar Dados do Ano Lectivo</h2>
+        <p>Director / Administração</p>
+      </div>
+
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Esta funcionalidade permite exportar todos os dados do ano lectivo para backup, auditoria ou encerramento. Selecione os dados desejados e formato de exportação.
+      </div>
+
+      <div class="form-group">
+        <label for="anoLectivo">Ano Lectivo *</label>
+        <select id="anoLectivo" class="form-control">
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="tipoExportacao">Tipo de Exportação *</label>
+        <select id="tipoExportacao" class="form-control">
+          <option value="completa">Completa (todos os dados)</option>
+          <option value="parcial">Parcial (selecionar setores)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Seção de Estudantes -->
+    <div class="backup-section">
+      <div class="backup-header">
+        <div class="backup-title">1. Estudantes</div>
+        <div>
+          <span style="color: var(--success);">✅ 248 registros</span>
+        </div>
+      </div>
+      <p>Matrículas, inscrições, dados pessoais, turmas, notas, pagamentos, desistências.</p>
+      <div class="export-options">
+        <button class="export-btn export-pdf" onclick="exportarSetor('estudantes', 'pdf')">
+          <i class="fas fa-file-pdf"></i> PDF
+        </button>
+        <button class="export-btn export-csv" onclick="exportarSetor('estudantes', 'csv')">
+          <i class="fas fa-file-csv"></i> CSV
+        </button>
+        <button class="export-btn export-json" onclick="exportarSetor('estudantes', 'json')">
+          <i class="fas fa-code"></i> JSON
+        </button>
+      </div>
+    </div>
+
+    <!-- Seção de Funcionários -->
+    <div class="backup-section">
+      <div class="backup-header">
+        <div class="backup-title">2. Funcionários</div>
+        <div>
+          <span style="color: var(--success);">✅ 32 registros</span>
+        </div>
+      </div>
+      <p>Contas, cargos, contratos, dados pessoais, especialidades.</p>
+      <div class="export-options">
+        <button class="export-btn export-pdf" onclick="exportarSetor('funcionarios', 'pdf')">
+          <i class="fas fa-file-pdf"></i> PDF
+        </button>
+        <button class="export-btn export-csv" onclick="exportarSetor('funcionarios', 'csv')">
+          <i class="fas fa-file-csv"></i> CSV
+        </button>
+        <button class="export-btn export-json" onclick="exportarSetor('funcionarios', 'json')">
+          <i class="fas fa-code"></i> JSON
+        </button>
+      </div>
+    </div>
+
+    <!-- Seção de Cursos e Turmas -->
+    <div class="backup-section">
+      <div class="backup-header">
+        <div class="backup-title">3. Cursos e Turmas</div>
+        <div>
+          <span style="color: var(--success);">✅ 8 cursos | 12 turmas</span>
+        </div>
+      </div>
+      <p>Definições de cursos, disciplinas, carga horária, duração, turmas criadas.</p>
+      <div class="export-options">
+        <button class="export-btn export-pdf" onclick="exportarSetor('cursos', 'pdf')">
+          <i class="fas fa-file-pdf"></i> PDF
+        </button>
+        <button class="export-btn export-csv" onclick="exportarSetor('cursos', 'csv')">
+          <i class="fas fa-file-csv"></i> CSV
+        </button>
+        <button class="export-btn export-json" onclick="exportarSetor('cursos', 'json')">
+          <i class="fas fa-code"></i> JSON
+        </button>
+      </div>
+    </div>
+
+    <!-- Seção de Finanças -->
+    <div class="backup-section">
+      <div class="backup-header">
+        <div class="backup-title">4. Finanças</div>
+        <div>
+          <span style="color: var(--success);">✅ 850.000 MZN arrecadados</span>
+        </div>
+      </div>
+      <p>Pagamentos, propinas, multas, comprovantes, dívidas.</p>
+      <div class="export-options">
+        <button class="export-btn export-pdf" onclick="exportarSetor('financas', 'pdf')">
+          <i class="fas fa-file-pdf"></i> PDF
+        </button>
+        <button class="export-btn export-csv" onclick="exportarSetor('financas', 'csv')">
+          <i class="fas fa-file-csv"></i> CSV
+        </button>
+        <button class="export-btn export-json" onclick="exportarSetor('financas', 'json')">
+          <i class="fas fa-code"></i> JSON
+        </button>
+      </div>
+    </div>
+
+    <!-- Seção de Avisos -->
+    <div class="backup-section">
+      <div class="backup-header">
+        <div class="backup-title">5. Avisos e Notificações</div>
+        <div>
+          <span style="color: var(--success);">✅ 124 avisos emitidos</span>
+        </div>
+      </div>
+      <p>Avisos gerais, por turma, por curso, data de validade.</p>
+      <div class="export-options">
+        <button class="export-btn export-pdf" onclick="exportarSetor('avisos', 'pdf')">
+          <i class="fas fa-file-pdf"></i> PDF
+        </button>
+        <button class="export-btn export-csv" onclick="exportarSetor('avisos', 'csv')">
+          <i class="fas fa-file-csv"></i> CSV
+        </button>
+        <button class="export-btn export-json" onclick="exportarSetor('avisos', 'json')">
+          <i class="fas fa-code"></i> JSON
+        </button>
+      </div>
+    </div>
+
+    <!-- Exportação Completa -->
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-archive"></i> Exportação Completa</h2>
+      </div>
+      <p>Exportar todos os dados do ano lectivo em todos os formatos.</p>
+      <div class="export-options">
+        <button class="btn btn-primary" onclick="exportarCompleto()">
+          <i class="fas fa-download"></i> Exportar Tudo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function exportarSetor(setor, formato) {
+      const ano = document.getElementById('anoLectivo').value;
+      alert(`📦 Exportando dados de "${setor}" para o ano ${ano} no formato ${formato.toUpperCase()}...\n\n(Função real: enviar para Supabase e gerar arquivo)`);
+    }
+
+    function exportarCompleto() {
+      const ano = document.getElementById('anoLectivo').value;
+      alert(`📦 EXPORTAÇÃO COMPLETA INICIADA\n\nAno: ${ano}\n\nFormatos: PDF, CSV, JSON\n\n(Função real: consultar todas as tabelas e gerar pacote de backup)`);
+    }
+  </script>
+</body>
+</html>

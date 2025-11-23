@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Atribuir Turmas a Formadores - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .form-group { margin-bottom: 15px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 15px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-primary { background: var(--gradient-primary); color: white; }
+
+    .turma-item {
+      background: white;
+      border-radius: var(--radius);
+      padding: 15px;
+      margin: 10px 0;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid var(--success);
+    }
+
+    .turma-info h4 {
+      color: var(--primary-dark);
+      margin-bottom: 5px;
+    }
+
+    .turma-info p {
+      font-size: 14px;
+      color: var(--gray-600);
+    }
+
+    .turma-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+      padding: 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+
+    .formador-section {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 2px solid var(--gray-200);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    th {
+      background: var(--gray-100);
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .status-livre { color: var(--success); font-weight: 600; }
+    .status-ocupado { color: var(--warning); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Atribuir Turmas a Formadores</p>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">Dr. Carlos Santos</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-chalkboard-teacher"></i> Filtros de Atribuição</h2>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="curso">Curso *</label>
+          <select id="curso" class="form-control" onchange="carregarAnos()">
+            <option value="">Selecione um curso</option>
+            <option value="info" data-disciplinas='["Matemática", "Informática", "Inglês", "Empreendedorismo"]'>
+              Técnico de Informática
+            </option>
+            <option value="agri" data-disciplinas='["Biologia", "Agricultura", "Química", "Sociologia"]'>
+              Técnico Agrícola
+            </option>
+            <option value="saude" data-disciplinas='["Anatomia", "Biologia", "Saúde Pública", "Farmacologia"]'>
+              Técnico de Saúde
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="anoFrequencia">Ano de Frequência *</label>
+          <select id="anoFrequencia" class="form-control" onchange="carregarDisciplinas()" disabled>
+            <option value="">Selecione primeiro o curso</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="disciplina">Disciplina *</label>
+          <select id="disciplina" class="form-control" onchange="carregarTurmas()" disabled>
+            <option value="">Selecione primeiro o ano</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="formador">Formador *</label>
+          <select id="formador" class="form-control" onchange="carregarDisponibilidade()" disabled>
+            <option value="">Selecione primeiro a disciplina</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Um formador pode ser atribuído a várias turmas da mesma ou de diferentes disciplinas.
+      </div>
+
+      <button class="btn btn-primary" onclick="atribuirFormadorATurma()">
+        <i class="fas fa-link"></i> Atribuir Formador à Turma
+      </button>
+    </div>
+
+    <!-- Turmas Disponíveis -->
+    <div class="card" id="secaoTurmas" style="display:none;">
+      <div class="card-header">
+        <h2><i class="fas fa-users"></i> Turmas Disponíveis</h2>
+        <p>Disciplina: <strong id="tituloDisciplina">—</strong> | Curso: <strong id="tituloCurso">—</strong></p>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Turma</th>
+            <th>Ano</th>
+            <th>Estudantes</th>
+            <th>Formador Actual</th>
+            <th>Acções</th>
+          </tr>
+        </thead>
+        <tbody id="listaTurmas">
+          <!-- Será preenchido dinamicamente -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Formadores Associados -->
+    <div class="card formador-section">
+      <div class="card-header">
+        <h2><i class="fas fa-list"></i> Atribuições Atuais</h2>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Formador</th>
+            <th>Disciplina</th>
+            <th>Turma</th>
+            <th>Curso</th>
+            <th>Acções</th>
+          </tr>
+        </thead>
+        <tbody id="listaAtribuicoes">
+          <!-- Será preenchido dinamicamente -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    let atribuicoes = [];
+
+    function carregarAnos() {
+      const select = document.getElementById('curso');
+      const option = select.options[select.selectedIndex];
+      const disciplinas = option.dataset.disciplinas ? JSON.parse(option.dataset.disciplinas) : [];
+
+      const anoSelect = document.getElementById('anoFrequencia');
+      anoSelect.disabled = !select.value;
+      anoSelect.innerHTML = '<option value="">Selecione o ano</option>';
+
+      if (!select.value) return;
+
+      for (let i = 1; i <= 3; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `${i}º Ano`;
+        opt.dataset.disciplinas = JSON.stringify(disciplinas);
+        anoSelect.appendChild(opt);
+      }
+    }
+
+    function carregarDisciplinas() {
+      const anoSelect = document.getElementById('anoFrequencia');
+      const option = anoSelect.options[anoSelect.selectedIndex];
+      const disciplinas = option.dataset.disciplinas ? JSON.parse(option.dataset.disciplinas) : [];
+
+      const discSelect = document.getElementById('disciplina');
+      discSelect.disabled = !anoSelect.value;
+      discSelect.innerHTML = '<option value="">Selecione a disciplina</option>';
+
+      if (!anoSelect.value) return;
+
+      disciplinas.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.toLowerCase().replace(/\s+/g, '_');
+        opt.textContent = d;
+        discSelect.appendChild(opt);
+      });
+    }
+
+    function carregarTurmas() {
+      const disciplina = document.getElementById('disciplina').options[document.getElementById('disciplina').selectedIndex].text;
+      const curso = document.getElementById('curso').options[document.getElementById('curso').selectedIndex].text;
+
+      document.getElementById('tituloDisciplina').textContent = disciplina;
+      document.getElementById('tituloCurso').textContent = curso;
+      document.getElementById('secaoTurmas').style.display = 'block';
+
+      const lista = document.getElementById('listaTurmas');
+      lista.innerHTML = '';
+
+      // Simular turmas
+      const turmas = [
+        { nome: 'T1-Informatica-1A-2025', ano: '1º Ano', estudantes: 24, formador: 'Dr. Carlos Santos' },
+        { nome: 'T2-Informatica-1B-2025', ano: '1º Ano', estudantes: 26, formador: '—' },
+        { nome: 'T3-Informatica-2A-2025', ano: '2º Ano', estudantes: 22, formador: 'Prof. Ana Lima' }
+      ];
+
+      turmas.forEach(t => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${t.nome}</td>
+          <td>${t.ano}</td>
+          <td>${t.estudantes}</td>
+          <td>${t.formador || '<span style="color: var(--success);">Livre</span>'}</td>
+          <td>
+            <button class="btn btn-primary" onclick="selecionarTurma('${t.nome}')">
+              <i class="fas fa-user-plus"></i> Atribuir
+            </button>
+          </td>
+        `;
+        lista.appendChild(tr);
+      });
+    }
+
+    function selecionarTurma(nomeTurma) {
+      document.getElementById('turmaSelecionada').value = nomeTurma;
+      alert(`✅ Turma "${nomeTurma}" selecionada para atribuição.`);
+    }
+
+    function atribuirFormadorATurma() {
+      const formador = document.getElementById('formador').options[document.getElementById('formador').selectedIndex].text;
+      const disciplina = document.getElementById('disciplina').options[document.getElementById('disciplina').selectedIndex].text;
+      const turma = document.getElementById('turmaSelecionada').value;
+
+      if (!formador || !disciplina || !turma) {
+        alert('Selecione formador, disciplina e turma.');
+        return;
+      }
+
+      const id = Date.now();
+      atribuicoes.push({ id, formador, disciplina, turma });
+
+      // Atualizar lista
+      atualizarListaAtribuicoes();
+
+      alert(`✅ Formador "${formador}" atribuído à turma "${turma}" para a disciplina "${disciplina}".`);
+    }
+
+    function atualizarListaAtribuicoes() {
+      const lista = document.getElementById('listaAtribuicoes');
+      lista.innerHTML = '';
+
+      atribuicoes.forEach(a => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${a.formador}</td>
+          <td>${a.disciplina}</td>
+          <td>${a.turma}</td>
+          <td>Técnico de Informática</td>
+          <td>
+            <button class="btn btn-danger" onclick="removerAtribuicao(${a.id})">
+              <i class="fas fa-trash"></i> Remover
+            </button>
+          </td>
+        `;
+        lista.appendChild(tr);
+      });
+    }
+
+    function removerAtribuicao(id) {
+      atribuicoes = atribuicoes.filter(a => a.id !== id);
+      atualizarListaAtribuicoes();
+    }
+  </script>
+</body>
+</html>

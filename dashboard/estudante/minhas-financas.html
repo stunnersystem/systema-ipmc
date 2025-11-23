@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Minhas Finanças - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+      padding: 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    th {
+      background: var(--gray-100);
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .status-pago { color: var(--success); font-weight: 600; }
+    .status-nao-pago { color: var(--danger); font-weight: 600; }
+    .status-em-atraso { color: var(--warning); font-weight: 600; }
+
+    .tipo-mensalidade { color: var(--primary); font-weight: 600; }
+    .tipo-estagio { color: var(--accent); font-weight: 600; }
+    .tipo-multa { color: var(--danger); font-weight: 600; }
+
+    .funcionario-info {
+      font-size: 13px;
+      color: var(--gray-600);
+    }
+
+    .recibo-id {
+      font-family: monospace;
+      background: var(--gray-100);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Minhas Finanças</p>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">João Silva</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-file-invoice-dollar"></i> Histórico de Pagamentos</h2>
+        <p>Curso: Técnico de Informática | Turma: T1-2025</p>
+      </div>
+
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> 
+        A multa de 5% é aplicada automaticamente após o dia 10 de cada mês. 
+        A Taxa de Estágio é cobrada apenas no ano de estágio.
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo de Pagamento</th>
+            <th>Mês</th>
+            <th>Valor (MZN)</th>
+            <th>ID do Recibo</th>
+            <th>Status</th>
+            <th>Validado por</th>
+            <th>Data de Validação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Pagamento 1: Mensalidade com multa -->
+          <tr>
+            <td><span class="tipo-multa">Mensalidade (com multa)</span></td>
+            <td>Outubro 2025</td>
+            <td>3.675,00</td>
+            <td><span class="recibo-id">REC202510001</span></td>
+            <td><span class="status-pago">Pago</span></td>
+            <td>
+              <div>Ana Ferreira</div>
+              <div class="funcionario-info">(Secretaria)</div>
+            </td>
+            <td>15/10/2025</td>
+          </tr>
+
+          <!-- Pagamento 2: Mensalidade sem multa -->
+          <tr>
+            <td><span class="tipo-mensalidade">Mensalidade</span></td>
+            <td>Novembro 2025</td>
+            <td>3.500,00</td>
+            <td><span class="recibo-id">REC202511001</span></td>
+            <td><span class="status-pago">Pago</span></td>
+            <td>
+              <div>Ana Ferreira</div>
+              <div class="funcionario-info">(Secretaria)</div>
+            </td>
+            <td>05/11/2025</td>
+          </tr>
+
+          <!-- Pagamento 3: Mensalidade em atraso -->
+          <tr>
+            <td><span class="tipo-mensalidade">Mensalidade</span></td>
+            <td>Setembro 2025</td>
+            <td>3.675,00</td>
+            <td><span class="recibo-id">REC202509001</span></td>
+            <td><span class="status-em-atraso">Pago com Atraso</span></td>
+            <td>
+              <div>Ana Ferreira</div>
+              <div class="funcionario-info">(Secretaria)</div>
+            </td>
+            <td>18/09/2025</td>
+          </tr>
+
+          <!-- Pagamento 4: Taxa de Estágio -->
+          <tr>
+            <td><span class="tipo-estagio">Taxa de Estágio</span></td>
+            <td>2º Ano</td>
+            <td>5.000,00</td>
+            <td><span class="recibo-id">EST2025001</span></td>
+            <td><span class="status-pago">Pago</span></td>
+            <td>
+              <div>Ana Ferreira</div>
+              <div class="funcionario-info">(Secretaria)</div>
+            </td>
+            <td>20/08/2025</td>
+          </tr>
+
+          <!-- Pagamento 5: Mensalidade pendente -->
+          <tr>
+            <td><span class="tipo-mensalidade">Mensalidade</span></td>
+            <td>Dezembro 2025</td>
+            <td>3.500,00</td>
+            <td>—</td>
+            <td><span class="status-nao-pago">Pendente</span></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lançar Avaliações - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .form-group { margin-bottom: 15px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    th {
+      background: var(--gray-100);
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .nota-input {
+      width: 80px;
+      padding: 8px;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-primary { background: var(--gradient-primary); color: white; }
+
+    .status-aprovado { color: var(--success); font-weight: 600; }
+    .status-reprovado { color: var(--danger); font-weight: 600; }
+    .status-em-recuperacao { color: var(--warning); font-weight: 600; }
+
+    .info-box {
+      background: #fffbeb;
+      border-left: 4px solid var(--warning);
+      padding: 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Lançar Notas de Avaliações</p>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">Dr. Carlos Santos</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-clipboard-list"></i> Selecionar Disciplina e Turma</h2>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="curso">Curso *</label>
+          <select id="curso" class="form-control" onchange="carregarAnos()">
+            <option value="">Selecione um curso</option>
+            <option value="info">Técnico de Informática</option>
+            <option value="agri">Técnico Agrícola</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="anoFrequencia">Ano de Frequência *</label>
+          <select id="anoFrequencia" class="form-control" onchange="carregarDisciplinas()" disabled>
+            <option value="">Selecione primeiro o curso</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="disciplina">Disciplina *</label>
+          <select id="disciplina" class="form-control" onchange="carregarEstudantes()" disabled>
+            <option value="">Selecione primeiro o ano</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="turma">Turma *</label>
+          <select id="turma" class="form-control" onchange="carregarEstudantes()" disabled>
+            <option value="">Selecione primeiro a disciplina</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="tipoAvaliacao">Tipo de Avaliação *</label>
+          <select id="tipoAvaliacao" class="form-control" required onchange="ajustarCampos()">
+            <option value="">Selecione</option>
+            <option value="ac">Avaliação Contínua</option>
+            <option value="trabalho">Trabalho Prático</option>
+            <option value="teste">Teste Parcial</option>
+            <option value="exame">Exame Final</option>
+            <option value="recuperacao">Exame de Recuperação</option>
+            <option value="estagio">Estágio</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="nomeAvaliacao">Nome da Avaliação *</label>
+          <input type="text" id="nomeAvaliacao" class="form-control" placeholder="Ex: AC1, Exame Final..." required>
+        </div>
+        <div class="form-group">
+          <label for="dataAvaliacao">Data da Avaliação *</label>
+          <input type="date" id="dataAvaliacao" class="form-control" required>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Notas ≤ 9 permitem reavaliação. O sistema calculará automaticamente médias e status de admissão.
+      </div>
+
+      <button id="btnCarregar" class="btn btn-primary" style="width:100%; display:none;" onclick="carregarEstudantes()">
+        <i class="fas fa-users"></i> Carregar Estudantes
+      </button>
+    </div>
+
+    <!-- Tabela de Estudantes e Notas -->
+    <div class="card" id="secaoNotas" style="display:none;">
+      <div class="card-header">
+        <h2><i class="fas fa-user-graduate"></i> Lançar Notas para <span id="tituloDisciplina">—</span></h2>
+        <p>Turma: <strong id="tituloTurma">—</strong> | Avaliação: <strong id="tituloTipoAvaliacao">—</strong></p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Estudante</th>
+            <th>Ano</th>
+            <th>Nota Original</th>
+            <th>Reavaliação (≤ 9)</th>
+            <th>Nota Final</th>
+            <th>Status</th>
+            <th>Observações</th>
+          </tr>
+        </thead>
+        <tbody id="listaEstudantes">
+          <!-- Será preenchido dinamicamente -->
+        </tbody>
+      </table>
+
+      <button class="btn btn-primary" style="width:100%; margin-top: 20px;" onclick="salvarNotas()">
+        <i class="fas fa-save"></i> Salvar Notas
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Simular dados
+    const estudantesDaTurma = [
+      { id: 1, nome: "João Silva", ano: "2º Ano", media_admissao: 14.5, admitido_exame: true, admitido_estagio: true },
+      { id: 2, nome: "Maria Costa", ano: "2º Ano", media_admissao: 8.7, admitido_exame: false, admitido_estagio: false },
+      { id: 3, nome: "Pedro Manguene", ano: "1º Ano", media_admissao: 16.0, admitido_exame: true, admitido_estagio: true }
+    ];
+
+    function carregarAnos() {
+      const select = document.getElementById('curso');
+      const ano = document.getElementById('anoFrequencia');
+      ano.disabled = !select.value;
+      ano.innerHTML = '<option value="">Selecione o ano</option>';
+
+      if (!select.value) return;
+
+      for (let i = 1; i <= 3; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `${i}º Ano`;
+        ano.appendChild(opt);
+      }
+    }
+
+    function carregarDisciplinas() {
+      const ano = document.getElementById('anoFrequencia').value;
+      const select = document.getElementById('disciplina');
+      select.disabled = !ano;
+      select.innerHTML = '<option value="">Selecione a disciplina</option>';
+
+      if (!ano) return;
+
+      const disciplinas = {
+        '1': ['Matemática', 'Informática', 'Inglês'],
+        '2': ['Programação', 'Estatística', 'Metodologia']
+      };
+
+      (disciplinas[ano] || []).forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.toLowerCase().replace(/\s+/g, '_');
+        opt.textContent = d;
+        select.appendChild(opt);
+      });
+    }
+
+    function carregarTurmas() {
+      const disciplina = document.getElementById('disciplina').value;
+      const select = document.getElementById('turma');
+      select.disabled = !disciplina;
+      select.innerHTML = '<option value="">Selecione a turma</option>';
+
+      if (!disciplina) return;
+
+      ['T1-2025', 'T2-2025'].forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        select.appendChild(opt);
+      });
+
+      document.getElementById('btnCarregar').style.display = 'block';
+    }
+
+    function carregarEstudantes() {
+      const disciplina = document.getElementById('disciplina').options[document.getElementById('disciplina').selectedIndex].text;
+      const turma = document.getElementById('turma').value;
+      const tipo = document.getElementById('tipoAvaliacao').value;
+
+      if (!disciplina || !turma || !tipo) return;
+
+      document.getElementById('tituloDisciplina').textContent = disciplina;
+      document.getElementById('tituloTurma').textContent = turma;
+      document.getElementById('tituloTipoAvaliacao').textContent = tipo.toUpperCase();
+
+      const lista = document.getElementById('listaEstudantes');
+      lista.innerHTML = '';
+
+      estudantesDaTurma.forEach(est => {
+        const tr = document.createElement('tr');
+        let campoNotaOriginal = '';
+        let campoReavaliacao = '';
+        let campoNotaFinal = '';
+
+        if (tipo === 'exame' && !est.admitido_exame) {
+          // Estudante não admitido ao exame
+          campoNotaOriginal = '<input type="text" class="form-control" value="—" readonly style="background:#f8fafc;">';
+          campoReavaliacao = '<input type="text" class="form-control" value="Bloqueado" readonly style="background:#fef2f2;">';
+          campoNotaFinal = '<span class="status-reprovado">Não Admitido</span>';
+        } else if (tipo === 'estagio' && !est.admitido_estagio) {
+          // Estudante não admitido ao estágio
+          campoNotaOriginal = '<input type="text" class="form-control" value="— (exame ≤ 9)" readonly style="background:#f8fafc;">';
+          campoReavaliacao = '<input type="text" class="form-control" value="—" readonly style="background:#fef2f2;">';
+          campoNotaFinal = '<span class="status-reprovado">Não Admitido</span>';
+        } else {
+          // Estudante admitido
+          campoNotaOriginal = `<input type="number" class="nota-input" min="0" max="20" step="0.1" placeholder="0-20" onchange="verificarReavaliacao(this, ${est.id})">`;
+          campoReavaliacao = `<input type="number" class="nota-input" min="0" max="20" step="0.1" placeholder="Reavaliação" disabled onchange="calcularNotaFinal(this, ${est.id})">`;
+          campoNotaFinal = `<span class="nota-final">—</span>`;
+        }
+
+        tr.innerHTML = `
+          <td>${est.nome}</td>
+          <td>${est.ano}</td>
+          <td>${campoNotaOriginal}</td>
+          <td>${campoReavaliacao}</td>
+          <td>${campoNotaFinal}</td>
+          <td><span class="status-pendente">Pendente</span></td>
+          <td><input type="text" class="form-control" style="width:100%; max-width:150px;" placeholder="Observações"></td>
+        `;
+        lista.appendChild(tr);
+      });
+
+      document.getElementById('secaoNotas').style.display = 'block';
+    }
+
+    function verificarReavaliacao(input, idEstudante) {
+      const nota = parseFloat(input.value);
+      if (!nota) return;
+
+      const row = input.closest('tr');
+      const reavaliacaoInput = row.cells[3].querySelector('input');
+      const statusCell = row.cells[5];
+      const statusSpan = statusCell.querySelector('span');
+
+      if (nota < 10) {
+        reavaliacaoInput.disabled = false;
+        reavaliacaoInput.placeholder = 'Lançar Reavaliação';
+        statusSpan.className = 'status-em-recuperacao';
+        statusSpan.textContent = 'Em Recuperação';
+      } else {
+        statusSpan.className = 'status-aprovado';
+        statusSpan.textContent = 'Aprovado';
+      }
+    }
+
+    function calcularNotaFinal(input, idEstudante) {
+      const notaOriginal = parseFloat(input.closest('tr').cells[2].querySelector('input').value);
+      const reavaliacao = parseFloat(input.value);
+
+      if (reavaliacao) {
+        const notaFinalSpan = input.closest('tr').cells[4].querySelector('span');
+        notaFinalSpan.textContent = reavaliacao.toFixed(1);
+
+        // Atualizar status
+        const statusCell = input.closest('tr').cells[5];
+        const statusSpan = statusCell.querySelector('span');
+        if (reavaliacao >= 10) {
+          statusSpan.className = 'status-aprovado';
+          statusSpan.textContent = 'Aprovado';
+        } else {
+          statusSpan.className = 'status-reprovado';
+          statusSpan.textContent = 'Reprovado';
+        }
+      }
+    }
+
+    function salvarNotas() {
+      const tipo = document.getElementById('tituloTipoAvaliacao').textContent;
+      const disciplina = document.getElementById('tituloDisciplina').textContent;
+      const turma = document.getElementById('tituloTurma').textContent;
+
+      alert(`✅ Notas de "${tipo}" lançadas com sucesso!\n\nDisciplina: ${disciplina}\nTurma: ${turma}\n\nAs médias serão calculadas automaticamente.`);
+    }
+  </script>
+</body>
+</html>

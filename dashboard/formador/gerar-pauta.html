@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gerar Pauta Final - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .form-group { margin-bottom: 15px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    th {
+      background: var(--gray-100);
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .nota-input {
+      width: 80px;
+      padding: 8px;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-primary { background: var(--gradient-primary); color: white; }
+    .btn-success { background: var(--success); color: white; }
+
+    .status-aprovado { color: var(--success); font-weight: 600; }
+    .status-reprovado { color: var(--danger); font-weight: 600; }
+    .status-em-recuperacao { color: var(--warning); font-weight: 600; }
+    .status-nao-admitido { color: var(--danger); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Gerar Pauta Final</p>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">Dr. Carlos Santos</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-file-alt"></i> Selecionar Disciplina e Turma</h2>
+        <p>Formador: Dr. Carlos Santos | Departamento: Ciências Exactas</p>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="curso">Curso *</label>
+          <select id="curso" class="form-control" onchange="carregarAnos()">
+            <option value="">Selecione um curso</option>
+            <option value="info">Técnico de Informática</option>
+            <option value="agri">Técnico Agrícola</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="anoFrequencia">Ano de Frequência *</label>
+          <select id="anoFrequencia" class="form-control" onchange="carregarDisciplinas()" disabled>
+            <option value="">Selecione primeiro o curso</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="disciplina">Disciplina *</label>
+          <select id="disciplina" class="form-control" onchange="carregarTurmas()" disabled>
+            <option value="">Selecione primeiro o ano</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="turma">Turma *</label>
+          <select id="turma" class="form-control" onchange="carregarPauta()" disabled>
+            <option value="">Selecione primeiro a disciplina</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="semestre">Semestre *</label>
+          <select id="semestre" class="form-control" onchange="carregarPauta()" disabled>
+            <option value="">Selecione primeiro a turma</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="anoLectivo">Ano Lectivo *</label>
+          <input type="number" id="anoLectivo" class="form-control" value="2025" min="2020" max="2030" readonly>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; padding: 15px; background: #fffbeb; border-radius: var(--radius); border-left: 4px solid var(--warning);">
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Esta pauta será enviada à Secção Pedagógica para validação após preenchimento. As médias são calculadas automaticamente com base nas avaliações lançadas anteriormente.
+      </div>
+
+      <button id="btnCarregarPauta" class="btn btn-primary" style="width:100%; display:none; margin-top: 20px;" onclick="carregarPauta()">
+        <i class="fas fa-users"></i> Carregar Pauta de Estudantes
+      </button>
+    </div>
+
+    <!-- Tabela de Pauta -->
+    <div class="card" id="secaoPauta" style="display:none;">
+      <div class="card-header">
+        <h2><i class="fas fa-list"></i> Pauta Final de <span id="tituloDisciplina">—</span></h2>
+        <p>Curso: <strong id="tituloCurso">—</strong> | Turma: <strong id="tituloTurma">—</strong> | Semestre: <strong id="tituloSemestre">—</strong></p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Estudante</th>
+            <th>Ano</th>
+            <th>AC1</th>
+            <th>AC2</th>
+            <th>Trabalho</th>
+            <th>Média de Avaliações</th>
+            <th>Exame</th>
+            <th>Recuperação</th>
+            <th>Média de Admissão ao Estágio</th>
+            <th>Estágio</th>
+            <th>Média Final</th>
+            <th>Status</th>
+            <th>Observações</th>
+          </tr>
+        </thead>
+        <tbody id="listaPauta">
+          <!-- Será preenchido dinamicamente via fetch (simulado) -->
+        </tbody>
+      </table>
+
+      <div style="margin-top: 20px; padding: 15px; background: #f8fafc; border-radius: var(--radius); border-left: 4px solid var(--accent);">
+        <strong>Resumo da Pauta:</strong>  
+        <ul style="margin-top: 10px; margin-left: 20px;">
+          <li>Total de Estudantes: <strong id="totalEstudantes">0</strong></li>
+          <li>Aprovados: <strong id="totalAprovados">0</strong></li>
+          <li>Reprovados: <strong id="totalReprovados">0</strong></li>
+          <li>Em Recuperação: <strong id="totalRecuperacao">0</strong></li>
+          <li>Em Dívida ao Estágio: <strong id="totalNaoAdmitidos">0</strong></li>
+        </ul>
+      </div>
+
+      <button class="btn btn-success" style="width:100%; margin-top: 20px;" onclick="enviarPauta()">
+        <i class="fas fa-paper-plane"></i> Enviar Pauta para Validação
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Simular dados vindos do Supabase (fetch real em produção)
+    async function carregarPauta() {
+      const curso = document.getElementById('curso').options[document.getElementById('curso').selectedIndex].text;
+      const ano = document.getElementById('anoFrequencia').value;
+      const disciplina = document.getElementById('disciplina').options[document.getElementById('disciplina').selectedIndex].text;
+      const turma = document.getElementById('turma').value;
+      const semestre = document.getElementById('semestre').value;
+
+      if (!curso || !ano || !disciplina || !turma || !semestre) {
+        alert('Selecione todos os filtros.');
+        return;
+      }
+
+      document.getElementById('tituloCurso').textContent = curso;
+      document.getElementById('tituloDisciplina').textContent = disciplina;
+      document.getElementById('tituloTurma').textContent = turma;
+      document.getElementById('tituloSemestre').textContent = semestre;
+
+      // Simular fetch para obter dados do banco (em produção: substituir por Supabase)
+      const dadosPauta = await obterPautaDoBanco(curso, ano, disciplina, turma, semestre);
+
+      const lista = document.getElementById('listaPauta');
+      lista.innerHTML = '';
+
+      let totalEstudantes = 0;
+      let totalAprovados = 0;
+      let totalReprovados = 0;
+      let totalRecuperacao = 0;
+      let totalNaoAdmitidos = 0;
+
+      dadosPauta.forEach(est => {
+        totalEstudantes++;
+
+        // Cálculos de média (em produção: feitos no backend)
+        const mediaAvaliacoes = ((est.ac1 || 0) + (est.ac2 || 0) + (est.trabalho || 0)) / 3;
+        const exameFinal = est.exame || 0;
+        const recuperacao = est.recuperacao || 0;
+        const mediaAdmissaoEstagio = (mediaAvaliacoes + (recuperacao > 0 ? recuperacao : exameFinal)) / 2;
+        const notaEstagio = est.estagio || 0;
+        const mediaFinal = notaEstagio ? (mediaAdmissaoEstagio + notaEstagio) / 2 : mediaAdmissaoEstagio;
+
+        let status = 'pendente';
+        if (mediaFinal >= 10) {
+          status = 'aprovado';
+          totalAprovados++;
+        } else if (exameFinal < 10 && recuperacao > 0 && recuperacao >= 10) {
+          status = 'em_recuperacao';
+          totalRecuperacao++;
+        } else if (mediaAdmissaoEstagio < 10) {
+          status = 'nao_admitido_estagio';
+          totalNaoAdmitidos++;
+        } else {
+          status = 'reprovado';
+          totalReprovados++;
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${est.nome}</td>
+          <td>${est.ano}</td>
+          <td>${est.ac1 || '—'}</td>
+          <td>${est.ac2 || '—'}</td>
+          <td>${est.trabalho || '—'}</td>
+          <td><strong>${mediaAvaliacoes.toFixed(2)}</strong></td>
+          <td>${est.exame || '—'}</td>
+          <td>${est.recuperacao || '—'}</td>
+          <td><strong>${mediaAdmissaoEstagio.toFixed(2)}</strong></td>
+          <td>${est.estagio || '—'}</td>
+          <td><strong>${mediaFinal.toFixed(2)}</strong></td>
+          <td><span class="status-${status.replace('_', '-')}">${traduzirStatus(status)}</span></td>
+          <td><input type="text" class="form-control" style="width:100%; max-width:150px;" placeholder="Observações"></td>
+        `;
+        lista.appendChild(tr);
+      });
+
+      // Atualizar resumo
+      document.getElementById('totalEstudantes').textContent = totalEstudantes;
+      document.getElementById('totalAprovados').textContent = totalAprovados;
+      document.getElementById('totalReprovados').textContent = totalReprovados;
+      document.getElementById('totalRecuperacao').textContent = totalRecuperacao;
+      document.getElementById('totalNaoAdmitidos').textContent = totalNaoAdmitidos;
+
+      document.getElementById('secaoPauta').style.display = 'block';
+    }
+
+    function traduzirStatus(status) {
+      const map = {
+        'aprovado': 'Aprovado',
+        'reprovado': 'Reprovado',
+        'em_recuperacao': 'Em Recuperação',
+        'nao_admitido_estagio': 'Não Admitido ao Estágio'
+      };
+      return map[status] || status;
+    }
+
+    // Simular obtenção de dados do banco (em produção: substituir por Supabase)
+    async function obterPautaDoBanco(curso, ano, disciplina, turma, semestre) {
+      // Em produção: substituir por:
+      // const { data, error } = await supabase
+      //   .from('notas')
+      //   .select(`
+      //     estudante:estudantes(nome, ano_frequencia_id),
+      //     ac1, ac2, trabalho, exame, recuperacao, estagio
+      //   `)
+      //   .eq('curso', curso)
+      //   .eq('turma', turma)
+      //   .eq('disciplina', disciplina)
+      //   .eq('semestre', semestre);
+
+      return [
+        { id: 1, nome: "João Silva", ano: "2º Ano", ac1: 14.0, ac2: 15.5, trabalho: 16.0, exame: 16.0, recuperacao: null, estagio: 17.0 },
+        { id: 2, nome: "Maria Costa", ano: "2º Ano", ac1: 8.0, ac2: 9.0, trabalho: 7.5, exame: 8.5, recuperacao: 12.0, estagio: null },
+        { id: 3, nome: "Pedro Manguene", ano: "1º Ano", ac1: 16.0, ac2: 15.0, trabalho: 17.0, exame: 14.0, recuperacao: null, estagio: null }
+      ];
+    }
+
+    function enviarPauta() {
+      const disciplina = document.getElementById('tituloDisciplina').textContent;
+      const turma = document.getElementById('tituloTurma').textContent;
+
+      if (confirm(`Enviar pauta de "${disciplina}" para "${turma}"?\n\nSerá encaminhada à Secção Pedagógica para validação.`)) {
+        // Em produção: enviar para Supabase
+        // await supabase.from('pautas').insert({...})
+
+        alert(`✅ Pauta de "${disciplina}" para "${turma}" enviada com sucesso!\n\nAguardando validação do Pedagógico.`);
+      }
+    }
+
+    function carregarAnos() {
+      const select = document.getElementById('curso');
+      const ano = document.getElementById('anoFrequencia');
+      ano.disabled = !select.value;
+      ano.innerHTML = '<option value="">Selecione o ano</option>';
+
+      if (!select.value) return;
+
+      for (let i = 1; i <= 3; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `${i}º Ano`;
+        ano.appendChild(opt);
+      }
+    }
+
+    function carregarDisciplinas() {
+      const ano = document.getElementById('anoFrequencia').value;
+      const select = document.getElementById('disciplina');
+      select.disabled = !ano;
+      select.innerHTML = '<option value="">Selecione a disciplina</option>';
+
+      if (!ano) return;
+
+      const disciplinas = {
+        '1': ['Matemática', 'Informática', 'Inglês'],
+        '2': ['Programação', 'Estatística', 'Metodologia']
+      };
+
+      (disciplinas[ano] || []).forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.toLowerCase().replace(/\s+/g, '_');
+        opt.textContent = d;
+        select.appendChild(opt);
+      });
+    }
+
+    function carregarTurmas() {
+      const disciplina = document.getElementById('disciplina').value;
+      const select = document.getElementById('turma');
+      select.disabled = !disciplina;
+      select.innerHTML = '<option value="">Selecione a turma</option>';
+
+      if (!disciplina) return;
+
+      ['T1-2025', 'T2-2025'].forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        select.appendChild(opt);
+      });
+
+      document.getElementById('semestre').disabled = false;
+    }
+  </script>
+</body>
+  </html>

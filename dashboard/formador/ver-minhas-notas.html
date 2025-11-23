@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ver Minhas Notas Lançadas - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    th {
+      background: var(--gray-100);
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+      padding: 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Ver Minhas Notas Lançadas</p>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">Dr. Carlos Santos</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-chart-bar"></i> Consultar Notas Lançadas</h2>
+        <p>Formador: Dr. Carlos Santos</p>
+      </div>
+
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Selecione o curso, disciplina e tipo de avaliação para ver a lista completa de estudantes com suas notas.
+      </div>
+
+      <div class="form-group">
+        <label for="curso">Curso *</label>
+        <select id="curso" class="form-control" onchange="carregarDisciplinas()">
+          <option value="">Selecione um curso</option>
+          <option value="info">Técnico de Informática</option>
+          <option value="agri">Técnico Agrícola</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="disciplina">Disciplina *</label>
+        <select id="disciplina" class="form-control" onchange="carregarTiposAvaliacoes()" disabled>
+          <option value="">Selecione uma disciplina</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="tipoAvaliacao">Tipo de Avaliação *</label>
+        <select id="tipoAvaliacao" class="form-control" onchange="carregarNotas()" disabled>
+          <option value="">Selecione o tipo</option>
+        </select>
+      </div>
+
+      <button class="btn" onclick="carregarNotas()">
+        <i class="fas fa-search"></i> Exibir Notas
+      </button>
+    </div>
+
+    <!-- Tabela de Notas -->
+    <div class="card" id="secaoNotas" style="display:none;">
+      <div class="card-header">
+        <h2><i class="fas fa-list"></i> Notas Lançadas</h2>
+        <p>Curso: <strong id="tituloCurso">—</strong> | Disciplina: <strong id="tituloDisciplina">—</strong> | Avaliação: <strong id="tituloAvaliacao">—</strong></p>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Estudante</th>
+            <th>Ano</th>
+            <th>Turma</th>
+            <th>Tipo de Avaliação</th>
+            <th>Nota</th>
+            <th>Data da Avaliação</th>
+          </tr>
+        </thead>
+        <tbody id="listaNotas">
+          <!-- Será preenchido dinamicamente -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Simular dados de disciplinas por curso
+    const disciplinasPorCurso = {
+      'info': ['Matemática', 'Informática', 'Inglês'],
+      'agri': ['Biologia', 'Agricultura', 'Química']
+    };
+
+    // Simular tipos de avaliação por disciplina
+    const tiposAvaliacao = [
+      'Teste 1', 'Teste 2', 'Trabalho Prático', 'Avaliação Final', 'Recuperação'
+    ];
+
+    // Simular notas lançadas
+    const notasLancadas = [
+      { estudante: "João Silva", ano: "2º Ano", turma: "T1-2025", tipo: "Teste 1", nota: "14.5", data: "10/10/2025" },
+      { estudante: "Maria Costa", ano: "2º Ano", turma: "T1-2025", tipo: "Teste 1", nota: "16.0", data: "10/10/2025" },
+      { estudante: "Pedro Manguene", ano: "1º Ano", turma: "T2-2025", tipo: "Teste 1", nota: "12.8", data: "10/10/2025" },
+      { estudante: "Ana Nhampossa", ano: "1º Ano", turma: "T2-2025", tipo: "Teste 1", nota: "17.2", data: "10/10/2025" }
+    ];
+
+    function carregarDisciplinas() {
+      const curso = document.getElementById('curso').value;
+      const selectDisc = document.getElementById('disciplina');
+      selectDisc.disabled = !curso;
+      selectDisc.innerHTML = '<option value="">Selecione uma disciplina</option>';
+
+      if (!curso) return;
+
+      const lista = disciplinasPorCurso[curso] || [];
+      lista.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.toLowerCase().replace(/\s+/g, '_');
+        opt.textContent = d;
+        selectDisc.appendChild(opt);
+      });
+    }
+
+    function carregarTiposAvaliacoes() {
+      const disciplina = document.getElementById('disciplina').value;
+      const selectTipo = document.getElementById('tipoAvaliacao');
+      selectTipo.disabled = !disciplina;
+      selectTipo.innerHTML = '<option value="">Selecione o tipo</option>';
+
+      if (!disciplina) return;
+
+      tiposAvaliacao.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t.toLowerCase().replace(/\s+/g, '_');
+        opt.textContent = t;
+        selectTipo.appendChild(opt);
+      });
+    }
+
+    function carregarNotas() {
+      const curso = document.getElementById('curso').options[document.getElementById('curso').selectedIndex].text;
+      const disciplina = document.getElementById('disciplina').options[document.getElementById('disciplina').selectedIndex].text;
+      const tipo = document.getElementById('tipoAvaliacao').options[document.getElementById('tipoAvaliacao').selectedIndex].text;
+
+      if (!curso || !disciplina || !tipo) {
+        alert('Selecione curso, disciplina e tipo de avaliação.');
+        return;
+      }
+
+      document.getElementById('tituloCurso').textContent = curso;
+      document.getElementById('tituloDisciplina').textContent = disciplina;
+      document.getElementById('tituloAvaliacao').textContent = tipo;
+
+      const lista = document.getElementById('listaNotas');
+      lista.innerHTML = '';
+
+      // Filtrar notas simuladas
+      const notasFiltradas = notasLancadas.filter(n => 
+        n.tipo.toLowerCase().includes(tipo.toLowerCase())
+      );
+
+      notasFiltradas.forEach(n => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${n.estudante}</td>
+          <td>${n.ano}</td>
+          <td>${n.turma}</td>
+          <td>${n.tipo}</td>
+          <td>${n.nota}</td>
+          <td>${n.data}</td>
+        `;
+        lista.appendChild(tr);
+      });
+
+      document.getElementById('secaoNotas').style.display = 'block';
+    }
+  </script>
+</body>
+  </html>

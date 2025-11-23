@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enviar Aviso Geral - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 15px;
+    }
+
+    textarea.form-control { min-height: 120px; }
+
+    .btn {
+      padding: 12px 24px;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+      padding: 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Enviar Aviso Geral</p>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">Dr. Carlos Santos</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-bullhorn"></i> Enviar Aviso Geral</h2>
+        <p>Secção Pedagógica</p>
+      </div>
+
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> O aviso será enviado para todos os estudantes ou para um curso específico. Defina uma data de validade para que o aviso deixe de aparecer automaticamente.
+      </div>
+
+      <div class="form-group">
+        <label for="destino">Destino do Aviso *</label>
+        <select id="destino" class="form-control" onchange="toggleCurso()">
+          <option value="geral">Todos os Estudantes</option>
+          <option value="curso">Por Curso</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="cursoSelect" style="display:none;">
+        <label for="curso">Curso *</label>
+        <select id="curso" class="form-control">
+          <option value="info">Técnico de Informática</option>
+          <option value="agri">Técnico Agrícola</option>
+          <option value="saude">Técnico de Saúde</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="titulo">Título do Aviso *</label>
+        <input type="text" id="titulo" class="form-control" placeholder="Ex: Calendário Académico, Avaliação de Desempenho...">
+      </div>
+
+      <div class="form-group">
+        <label for="tipo">Tipo de Aviso *</label>
+        <select id="tipo" class="form-control">
+          <option value="aviso">Aviso</option>
+          <option value="alerta">Alerta</option>
+          <option value="informativo">Informativo</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="dataValidade">Data de Validade (Opcional)</label>
+        <input type="date" id="dataValidade" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label for="descricao">Descrição *</label>
+        <textarea id="descricao" class="form-control" placeholder="Detalhes do aviso..."></textarea>
+      </div>
+
+      <button class="btn" onclick="enviarAviso()">
+        <i class="fas fa-bullhorn"></i> Enviar Aviso Geral
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function toggleCurso() {
+      const destino = document.getElementById('destino').value;
+      const select = document.getElementById('cursoSelect');
+      select.style.display = destino === 'curso' ? 'block' : 'none';
+    }
+
+    function enviarAviso() {
+      const titulo = document.getElementById('titulo').value;
+      const descricao = document.getElementById('descricao').value;
+      const destino = document.getElementById('destino').value;
+      const dataValidade = document.getElementById('dataValidade').value;
+
+      if (!titulo || !descricao) {
+        alert('Preencha todos os campos obrigatórios.');
+        return;
+      }
+
+      let msg = `✅ Aviso enviado com sucesso!\n\nTítulo: ${titulo}\nDestino: `;
+      if (destino === 'geral') {
+        msg += 'Todos os estudantes';
+      } else {
+        const curso = document.getElementById('curso').options[document.getElementById('curso').selectedIndex].text;
+        msg += `Curso: ${curso}`;
+      }
+
+      if (dataValidade) {
+        msg += `\nValidade: ${new Date(dataValidade).toLocaleDateString('pt-MZ')}`;
+      } else {
+        msg += `\nValidade: Permanente`;
+      }
+
+      alert(msg);
+    }
+  </script>
+</body>
+</html>

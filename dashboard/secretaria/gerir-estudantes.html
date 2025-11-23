@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gerir Estudantes - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 25px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .course-section {
+      margin-bottom: 30px;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+    }
+
+    .course-header {
+      background: var(--gray-100);
+      padding: 15px;
+      border-radius: var(--radius) var(--radius) 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .course-title {
+      font-size: 20px;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .turma-section {
+      padding: 15px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .turma-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .turma-title {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-warning { background: var(--warning); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-outline { 
+      border: 1px solid var(--primary); 
+      color: var(--primary); 
+      background: white; 
+    }
+    .btn-success { 
+      background: var(--success); 
+      color: white; 
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    th {
+      background: var(--gray-100);
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .status-activo { color: var(--success); }
+    .status-divida { color: var(--warning); }
+    .status-pendente { 
+      color: var(--warning); 
+      font-weight: bold;
+    }
+    .status-desistente { color: var(--danger); }
+
+    .action-select {
+      padding: 6px;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      font-size: 13px;
+      width: 100%;
+      max-width: 180px;
+    }
+
+    .info-box {
+      background: #fffbeb;
+      border-left: 4px solid var(--warning);
+      padding: 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Gerir Estudantes</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div style="margin-bottom: 20px;">
+        <h2><i class="fas fa-user-graduate"></i> Gestão de Estudantes</h2>
+        <div class="info-box">
+          <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Todas as ações requerem <strong>aprovação do Director</strong> antes de serem efetivadas.
+        </div>
+      </div>
+
+      <!-- Curso 1 -->
+      <div class="course-section">
+        <div class="course-header">
+          <div class="course-title">Técnico de Informática</div>
+          <span style="color: var(--gray-700);">18 estudantes</span>
+        </div>
+
+        <!-- Turma T1 -->
+        <div class="turma-section">
+          <div class="turma-header">
+            <div class="turma-title">Turma T1-2025</div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Estudante</th>
+                <th>Ano</th>
+                <th>Status</th>
+                <th>Ação Solicitada</th>
+                <th>Submeter</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>João Silva</td>
+                <td>2º Ano</td>
+                <td><span class="status-activo">Activo</span></td>
+                <td>
+                  <select class="action-select" id="acao-joao">
+                    <option value="">Selecione uma ação</option>
+                    <option value="mudar_turma">Mudar Turma</option>
+                    <option value="mudar_curso">Mudar Curso</option>
+                    <option value="transferir">Transferir para outra instituição</option>
+                    <option value="suspender">Suspender Matrícula</option>
+                    <option value="desistir">Desistência</option>
+                    <option value="excluir">Exclusão (falecimento)</option>
+                  </select>
+                </td>
+                <td>
+                  <button class="btn btn-success" onclick="submeterAcao('João Silva', 'acao-joao')">
+                    <i class="fas fa-paper-plane"></i> Submeter
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>Maria Costa</td>
+                <td>2º Ano</td>
+                <td><span class="status-divida">Em Dívida</span></td>
+                <td>
+                  <select class="action-select" id="acao-maria">
+                    <option value="">Selecione uma ação</option>
+                    <option value="mudar_turma">Mudar Turma</option>
+                    <option value="mudar_curso">Mudar Curso</option>
+                    <option value="transferir">Transferir para outra instituição</option>
+                    <option value="suspender">Suspender Matrícula</option>
+                    <option value="desistir">Desistência</option>
+                    <option value="excluir">Exclusão (falecimento)</option>
+                  </select>
+                </td>
+                <td>
+                  <button class="btn btn-success" onclick="submeterAcao('Maria Costa', 'acao-maria')">
+                    <i class="fas fa-paper-plane"></i> Submeter
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function submeterAcao(nome, selectId) {
+      const acao = document.getElementById(selectId).value;
+      const acoes = {
+        'mudar_turma': 'Mudança de Turma',
+        'mudar_curso': 'Mudança de Curso',
+        'transferir': 'Transferência',
+        'suspender': 'Suspensão de Matrícula',
+        'desistir': 'Desistência',
+        'excluir': 'Exclusão (Falecimento)'
+      };
+
+      if (!acao) {
+        alert('❗ Por favor, selecione uma ação.');
+        return;
+      }
+
+      const msg = `✅ Solicitação submetida com sucesso!\n\n` +
+                  `Estudante: ${nome}\n` +
+                  `Ação: ${acoes[acao]}\n\n` +
+                  `Status: Pendente de aprovação do Director.`;
+
+      alert(msg);
+      
+      // Em produção: enviar para Supabase com status="pendente"
+    }
+  </script>
+</body>
+</html>

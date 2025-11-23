@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inscrição de Estudante - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #f0f4ff, #ffffff);
+      color: var(--gray-900);
+    }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo {
+      width: 50px;
+      height: 50px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 15px;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(30, 64, 175, 0.2);
+    }
+
+    .course-info {
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      padding: 15px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--gray-700);
+    }
+
+    .course-info strong {
+      color: var(--primary-dark);
+    }
+
+    .credentials-section {
+      background: #f0f9ff;
+      border-left: 4px solid var(--success);
+      padding: 20px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 20px 0;
+    }
+
+    .credential-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: white;
+      border-radius: var(--radius);
+      margin: 10px 0;
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-copy {
+      padding: 6px 12px;
+      background: var(--primary-light);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+
+    .comprovante {
+      display: none;
+      width: 100%;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 30px;
+      border: 1px solid #000;
+      font-family: 'Times New Roman', serif;
+      background: white;
+      color: black;
+    }
+
+    .comprovante-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .comprovante-logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 10px;
+      object-fit: contain;
+    }
+
+    .comprovante h2 {
+      font-size: 24px;
+      margin: 10px 0;
+      color: var(--primary-dark);
+    }
+
+    .comprovante h3 {
+      font-size: 18px;
+      margin: 15px 0;
+      color: var(--gray-800);
+      text-decoration: underline;
+    }
+
+    .comprovante p {
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    .comprovante-line {
+      display: flex;
+      justify-content: space-between;
+      margin: 6px 0;
+      font-size: 14px;
+    }
+
+    .comprovante-assinatura {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .comprovante, .comprovante * {
+        visibility: visible;
+      }
+      .comprovante {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Inscrição de Novo Estudante</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-user-graduate"></i> Dados Pessoais</h2>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nomeCompleto">Nome Completo *</label>
+          <input type="text" id="nomeCompleto" class="form-control" required onchange="gerarCredenciais()">
+        </div>
+        <div class="form-group">
+          <label for="dataNasc">Data de Nascimento *</label>
+          <input type="date" id="dataNasc" class="form-control" required onchange="gerarCredenciais()">
+        </div>
+        <div class="form-group">
+          <label for="sexo">Sexo *</label>
+          <select id="sexo" class="form-control" required onchange="gerarCredenciais()">
+            <option value="">Selecione</option>
+            <option value="M">Masculino</option>
+            <option value="F">Feminino</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="naturalidade">Naturalidade *</label>
+          <input type="text" id="naturalidade" class="form-control" placeholder="Ex: Caia, Manica" required>
+        </div>
+        <div class="form-group">
+          <label for="residencia">Residência *</label>
+          <input type="text" id="residencia" class="form-control" placeholder="Bairro, Rua, Número" required onchange="gerarCredenciais()">
+        </div>
+        <div class="form-group">
+          <label for="contacto">Contacto *</label>
+          <input type="tel" id="contacto" class="form-control" placeholder="84 123 4567" required>
+        </div>
+        <div class="form-group">
+          <label for="tipoDocumento">Tipo de Documento *</label>
+          <select id="tipoDocumento" class="form-control" required onchange="toggleOutroDocumento()">
+            <option value="">Selecione</option>
+            <option value="bilhete_identidade">Bilhete de Identidade</option>
+            <option value="cartao_eleitoral">Cartão Eleitoral</option>
+            <option value="carta_conducao">Carta de Condução</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+        <div class="form-group" id="divOutroDocumento" style="display:none;">
+          <label for="outroDocumento">Tipo de Documento (Especifique) *</label>
+          <input type="text" id="outroDocumento" class="form-control" placeholder="Ex: Passaporte, Declaração...">
+        </div>
+        <div class="form-group">
+          <label for="numeroIdentificacao">Número de Identificação *</label>
+          <input type="text" id="numeroIdentificacao" class="form-control" placeholder="Número do documento" required>
+        </div>
+        <div class="form-group">
+          <label for="idReciboMatricula">ID do Recibo de Matrícula *</label>
+          <input type="text" id="idReciboMatricula" class="form-control" placeholder="Ex: MAT2025001" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="nivelAcademico">Nível Académico Anterior *</label>
+        <select id="nivelAcademico" class="form-control" required>
+          <option value="">Selecione</option>
+          <option value="basico">Ensino Básico</option>
+          <option value="medio">Ensino Médio</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="curso">Curso que Pretende Frequentar *</label>
+        <select id="curso" class="form-control" required onchange="mostrarInfoCurso()">
+          <option value="">Selecione um curso</option>
+          <option value="info" data-taxa="3500" data-duracao="24" data-area="Finanças e Gestão">
+            Técnico de Informática de Gestão
+          </option>
+          <option value="contab" data-taxa="3200" data-duracao="24" data-area="Finanças e Gestão">
+            Técnico de Contabilidade
+          </option>
+          <option value="agri" data-taxa="3000" data-duracao="18" data-area="Agricultura">
+            Técnico Agrícola
+          </option>
+          <option value="saude" data-taxa="4000" data-duracao="30" data-area="Saúde">
+            Técnico de Saúde
+          </option>
+        </select>
+        <div id="infoCurso" class="course-info" style="display:none;">
+          <p><strong>Área:</strong> <span id="areaCurso">—</span></p>
+          <p><strong>Duração:</strong> <span id="duracaoCurso">—</span> meses</p>
+          <p><strong>Taxa Mensal:</strong> <span id="taxaCurso">—</span> MZN</p>
+          <p style="color: var(--success);"><i class="fas fa-info-circle"></i> A taxa de multa aplica-se apenas em pagamentos em atraso.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="encarregado">Nome do Encarregado de Educação *</label>
+        <input type="text" id="encarregado" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="parentesco">Parentesco *</label>
+        <input type="text" id="parentesco" class="form-control" placeholder="Pai, Mãe, Tio, etc." required>
+      </div>
+      <div class="form-group">
+        <label for="contactoEnc">Contactos do Encarregado *</label>
+        <input type="text" id="contactoEnc" class="form-control" placeholder="84..., 82..., Email" required>
+      </div>
+
+      <!-- Credenciais Geradas -->
+      <div class="credentials-section" id="secaoCredenciais" style="display:none;">
+        <h3 style="margin-bottom: 15px; color: var(--success);"><i class="fas fa-key"></i> Credenciais de Acesso ao Sistema</h3>
+        
+        <div class="credential-item">
+          <div>
+            <strong>Código do Estudante</strong><br>
+            <small>Gerado automaticamente após inscrição</small>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span id="codigoEstudante">—</span>
+            <button class="btn-copy" onclick="copiarTexto('codigoEstudante')">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+        </div>
+
+        <div class="credential-item">
+          <div>
+            <strong>Email de Acesso</strong><br>
+            <small>Montado automaticamente</small>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span id="emailGerado">—</span>
+            <button class="btn-copy" onclick="copiarTexto('emailGerado')">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+        </div>
+
+        <div class="credential-item">
+          <div>
+            <strong>Senha Temporária</strong><br>
+            <small>Alterável no primeiro acesso</small>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span id="senhaGerada">—</span>
+            <button class="btn-copy" onclick="copiarTexto('senhaGerada')">
+              <i class="fas fa-copy"></i> Copiar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button id="btnInserir" class="btn btn-primary" style="width:100%;" onclick="inscreverEstudante()">
+        <i class="fas fa-check"></i> Confirmar Inscrição
+      </button>
+    </div>
+
+    <!-- Comprovante de Inscrição (PDF) -->
+    <div class="comprovante" id="comprovantePDF">
+      <div class="comprovante-header">
+        <img src="../../iconeipm.png" alt="IPM Caia" class="comprovante-logo">
+        <h2>INSTITUTO POLITÉCNICO MAKHETELE - CAIA</h2>
+        <p>Av. Principal, Caia, Sofala, Moçambique</p>
+        <p>Tel: +258 84 XXX XXXX | Email: info@ipm.co.mz</p>
+        <h3>DADOS DE REGISTO ACADÉMICO E MATRÍCULA</h3>
+      </div>
+
+      <p><strong>Recibo de Inscrição:</strong> <span id="pdfRecibo">—</span></p>
+      <p><strong>Data de Inscrição:</strong> <span id="pdfDataInscricao">—</span></p>
+      <p><strong>Código do Estudante:</strong> <span id="pdfCodigo">—</span></p>
+      <hr style="margin: 15px 0;">
+
+      <h3>Dados Pessoais</h3>
+      <p><strong>Nome Completo:</strong> <span id="pdfNome">—</span></p>
+      <p><strong>Data de Nascimento:</strong> <span id="pdfDataNasc">—</span></p>
+      <p><strong>Sexo:</strong> <span id="pdfSexo">—</span></p>
+      <p><strong>Naturalidade:</strong> <span id="pdfNaturalidade">—</span></p>
+      <p><strong>Residência:</strong> <span id="pdfResidencia">—</span></p>
+      <p><strong>Contacto:</strong> <span id="pdfContacto">—</span></p>
+      <p><strong>Tipo de Documento:</strong> <span id="pdfTipoDoc">—</span></p>
+      <p><strong>Número de Identificação:</strong> <span id="pdfNumeroDoc">—</span></p>
+
+      <h3>Curso e Matrícula</h3>
+      <p><strong>Curso:</strong> <span id="pdfCurso">—</span></p>
+      <p><strong>Área de Actuação:</strong> <span id="pdfArea">—</span></p>
+      <p><strong>Duração:</strong> <span id="pdfDuracao">—</span> meses</p>
+      <p><strong>Nível Académico Anterior:</strong> <span id="pdfNivel">—</span></p>
+      <p><strong>ID do Recibo de Matrícula:</strong> <span id="pdfIdRecibo">—</span></p>
+
+      <h3>Encarregado de Educação</h3>
+      <p><strong>Nome:</strong> <span id="pdfEncarregado">—</span></p>
+      <p><strong>Parentesco:</strong> <span id="pdfParentesco">—</span></p>
+      <p><strong>Contactos:</strong> <span id="pdfContactoEnc">—</span></p>
+
+      <h3>Credenciais de Acesso</h3>
+      <p><strong>Código do Estudante:</strong> <span id="pdfCodigoCred">—</span></p>
+      <p><strong>Email:</strong> <span id="pdfEmail">—</span></p>
+      <p><strong>Senha:</strong> <span id="pdfSenha">—</span></p>
+
+      <div class="comprovante-assinatura">
+        <p>___________________________</p>
+        <p>Chefe da Secretaria</p>
+        <p style="margin-top:20px; font-size:12px; color:#666;">
+          Comprovante gerado em: <span id="pdfDataGeracao">—</span> •© Powered by Stunner School System (3S_Benjanuário)
+        </p>
+      </div>
+    </div>
+
+    <div id="botoesComprovante" style="display:none; text-align:center; margin-top:20px;">
+      <button class="btn btn-primary" onclick="imprimirComprovante()">
+        <i class="fas fa-print"></i> Imprimir Comprovante
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function toggleOutroDocumento() {
+      const tipo = document.getElementById('tipoDocumento').value;
+      const div = document.getElementById('divOutroDocumento');
+      div.style.display = tipo === 'outro' ? 'block' : 'none';
+      document.getElementById('outroDocumento').required = tipo === 'outro';
+    }
+
+    function mostrarInfoCurso() {
+      const select = document.getElementById('curso');
+      const option = select.options[select.selectedIndex];
+      
+      if (option.value) {
+        document.getElementById('areaCurso').textContent = option.dataset.area || '—';
+        document.getElementById('duracaoCurso').textContent = option.dataset.duracao || '—';
+        document.getElementById('taxaCurso').textContent = option.dataset.taxa || '—';
+        document.getElementById('infoCurso').style.display = 'block';
+      } else {
+        document.getElementById('infoCurso').style.display = 'none';
+      }
+    }
+
+    function gerarCredenciais() {
+      const nome = document.getElementById('nomeCompleto').value.trim();
+      const dataNasc = document.getElementById('dataNasc').value;
+      const sexo = document.getElementById('sexo').value;
+      const residencia = document.getElementById('residencia').value.trim();
+
+      if (!nome || !dataNasc || !sexo || !residencia) return;
+
+      // Remover acentos
+      const nomeSemAcentos = nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const partes = nomeSemAcentos.split(' ');
+      const primeiroNome = partes[0].toLowerCase();
+      const sobrenome = partes[partes.length - 1].toUpperCase();
+
+      // Calcular posições das letras
+      const primeiraLetra = sobrenome.charCodeAt(0) - 64;
+      const ultimaLetra = sobrenome.charCodeAt(sobrenome.length - 1) - 64;
+
+      // Gerar código do estudante
+      const ano = new Date().getFullYear().toString().slice(-2); // últimos 2 dígitos do ano
+      const segundo = new Date().getSeconds().toString().padStart(2, '0');
+      const hora = new Date().getHours().toString().padStart(2, '0');
+      const numeroAleatorio = Math.floor(Math.random() * 10);
+      const inicialNome = nome.charAt(0).toUpperCase();
+
+      const codigo = `IPM${ano}${segundo}${hora}${numeroAleatorio}${inicialNome}`;
+      document.getElementById('codigoEstudante').textContent = codigo;
+
+      // Gerar email
+      const email = `${primeiroNome}.${primeiraLetra}${ultimaLetra}esipm@gmail.com`;
+      document.getElementById('emailGerado').textContent = email;
+
+      // Gerar senha
+      const minuto = new Date().getMinutes().toString().padStart(2, '0');
+      const nomes = nome.split(' ');
+      const iniciais = nomes.map(n => n[0]).reverse().join('').toUpperCase();
+      const mes = new Date(dataNasc).getMonth() + 1;
+      const mesStr = mes.toString().padStart(2, '0');
+      const iniciaisResidencia = residencia.substring(0, 2).toUpperCase();
+      const sexoLetra = sexo === 'M' ? 'M' : 'F';
+
+      const senha = `${minuto}${iniciais}${mesStr}${iniciaisResidencia}${sexoLetra}`;
+      document.getElementById('senhaGerada').textContent = senha;
+
+      document.getElementById('secaoCredenciais').style.display = 'block';
+    }
+
+    function copiarTexto(id) {
+      const texto = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(texto).then(() => {
+        alert(`✅ Texto copiado:\n\n${texto}`);
+      });
+    }
+
+    function inscreverEstudante() {
+      const nome = document.getElementById('nomeCompleto').value;
+      const codigo = document.getElementById('codigoEstudante').textContent;
+      const email = document.getElementById('emailGerado').textContent;
+      const senha = document.getElementById('senhaGerada').textContent;
+
+      if (!codigo || !email || !senha) {
+        alert('Preencha os dados necessários para gerar credenciais.');
+        return;
+      }
+
+      // Preencher comprovante
+      document.getElementById('pdfNome').textContent = nome;
+      document.getElementById('pdfCodigo').textContent = codigo;
+      document.getElementById('pdfCodigoCred').textContent = codigo;
+      document.getElementById('pdfDataNasc').textContent = new Date(document.getElementById('dataNasc').value).toLocaleDateString('pt-MZ');
+      document.getElementById('pdfSexo').textContent = document.getElementById('sexo').options[document.getElementById('sexo').selectedIndex].text;
+      document.getElementById('pdfNaturalidade').textContent = document.getElementById('naturalidade').value;
+      document.getElementById('pdfResidencia').textContent = document.getElementById('residencia').value;
+      document.getElementById('pdfContacto').textContent = document.getElementById('contacto').value;
+      document.getElementById('pdfTipoDoc').textContent = document.getElementById('tipoDocumento').options[document.getElementById('tipoDocumento').selectedIndex].text;
+      document.getElementById('pdfNumeroDoc').textContent = document.getElementById('numeroIdentificacao').value;
+      document.getElementById('pdfCurso').textContent = document.getElementById('curso').options[document.getElementById('curso').selectedIndex].text;
+      document.getElementById('pdfArea').textContent = document.getElementById('areaCurso').textContent;
+      document.getElementById('pdfDuracao').textContent = document.getElementById('duracaoCurso').textContent;
+      document.getElementById('pdfNivel').textContent = document.getElementById('nivelAcademico').options[document.getElementById('nivelAcademico').selectedIndex].text;
+      document.getElementById('pdfIdRecibo').textContent = document.getElementById('idReciboMatricula').value;
+      document.getElementById('pdfEncarregado').textContent = document.getElementById('encarregado').value;
+      document.getElementById('pdfParentesco').textContent = document.getElementById('parentesco').value;
+      document.getElementById('pdfContactoEnc').textContent = document.getElementById('contactoEnc').value;
+      document.getElementById('pdfEmail').textContent = email;
+      document.getElementById('pdfSenha').textContent = senha;
+      document.getElementById('pdfDataInscricao').textContent = new Date().toLocaleDateString('pt-MZ');
+      document.getElementById('pdfDataGeracao').textContent = new Date().toLocaleDateString('pt-MZ') + ' ' + new Date().toLocaleTimeString('pt-MZ');
+
+      // Mostrar comprovante
+      document.getElementById('comprovantePDF').style.display = 'block';
+      document.getElementById('botoesComprovante').style.display = 'block';
+
+      alert(`✅ Estudante "${nome}" inscrito com sucesso!\n\nCódigo: ${codigo}\nEmail: ${email}\nSenha: ${senha}\n\nCredenciais enviadas por email institucional.`);
+    }
+
+    function imprimirComprovante() {
+      window.print();
+    }
+  </script>
+</body>
+</html>

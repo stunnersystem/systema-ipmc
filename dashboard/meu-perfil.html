@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meu Perfil - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .profile-section {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .profile-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+      color: var(--primary);
+    }
+
+    .profile-info h3 {
+      font-size: 22px;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 15px;
+      background: var(--gray-50);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: not-allowed;
+      font-size: 16px;
+      opacity: 0.7;
+    }
+
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid var(--primary);
+      padding: 12px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Meu Perfil</p>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;" id="nomeUsuario">Carregando...</span>
+        <a href="../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-user"></i> Informações Pessoais</h2>
+        <p id="tituloSetor">Setor: —</p>
+      </div>
+
+      <div class="info-box">
+        <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Estas informações foram definidas pelo Director. Contate-o para alterações.
+      </div>
+
+      <div class="profile-section">
+        <div class="profile-photo">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="profile-info">
+          <h3 id="nomeCompleto">—</h3>
+          <p><strong>Email:</strong> <span id="email">—</span></p>
+          <p><strong>Telefone:</strong> <span id="telefone">—</span></p>
+          <p><strong>Cargo:</strong> <span id="cargo">—</span></p>
+          <p><strong>Data de Admissão:</strong> <span id="dataAdmissao">—</span></p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nomeInput">Nome Completo</label>
+          <input type="text" id="nomeInput" class="form-control" value="—">
+        </div>
+        <div class="form-group">
+          <label for="dataNascimento">Data de Nascimento</label>
+          <input type="text" id="dataNascimento" class="form-control" value="—">
+        </div>
+        <div class="form-group">
+          <label for="naturalidade">Naturalidade</label>
+          <input type="text" id="naturalidade" class="form-control" value="—">
+        </div>
+        <div class="form-group">
+          <label for="residencia">Residência</label>
+          <input type="text" id="residencia" class="form-control" value="—">
+        </div>
+        <div class="form-group">
+          <label for="telefoneInput">Telefone</label>
+          <input type="text" id="telefoneInput" class="form-control" value="—">
+        </div>
+        <div class="form-group">
+          <label for="emailInput">Email</label>
+          <input type="text" id="emailInput" class="form-control" value="—">
+        </div>
+        <div class="form-group">
+          <label for="formacao">Formação Profissional</label>
+          <input type="text" id="formacao" class="form-control" value="—">
+        </div>
+        <div class="form-group">
+          <label for="especialidade">Especialidade</label>
+          <input type="text" id="especialidade" class="form-control" value="—">
+        </div>
+        <div class="form-group">
+          <label for="categoria">Categoria</label>
+          <input type="text" id="categoria" class="form-control" value="—">
+        </div>
+        <div class="form-group">
+          <label for="contrato">Tipo de Contrato</label>
+          <input type="text" id="contrato" class="form-control" value="—">
+        </div>
+        <div class="form-group">
+          <label for="dataAdmissaoInput">Data de Admissão</label>
+          <input type="text" id="dataAdmissaoInput" class="form-control" value="—">
+        </div>
+        <div class="form-group">
+          <label for="observacoes">Observações</label>
+          <textarea id="observacoes" class="form-control" rows="3" readonly></textarea>
+        </div>
+        <!-- Campos exclusivos para estudante -->
+        <div class="form-group" id="campoCurso" style="display:none;">
+          <label for="curso">Curso</label>
+          <input type="text" id="curso" class="form-control" value="—">
+        </div>
+        <div class="form-group" id="campoAno" style="display:none;">
+          <label for="ano">Ano de Frequência</label>
+          <input type="text" id="ano" class="form-control" value="—">
+        </div>
+        <div class="form-group" id="campoTurma" style="display:none;">
+          <label for="turma">Turma</label>
+          <input type="text" id="turma" class="form-control" value="—">
+        </div>
+        <div class="form-group" id="campoNivel" style="display:none;">
+          <label for="nivel">Nível Académico Anterior</label>
+          <input type="text" id="nivel" class="form-control" value="—">
+        </div>
+        <div class="form-group" id="campoEncarregado" style="display:none;">
+          <label for="encarregado">Encarregado de Educação</label>
+          <input type="text" id="encarregado" class="form-control" value="—">
+        </div>
+      </div>
+
+      <button class="btn" disabled>
+        <i class="fas fa-lock"></i> Edição Bloqueada
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Simular dados do usuário logado (em produção: virá do Supabase)
+    const usuarioLogado = {
+      nome: "Dr. Carlos Santos",
+      email: "carlos.santos@ipm.co.mz",
+      telefone: "+258 84 123 4567",
+      data_nascimento: "1985-06-15",
+      naturalidade: "Maputo, Moçambique",
+      residencia: "Rua da Escola, Nº 123, Maputo",
+      formacao: "Doutoramento em Educação",
+      especialidade: "Pedagogia, Metodologia de Ensino",
+      cargo: "Chefe da Secção Pedagógica",
+      categoria: "Chefe de Secção",
+      tipo_contrato: "Contrato Indeterminado",
+      data_admissao: "2023-01-01",
+      observacoes: "Responsável pela validação de pautas e coordenação pedagógica.",
+      role: "pedagogico",
+      curso: null,
+      ano: null,
+      turma: null,
+      nivel_academico: null,
+      encarregado: null
+    };
+
+    // Preencher dados
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('nomeUsuario').textContent = usuarioLogado.nome;
+      document.getElementById('nomeCompleto').textContent = usuarioLogado.nome;
+      document.getElementById('email').textContent = usuarioLogado.email;
+      document.getElementById('telefone').textContent = usuarioLogado.telefone;
+      document.getElementById('cargo').textContent = usuarioLogado.cargo;
+      document.getElementById('dataAdmissao').textContent = usuarioLogado.data_admissao;
+
+      // Preencher campos
+      document.getElementById('nomeInput').value = usuarioLogado.nome;
+      document.getElementById('dataNascimento').value = usuarioLogado.data_nascimento;
+      document.getElementById('naturalidade').value = usuarioLogado.naturalidade;
+      document.getElementById('residencia').value = usuarioLogado.residencia;
+      document.getElementById('telefoneInput').value = usuarioLogado.telefone;
+      document.getElementById('emailInput').value = usuarioLogado.email;
+      document.getElementById('formacao').value = usuarioLogado.formacao;
+      document.getElementById('especialidade').value = usuarioLogado.especialidade;
+      document.getElementById('categoria').value = usuarioLogado.categoria;
+      document.getElementById('contrato').value = usuarioLogado.tipo_contrato;
+      document.getElementById('dataAdmissaoInput').value = usuarioLogado.data_admissao;
+      document.getElementById('observacoes').value = usuarioLogado.observacoes;
+
+      // Ajustar título do setor
+      const setorMap = {
+        'director': 'Director Geral',
+        'secretaria': 'Secretaria Académica',
+        'pedagogico': 'Secção Pedagógica',
+        'formador': 'Formador',
+        'estudante': 'Estudante'
+      };
+      document.getElementById('tituloSetor').textContent = `Setor: ${setorMap[usuarioLogado.role] || 'Desconhecido'}`;
+
+      // Exibir campos específicos de estudante, se aplicável
+      if (usuarioLogado.role === 'estudante') {
+        document.getElementById('campoCurso').style.display = 'block';
+        document.getElementById('campoAno').style.display = 'block';
+        document.getElementById('campoTurma').style.display = 'block';
+        document.getElementById('campoNivel').style.display = 'block';
+        document.getElementById('campoEncarregado').style.display = 'block';
+
+        document.getElementById('curso').value = usuarioLogado.curso || '—';
+        document.getElementById('ano').value = usuarioLogado.ano || '—';
+        document.getElementById('turma').value = usuarioLogado.turma || '—';
+        document.getElementById('nivel').value = usuarioLogado.nivel_academico || '—';
+        document.getElementById('encarregado').value = usuarioLogado.encarregado || '—';
+      }
+    });
+  </script>
+</body>
+          </html>

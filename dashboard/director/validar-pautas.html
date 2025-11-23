@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Validar Pautas - IPM Caia</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #3b82f6;
+      --secondary: #7e22ce;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+      --radius: 12px;
+      --radius-lg: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
+
+    .dashboard-header {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-logo img {
+      width: 60%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 30px;
+    }
+
+    .card-header h2 {
+      color: var(--primary-dark);
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .form-group { margin-bottom: 15px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      font-size: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    th {
+      background: var(--gray-100);
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .status-aprovado { color: var(--success); font-weight: 600; }
+    .status-reprovado { color: var(--danger); font-weight: 600; }
+    .status-em-recuperacao { color: var(--warning); font-weight: 600; }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-success { background: var(--success); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
+  </style>
+</head>
+<body>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-logo">
+        <img src="../../iconeipm.png" alt="IPM Caia">
+      </div>
+      <div>
+        <h2>Instituto Politécnico Makhetele - Caia</h2>
+        <p>Validar Pautas Finais</p>
+      </div>
+      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">Dr. Ana Lima</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-clipboard-check"></i> Selecionar Pauta para Validação</h2>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="cursoPauta">Curso *</label>
+          <select id="cursoPauta" class="form-control" onchange="carregarAnos()">
+            <option value="">Selecione um curso</option>
+            <option value="info">Técnico de Informática</option>
+            <option value="agri">Técnico Agrícola</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="anoFrequenciaPauta">Ano de Frequência *</label>
+          <select id="anoFrequenciaPauta" class="form-control" onchange="carregarDisciplinasPauta()" disabled>
+            <option value="">Selecione primeiro o curso</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="disciplinaPauta">Disciplina *</label>
+          <select id="disciplinaPauta" class="form-control" onchange="carregarPauta()" disabled>
+            <option value="">Selecione primeiro o ano</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="turmaPauta">Turma *</label>
+          <select id="turmaPauta" class="form-control" onchange="carregarPauta()" disabled>
+            <option value="">Selecione primeiro a disciplina</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabela de Pauta -->
+    <div class="card" id="secaoPauta" style="display:none;">
+      <div class="card-header">
+        <h2><i class="fas fa-list"></i> Pauta de <span id="tituloDisciplinaPauta">—</span></h2>
+        <p>Curso: <strong id="tituloCursoPauta">—</strong> | Turma: <strong id="tituloTurmaPauta">—</strong></p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Estudante</th>
+            <th>Ano</th>
+            <th>AC1</th>
+            <th>AC2</th>
+            <th>Trabalho</th>
+            <th>Média de Avaliações</th>
+            <th>Exame</th>
+            <th>Recuperação</th>
+            <th>Média de Admissão ao Estágio</th>
+            <th>Estágio</th>
+            <th>Média Final</th>
+            <th>Status</th>
+            <th>Acções</th>
+          </tr>
+        </thead>
+        <tbody id="listaPauta">
+          <!-- Será preenchido dinamicamente -->
+        </tbody>
+      </table>
+
+      <div style="margin-top: 20px; display: flex; gap: 15px;">
+        <button class="btn btn-success" onclick="aprovarPauta()">
+          <i class="fas fa-check"></i> Aprovar Pauta Inteira
+        </button>
+        <button class="btn btn-danger" onclick="mostrarRejeicao()">
+          <i class="fas fa-times"></i> Rejeitar Pauta
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simular dados
+    const pautas = [
+      { 
+        estudante: "João Silva", 
+        ano: "2º Ano", 
+        ac1: 12.0, 
+        ac2: 14.0, 
+        trabalho: 15.0, 
+        media_avaliacoes: 13.7, 
+        exame: 8.0, 
+        recuperacao: 12.0, 
+        media_admissao_estagio: 12.9, 
+        estagio: 14.5, 
+        media_final: 13.7, 
+        status: "aprovado" 
+      },
+      { 
+        estudante: "Maria Costa", 
+        ano: "2º Ano", 
+        ac1: 16.0, 
+        ac2: 15.5, 
+        trabalho: 17.0, 
+        media_avaliacoes: 16.2, 
+        exame: 14.0, 
+        recuperacao: null, 
+        media_admissao_estagio: 15.1, 
+        estagio: 16.0, 
+        media_final: 15.6, 
+        status: "aprovado" 
+      }
+    ];
+
+    function carregarAnos() {
+      const curso = document.getElementById('cursoPauta').value;
+      const select = document.getElementById('anoFrequenciaPauta');
+      select.disabled = !curso;
+      select.innerHTML = '<option value="">Selecione o ano</option>';
+
+      if (!curso) return;
+
+      for (let i = 1; i <= 3; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `${i}º Ano`;
+        select.appendChild(opt);
+      }
+    }
+
+    function carregarDisciplinasPauta() {
+      const ano = document.getElementById('anoFrequenciaPauta').value;
+      const select = document.getElementById('disciplinaPauta');
+      select.disabled = !ano;
+      select.innerHTML = '<option value="">Selecione a disciplina</option>';
+
+      if (!ano) return;
+
+      // Simular disciplinas por ano
+      const disciplinas = {
+        '1': ['Matemática', 'Informática', 'Inglês'],
+        '2': ['Programação', 'Estatística', 'Estágio']
+      };
+
+      (disciplinas[ano] || []).forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.toLowerCase().replace(/\s+/g, '_');
+        opt.textContent = d;
+        select.appendChild(opt);
+      });
+    }
+
+    function carregarPauta() {
+      const disciplina = document.getElementById('disciplinaPauta').options[document.getElementById('disciplinaPauta').selectedIndex].text;
+      const turma = document.getElementById('turmaPauta').value;
+
+      if (!disciplina || !turma) return;
+
+      document.getElementById('tituloDisciplinaPauta').textContent = disciplina;
+      document.getElementById('tituloTurmaPauta').textContent = turma;
+
+      const lista = document.getElementById('listaPauta');
+      lista.innerHTML = '';
+
+      pautas.forEach(est => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${est.estudante}</td>
+          <td>${est.ano}</td>
+          <td>${est.ac1}</td>
+          <td>${est.ac2}</td>
+          <td>${est.trabalho}</td>
+          <td>${est.media_avaliacoes}</td>
+          <td>${est.exame}</td>
+          <td>${est.recuperacao || '—'}</td>
+          <td>${est.media_admissao_estagio}</td>
+          <td>${est.estagio || '—'}</td>
+          <td>${est.media_final}</td>
+          <td><span class="status-${est.status}">${est.status === 'aprovado' ? 'Aprovado' : 'Reprovado'}</span></td>
+          <td>
+            <button class="btn btn-success">
+              <i class="fas fa-check"></i>
+            </button>
+            <button class="btn btn-danger">
+              <i class="fas fa-times"></i>
+            </button>
+          </td>
+        `;
+        lista.appendChild(tr);
+      });
+
+      document.getElementById('secaoPauta').style.display = 'block';
+    }
+
+    function aprovarPauta() {
+      const disciplina = document.getElementById('tituloDisciplinaPauta').textContent;
+      const turma = document.getElementById('tituloTurmaPauta').textContent;
+
+      alert(`✅ Pauta de "${disciplina}" para "${turma}" aprovada com sucesso!\n\nSerá enviada ao Director para validação final.`);
+    }
+
+    function mostrarRejeicao() {
+      const motivo = prompt('Rejeitar pauta. Motivo:');
+      if (motivo) {
+        alert(`❌ Pauta rejeitada.\n\nMotivo: ${motivo}`);
+      }
+    }
+  </script>
+</body>
+</html>
