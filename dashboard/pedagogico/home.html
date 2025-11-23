@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Secção Pedagógica - IPM Caia</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #1e40af;
@@ -20,11 +21,7 @@
       --gray-200: #e5e7eb;
       --gray-800: #1f2937;
       --gray-900: #111827;
-      
       --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
-      --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-      --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
       --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
       --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
       --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
@@ -32,17 +29,8 @@
       --radius-lg: 16px;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: var(--gray-50);
-      color: var(--gray-900);
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
 
     .dashboard-header {
       background: var(--gradient-primary);
@@ -57,16 +45,6 @@
       gap: 15px;
       max-width: 1200px;
       margin: 0 auto;
-    }
-
-    .header-logo {
-      width: 50px;
-      height: 50px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .header-logo img {
@@ -142,11 +120,6 @@
       box-shadow: var(--shadow-xl);
     }
 
-    .welcome-card h2 {
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -179,8 +152,8 @@
     }
 
     .icon-primary { background: var(--gradient-primary); }
-    .icon-success { background: var(--gradient-success); }
-    .icon-warning { background: var(--gradient-warning); }
+    .icon-success { background: var(--success); }
+    .icon-warning { background: var(--warning); }
     .icon-accent { background: var(--gradient-accent); }
 
     .stat-info h3 {
@@ -239,8 +212,8 @@
         <h2>Instituto Politécnico Makhetele - Caia</h2>
         <p>Secção Pedagógica</p>
       </div>
-      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
-        <span style="font-size: 14px;">Dr. Carlos Santos</span>
+      <div id="infoUsuario" style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">Carregando...</span>
         <a href="../../index.html" style="color: white; text-decoration: none;">
           <i class="fas fa-sign-out-alt"></i>
         </a>
@@ -256,31 +229,25 @@
           <a href="#" class="nav-item active">
             <i class="fas fa-home"></i> Dashboard
           </a>
-          <a href="../secretaria/gerir-cursos.html" class="nav-item">
-            <i class="fas fa-book"></i> Cursos e Disciplinas
-          </a>
-          <a href="criar-turmas.html" class="nav-item">
-           <i class="fas fa-users"></i> Criar Turmas
-          </a>
           <a href="atribuir-turmas-formadores.html" class="nav-item">
             <i class="fas fa-chalkboard-teacher"></i> Atribuir Turmas
           </a>
           <a href="validar-pautas.html" class="nav-item">
             <i class="fas fa-clipboard-check"></i> Validar Pautas
           </a>
-          <a href="#" class="nav-item">
-            <i class="fas fa-chart-bar"></i> Relatórios
+          <a href="relatorios-academicos.html" class="nav-item">
+            <i class="fas fa-chart-bar"></i> Relatórios Académicos
           </a>
-          <a href="../director/exportar-dados.html" class="nav-item">
-            <i class="fas fa-archive"></i> Exportar Dados
-          </a>
-          <a href="#" class="nav-item">
+          <a href="calendario-academico.html" class="nav-item">
             <i class="fas fa-calendar-alt"></i> Calendário Académico
           </a>
-          <a href="enviar-aviso.html" class="nav-item">
-            <i class="fas fa-bullhorn"></i> Enviar Aviso Geral
+          <a href="gerir-disciplinas.html" class="nav-item">
+            <i class="fas fa-book-open"></i> Gerir Disciplinas
           </a>
-          <a href="../meu-perfil.html" class="nav-item">
+          <a href="controle-frequencia.html" class="nav-item">
+            <i class="fas fa-user-check"></i> Controlo de Frequência
+          </a>
+          <a href="meu-perfil.html" class="nav-item">
             <i class="fas fa-user"></i> Meu Perfil
           </a>
         </nav>
@@ -289,7 +256,7 @@
       <section class="content">
         <div class="welcome-card">
           <h2>Bem-vindo à Secção Pedagógica!</h2>
-          <p>Centro de excelência académica do Instituto Politécnico Makhetele - Caia</p>
+          <p>Centro de excelência académica do IPM Caia</p>
         </div>
 
         <div class="stats-grid">
@@ -298,7 +265,7 @@
               <i class="fas fa-chalkboard-teacher"></i>
             </div>
             <div class="stat-info">
-              <h3>18</h3>
+              <h3 id="totalFormadores">0</h3>
               <p>Formadores Activos</p>
             </div>
           </div>
@@ -307,77 +274,148 @@
               <i class="fas fa-users"></i>
             </div>
             <div class="stat-info">
-              <h3>12</h3>
-              <p>Turmas em Curso</p>
+              <h3 id="totalEstudantes">0</h3>
+              <p>Estudantes sob Supervisão</p>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon icon-warning">
-              <i class="fas fa-book-open"></i>
+              <i class="fas fa-file-alt"></i>
             </div>
             <div class="stat-info">
-              <h3>42</h3>
-              <p>Disciplinas</p>
+              <h3 id="totalPautasPendentes">0</h3>
+              <p>Pautas Pendentes de Validação</p>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon icon-accent">
-              <i class="fas fa-clock"></i>
+              <i class="fas fa-percentage"></i>
             </div>
             <div class="stat-info">
-              <h3>12h</h3>
-              <p>Carga Horária Média</p>
+              <h3 id="taxaAprovacao">0%</h3>
+              <p>Taxa de Aprovação Geral</p>
             </div>
           </div>
         </div>
 
-        <h2 style="margin: 25px 0 20px; color: var(--primary-dark);">Atividades Pedagógicas</h2>
+        <h2 style="margin: 25px 0 20px; color: var(--primary-dark);">Acesso Rápido</h2>
         <div class="modules-grid">
           <div class="module-card" onclick="location.href='atribuir-turmas-formadores.html'">
             <div class="module-icon">
               <i class="fas fa-link"></i>
             </div>
-            <h3>Atribuir Turmas a Formadores</h3>
-            <p>Vincular disciplinas e turmas aos formadores</p>
+            <h3>Atribuir Turmas</h3>
+            <p>Vincular formadores a turmas e disciplinas</p>
           </div>
           <div class="module-card" onclick="location.href='validar-pautas.html'">
             <div class="module-icon">
-              <i class="fas fa-file-signature"></i>
+              <i class="fas fa-clipboard-check"></i>
             </div>
-            <h3>Validar Pautas Finais</h3>
-            <p>Aprovar ou rejeitar pautas de disciplinas inteiras por semestre</p>
+            <h3>Validar Pautas</h3>
+            <p>Aprovar/rejeitar pautas de formadores</p>
           </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
-            <div class="module-icon">
-              <i class="fas fa-calendar-check"></i>
-            </div>
-            <h3>Calendário de Avaliações</h3>
-            <p>Definir datas de provas e entregas</p>
-          </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
+          <div class="module-card" onclick="location.href='relatorios-academicos.html'">
             <div class="module-icon">
               <i class="fas fa-chart-line"></i>
             </div>
-            <h3>Relatórios de Desempenho</h3>
-            <p>Gráficos por turma, disciplina e formador</p>
+            <h3>Relatórios Académicos</h3>
+            <p>Estatísticas por curso, turma, formador</p>
           </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
+          <div class="module-card" onclick="location.href='calendario-academico.html'">
             <div class="module-icon">
-              <i class="fas fa-clock"></i>
+              <i class="fas fa-calendar-check"></i>
             </div>
-            <h3>Cargas Horárias</h3>
-            <p>Acompanhar cumprimento de horas lectivas</p>
+            <h3>Calendário Académico</h3>
+            <p>Provas, avaliações, datas-chave</p>
           </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
+          <div class="module-card" onclick="location.href='gerir-disciplinas.html'">
             <div class="module-icon">
-              <i class="fas fa-graduation-cap"></i>
+              <i class="fas fa-book"></i>
             </div>
-            <h3>Plano Curricular</h3>
-            <p>Definir e actualizar programas de disciplinas</p>
+            <h3>Gerir Disciplinas</h3>
+            <p>Adicionar/editar disciplinas e planos curriculares</p>
+          </div>
+          <div class="module-card" onclick="location.href='controle-frequencia.html'">
+            <div class="module-icon">
+              <i class="fas fa-user-check"></i>
+            </div>
+            <h3>Controlo de Frequência</h3>
+            <p>Gerir presenças e ausências dos estudantes</p>
           </div>
         </div>
       </section>
     </div>
   </div>
+
+  <script>
+    // Configuração do Supabase
+    const supabaseUrl = 'https://SEU_PROJETO.supabase.co';
+    const supabaseAnonKey = 'SEU_ANON_KEY';
+    const { createClient } = supabase;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    // Verificar papel real do usuário
+    window.onload = async () => {
+      const {  { session }, error } = await supabase.auth.getSession();
+      if (error || !session) {
+        window.location.href = '../../index.html';
+        return;
+      }
+
+      const userId = session.user.id;
+
+      const { data, error: profileError } = await supabase
+        .from('usuarios')
+        .select('role, nome')
+        .eq('auth_id', userId)
+        .single();
+
+      if (profileError || !data || data.role !== 'pedagogico') {
+        window.location.href = '../../index.html';
+        return;
+      }
+
+      document.getElementById('infoUsuario').innerHTML = `
+        <span style="font-size: 14px;">${data.nome}</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      `;
+
+      // Carregar estatísticas reais
+      carregarEstatisticas();
+    };
+
+    async function carregarEstatisticas() {
+      try {
+        // Total de formadores
+        const { count: formadoresCount } = await supabase
+          .from('usuarios')
+          .select('*', { count: 'exact', head: true })
+          .eq('role', 'formador');
+
+        // Total de estudantes sob supervisão (em produção: usar relacionamento turmas_formadores)
+        const { count: estudantesCount } = await supabase
+          .from('estudantes')
+          .select('*', { count: 'exact', head: true });
+
+        // Pautas pendentes
+        const { count: pautasCount } = await supabase
+          .from('pautas')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'pendente');
+
+        // Taxa de aprovação (em produção: cálculo real)
+        const taxaAprovacao = 78; // Simulado
+
+        document.getElementById('totalFormadores').textContent = formadoresCount || 0;
+        document.getElementById('totalEstudantes').textContent = estudantesCount || 0;
+        document.getElementById('totalPautasPendentes').textContent = pautasCount || 0;
+        document.getElementById('taxaAprovacao').textContent = taxaAprovacao + '%';
+      } catch (error) {
+        console.error('Erro ao carregar estatísticas:', error);
+      }
+    }
+  </script>
 </body>
-  </html>
+</html>
