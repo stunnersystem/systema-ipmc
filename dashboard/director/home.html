@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel do Director - IPM Caia</title>
+  <title>Director - IPM Caia</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #1e40af;
@@ -20,11 +21,7 @@
       --gray-200: #e5e7eb;
       --gray-800: #1f2937;
       --gray-900: #111827;
-      
       --gradient-primary: linear-gradient(135deg, #1e40af 0%, #7e22ce 100%);
-      --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-      --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
       --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
       --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
       --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
@@ -32,17 +29,8 @@
       --radius-lg: 16px;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: var(--gray-50);
-      color: var(--gray-900);
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--gray-50); color: var(--gray-900); }
 
     .dashboard-header {
       background: var(--gradient-primary);
@@ -57,16 +45,6 @@
       gap: 15px;
       max-width: 1200px;
       margin: 0 auto;
-    }
-
-    .header-logo {
-      width: 50px;
-      height: 50px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .header-logo img {
@@ -140,8 +118,6 @@
       padding: 30px;
       margin-bottom: 30px;
       box-shadow: var(--shadow-xl);
-      position: relative;
-      overflow: hidden;
     }
 
     .welcome-card h2 {
@@ -181,10 +157,9 @@
     }
 
     .icon-primary { background: var(--gradient-primary); }
-    .icon-success { background: var(--gradient-success); }
-    .icon-warning { background: var(--gradient-warning); }
+    .icon-success { background: var(--success); }
+    .icon-warning { background: var(--warning); }
     .icon-accent { background: var(--gradient-accent); }
-    .icon-danger { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
 
     .stat-info h3 {
       font-size: 24px;
@@ -243,8 +218,8 @@
         <p>Painel do Director</p>
       </div>
       <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
-        <span style="font-size: 14px;">Benjanuário João</span>
-        <a href="../../index.html" style="color: white; text-decoration: none;">
+        <span style="font-size: 14px;" id="nomeUsuario">—</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;" onclick="logout()">
           <i class="fas fa-sign-out-alt"></i>
         </a>
       </div>
@@ -259,37 +234,26 @@
           <a href="#" class="nav-item active">
             <i class="fas fa-home"></i> Dashboard
           </a>
-          <a href="criar-funcionario.html" class="nav-item">
-            <i class="fas fa-users-cog"></i> Criar Funcionário(s)
-          </a>
           <a href="gerir-usuarios.html" class="nav-item">
-            <i class="fas fa-users-cog"></i> Gerir Usuários
+            <i class="fas fa-users-cog"></i> Gerir Utilizadores
           </a>
-          <a href="../secretaria/gerir-cursos.html" class="nav-item">
-            <i class="fas fa-book"></i> Criação de Cursos
+          <a href="criar-funcionario.html" class="nav-item">
+            <i class="fas fa-user-plus"></i> Criar Funcionário
           </a>
-          <a href="#" class="nav-item">
-            <i class="fas fa-calendar-alt"></i> Ano Lectivo
+          <a href="gerir-cursos.html" class="nav-item">
+            <i class="fas fa-book"></i> Gerir Cursos
           </a>
-          <a href="#" class="nav-item">
-            <i class="fas fa-thumbs-up"></i> Aprovações Pendentes
-          </a><a href="relatorios.html" class="nav-item">
-           <i class="fas fa-chart-bar"></i> Relatórios
+          <a href="validar-pautas.html" class="nav-item">
+            <i class="fas fa-clipboard-check"></i> Validar Pautas
           </a>
-          <a href="#" class="nav-item">
-            <i class="fas fa-hand-holding-usd"></i> Bolsas e Descontos
+          <a href="relatorios.html" class="nav-item">
+            <i class="fas fa-chart-bar"></i> Relatórios
+          </a>
+          <a href="auditoria.html" class="nav-item">
+            <i class="fas fa-history"></i> Auditoria
           </a>
           <a href="#" class="nav-item">
             <i class="fas fa-cog"></i> Configurações
-          </a>
-          <a href="exportar-dados.html" class="nav-item">
-           <i class="fas fa-archive"></i> Exportar Dados
-          </a>
-          <a href="emitir-diploma.html" class="nav-item">
-           <i class="fas fa-archive"></i> Emitir Diploma/ Certificado
-          </a>
-          <a href="../meu-perfil.html" class="nav-item">
-           <i class="fas fa-user"></i> Meu Perfil
           </a>
         </nav>
       </aside>
@@ -297,7 +261,7 @@
       <section class="content">
         <div class="welcome-card">
           <h2>Bem-vindo, Director!</h2>
-          <p>Visão geral das operações do Instituto Politécnico Makhetele - Caia</p>
+          <p>Centro de comando do Instituto Politécnico Makhetele - Caia</p>
         </div>
 
         <div class="stats-grid">
@@ -306,7 +270,7 @@
               <i class="fas fa-user-graduate"></i>
             </div>
             <div class="stat-info">
-              <h3>248</h3>
+              <h3 id="totalEstudantes">0</h3>
               <p>Estudantes Activos</p>
             </div>
           </div>
@@ -315,71 +279,150 @@
               <i class="fas fa-chalkboard-teacher"></i>
             </div>
             <div class="stat-info">
-              <h3>32</h3>
+              <h3 id="totalFuncionarios">0</h3>
               <p>Funcionários</p>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon icon-warning">
-              <i class="fas fa-book-open"></i>
+              <i class="fas fa-file-invoice-dollar"></i>
             </div>
             <div class="stat-info">
-              <h3>8</h3>
-              <p>Cursos Activos</p>
+              <h3 id="totalPagamentos">0 MZN</h3>
+              <p>Recebido em 2025</p>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon icon-accent">
-              <i class="fas fa-file-invoice-dollar"></i>
+              <i class="fas fa-percentage"></i>
             </div>
             <div class="stat-info">
-              <h3>85%</h3>
-              <p>Pagamentos em Dia</p>
+              <h3 id="taxaAprovacao">0%</h3>
+              <p>Taxa de Aprovação</p>
             </div>
           </div>
         </div>
 
-        <h2 style="margin: 25px 0 20px; color: var(--primary-dark);">Atividades Rápidas</h2>
+        <h2 style="margin: 25px 0 20px; color: var(--primary-dark);">Acesso Rápido</h2>
         <div class="modules-grid">
+          <div class="module-card" onclick="location.href='gerir-usuarios.html'">
+            <div class="module-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <h3>Gerir Utilizadores</h3>
+            <p>Criar, editar, suspender ou eliminar contas</p>
+          </div>
           <div class="module-card" onclick="location.href='criar-funcionario.html'">
             <div class="module-icon">
               <i class="fas fa-user-plus"></i>
             </div>
-            <h3>Criar Conta de Funcionário</h3>
-            <p>Adicionar pedagógico, secretaria ou formadores</p>
+            <h3>Criar Funcionário</h3>
+            <p>Adicionar novo pessoal (formador, secretaria, etc.)</p>
           </div>
-          <div class="module-card" onclick="location.href='../secretaria/gerir-cursos.html'">
+          <div class="module-card" onclick="location.href='gerir-cursos.html'">
             <div class="module-icon">
-              <i class="fas fa-plus-circle"></i>
+              <i class="fas fa-book-open"></i>
             </div>
-            <h3>Criar Novo Curso</h3>
-            <p>Definir área, duração, taxas e multas</p>
+            <h3>Gerir Cursos</h3>
+            <p>Criar cursos e definir disciplinas por ano</p>
           </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
+          <div class="module-card" onclick="location.href='validar-pautas.html'">
             <div class="module-icon">
-              <i class="fas fa-thumbs-up"></i>
+              <i class="fas fa-file-signature"></i>
             </div>
-            <h3>Aprovações Pendentes</h3>
-            <p>Validar solicitações da Secretaria (mudanças, desistências, etc.)</p>
+            <h3>Validar Pautas</h3>
+            <p>Aprovar pautas finais de disciplinas</p>
           </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
+          <div class="module-card" onclick="location.href='relatorios.html'">
             <div class="module-icon">
-              <i class="fas fa-calendar-check"></i>
+              <i class="fas fa-chart-pie"></i>
             </div>
-            <h3>Configurar Ano Lectivo</h3>
-            <p>Definir períodos, férias e datas-chave</p>
+            <h3>Relatórios</h3>
+            <p>Estatísticas académicas e financeiras</p>
           </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
-          
+          <div class="module-card" onclick="location.href='auditoria.html'">
             <div class="module-icon">
-              <i class="fas fa-percentage"></i>
+              <i class="fas fa-history"></i>
             </div>
-            <h3>Aprovar Bolsas</h3>
-            <p>Conceder descontos especiais a estudantes</p>
+            <h3>Auditoria</h3>
+            <p>Registo de ações e acesso ao sistema</p>
           </div>
         </div>
       </section>
     </div>
   </div>
+
+  <script>
+    // Configuração do Supabase
+    const supabaseUrl = 'https://SEU_PROJETO.supabase.co';
+    const supabaseAnonKey = 'SEU_ANON_KEY';
+    const { createClient } = supabase;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    // Verificar papel real no banco
+    window.onload = async () => {
+      const {  { session }, error } = await supabase.auth.getSession();
+      if (error || !session) {
+        window.location.href = '../../index.html';
+        return;
+      }
+
+      const userId = session.user.id;
+
+      const { data, error: profileError } = await supabase
+        .from('usuarios')
+        .select('role, nome')
+        .eq('auth_id', userId)
+        .single();
+
+      if (profileError || !data || data.role !== 'director') {
+        window.location.href = '../../index.html';
+        return;
+      }
+
+      document.getElementById('nomeUsuario').textContent = data.nome;
+
+      // Carregar estatísticas reais
+      carregarEstatisticas();
+    };
+
+    async function carregarEstatisticas() {
+      try {
+        // Total de estudantes activos
+        const { count: estudantesCount } = await supabase
+          .from('estudantes')
+          .select('*', { count: 'exact', head: true });
+
+        // Total de funcionários
+        const { count: funcionariosCount } = await supabase
+          .from('usuarios')
+          .select('*', { count: 'exact', head: true })
+          .in('role', ['secretaria', 'pedagogico', 'formador']);
+
+        // Total de pagamentos recebidos (em produção: somar valores do ano)
+        const { count: pagamentosCount } = await supabase
+          .from('pagamentos')
+          .select('*', { count: 'exact', head: true });
+
+        // Taxa de aprovação (em produção: cálculo real)
+        const taxaAprovacao = 78; // Simulado
+
+        document.getElementById('totalEstudantes').textContent = estudantesCount || 0;
+        document.getElementById('totalFuncionarios').textContent = funcionariosCount || 0;
+        document.getElementById('totalPagamentos').textContent = (pagamentosCount * 3500).toFixed(0) + ' MZN'; // Simulado
+        document.getElementById('taxaAprovacao').textContent = taxaAprovacao + '%';
+      } catch (error) {
+        console.error('Erro ao carregar estatísticas:', error);
+      }
+    }
+
+    async function logout() {
+      await supabase.auth.signOut();
+      localStorage.removeItem('ipm_user_logged');
+      localStorage.removeItem('ipm_user_role');
+      localStorage.removeItem('ipm_user_nome');
+      window.location.href = '../../index.html';
+    }
+  </script>
 </body>
 </html>
