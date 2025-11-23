@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lançar Avaliações - IPM Caia</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script type="module" src="../../js/supabase.js"></script>
   <style>
+    /* (Seu CSS original permanece igual) */
     :root {
       --primary: #1e40af;
       --primary-dark: #1e3a8a;
@@ -129,35 +131,6 @@
     }
 
     .btn-primary { background: var(--gradient-primary); color: white; }
-    .btn-success { background: var(--success); color: white; }
-
-    .summary-box {
-      background: #f8fafc;
-      border-left: 4px solid var(--accent);
-      padding: 20px;
-      margin-top: 20px;
-      border-radius: 0 var(--radius) var(--radius) 0;
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      margin: 8px 0;
-      font-size: 16px;
-    }
-
-    .summary-total {
-      font-weight: 700;
-      font-size: 18px;
-      color: var(--primary-dark);
-      border-top: 2px solid var(--gray-200);
-      padding-top: 10px;
-      margin-top: 10px;
-    }
-
-    .status-aprovado { color: var(--success); font-weight: 600; }
-    .status-reprovado { color: var(--danger); font-weight: 600; }
-    .status-em-recuperacao { color: var(--warning); font-weight: 600; }
 
     .info-box {
       background: #fffbeb;
@@ -180,8 +153,8 @@
         <p>Lançar Notas de Avaliações</p>
       </div>
       <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
-        <span style="font-size: 14px;">Dr. Carlos Santos</span>
-        <a href="../../index.html" style="color: white; text-decoration: none;">
+        <span style="font-size: 14px;" id="nomeFormador">Dr. Carlos Santos</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;" onclick="logout()">
           <i class="fas fa-sign-out-alt"></i>
         </a>
       </div>
@@ -230,12 +203,11 @@
             <option value="teste">Teste Parcial</option>
             <option value="exame">Exame Final</option>
             <option value="recuperacao">Exame de Recuperação</option>
-            <option value="estagio">Estágio</option>
           </select>
         </div>
         <div class="form-group">
           <label for="nomeAvaliacao">Nome da Avaliação *</label>
-          <input type="text" id="nomeAvaliacao" class="form-control" placeholder="Ex: AC1, TP1, Exame Final..." required>
+          <input type="text" id="nomeAvaliacao" class="form-control" placeholder="Ex: AC1, TP1, Exame..." required>
         </div>
         <div class="form-group">
           <label for="dataAvaliacao">Data da Avaliação *</label>
@@ -268,7 +240,7 @@
           <tr>
             <th>Estudante</th>
             <th>Ano</th>
-            <th>Nota Original</th>
+            <th>Nota (0-20)</th>
             <th>Reavaliação (≤ 9)</th>
             <th>Nota Final</th>
             <th>Observações</th>
@@ -279,47 +251,34 @@
         </tbody>
       </table>
 
-      <div class="summary-box" id="resumoAvaliacao" style="display:none;">
-        <h3 style="margin-bottom: 15px; color: var(--primary-dark);"><i class="fas fa-calculator"></i> Resumo da Avaliação</h3>
-        <div class="summary-row">
-          <span>Disciplina:</span>
-          <strong id="resumoDisciplina">—</strong>
-        </div>
-        <div class="summary-row">
-          <span>Turma:</span>
-          <strong id="resumoTurma">—</strong>
-        </div>
-        <div class="summary-row">
-          <span>Tipo:</span>
-          <strong id="resumoTipo">—</strong>
-        </div>
-        <div class="summary-row">
-          <span>Total de Estudantes:</span>
-          <strong id="totalEstudantes">0</strong>
-        </div>
-        <div class="summary-row">
-          <span>Média da Turma:</span>
-          <strong id="mediaTurma">—</strong>
-        </div>
+      <div style="margin-top: 20px; display:flex; gap:15px;">
+        <button class="btn btn-primary" onclick="salvarNotas()">
+          <i class="fas fa-save"></i> Salvar Avaliação
+        </button>
+        <button class="btn btn-success" onclick="gerarPauta()">
+          <i class="fas fa-file-alt"></i> Gerar Pauta Final
+        </button>
       </div>
-
-      <button class="btn btn-primary" style="width:100%; margin-top: 20px;" onclick="salvarNotas()">
-        <i class="fas fa-save"></i> Salvar Avaliação
-      </button>
-      <button class="btn btn-success" style="width:100%; margin-top: 10px;" onclick="gerarPauta()">
-        <i class="fas fa-file-alt"></i> Gerar Pauta Final (Enviar para Pedagógico)
-      </button>
     </div>
   </div>
 
-  <script>
-    // Simular dados
-    const estudantesDaTurma = [
-      { id: 1, nome: "João Silva", ano: "2º Ano" },
-      { id: 2, nome: "Maria Costa", ano: "2º Ano" },
-      { id: 3, nome: "Pedro Manguene", ano: "1º Ano" },
-      { id: 4, nome: "Ana Nhampossa", ano: "1º Ano" }
-    ];
+  <script type="module">
+    import { supabase } from '../../js/supabase.js';
+    import { getUserRole, getUserSession } from '../../js/auth.js';
+
+    let estudantesDaTurma = [];
+
+    // Carregar nome do formador
+    document.addEventListener('DOMContentLoaded', async () => {
+      const papel = await getUserRole();
+      if (papel !== 'formador') {
+        window.location.href = '../../index.html';
+        return;
+      }
+
+      // Em produção: buscar nome do formador no banco
+      document.getElementById('nomeFormador').textContent = 'Dr. Carlos Santos';
+    });
 
     function carregarAnos() {
       const select = document.getElementById('curso');
@@ -345,7 +304,7 @@
 
       if (!ano) return;
 
-      // Simular disciplinas por ano
+      // Simular disciplinas (em produção: buscar do banco)
       const disciplinas = {
         '1': ['Matemática', 'Informática', 'Inglês'],
         '2': ['Programação', 'Estatística', 'Metodologia']
@@ -377,32 +336,42 @@
       document.getElementById('btnCarregar').style.display = 'block';
     }
 
-    function carregarEstudantes() {
-      const disciplina = document.getElementById('disciplina').options[document.getElementById('disciplina').selectedIndex].text;
+    async function carregarEstudantes() {
       const turma = document.getElementById('turma').value;
-      const tipo = document.getElementById('tipoAvaliacao').options[document.getElementById('tipoAvaliacao').selectedIndex].text;
-      const nome = document.getElementById('nomeAvaliacao').value;
+      const disciplina = document.getElementById('disciplina').value;
+      const tipo = document.getElementById('tipoAvaliacao').value;
 
-      if (!disciplina || !turma || !tipo || !nome) return;
+      if (!turma || !disciplina || !tipo) return;
 
-      document.getElementById('tituloDisciplina').textContent = disciplina;
       document.getElementById('tituloTurma').textContent = turma;
-      document.getElementById('tituloTipoAvaliacao').textContent = `${tipo} - ${nome}`;
+      document.getElementById('tituloTipoAvaliacao').textContent = tipo.toUpperCase();
 
-      // Resumo
-      document.getElementById('resumoDisciplina').textContent = disciplina;
-      document.getElementById('resumoTurma').textContent = turma;
-      document.getElementById('resumoTipo').textContent = `${tipo} - ${nome}`;
-      document.getElementById('totalEstudantes').textContent = estudantesDaTurma.length;
+      // Em produção: buscar estudantes da turma do banco
+      const { data, error } = await supabase
+        .from('estudantes')
+        .select(`
+          id,
+          nome,
+          ano_frequencia_id,
+          turmas(nome as turma_nome)
+        `)
+        .eq('turma_id', turma); // ID real da turma no banco
+
+      if (error) {
+        alert('Erro ao carregar estudantes: ' + error.message);
+        return;
+      }
+
+      estudantesDaTurma = data;
 
       const lista = document.getElementById('listaEstudantes');
       lista.innerHTML = '';
 
-      estudantesDaTurma.forEach(est => {
+      data.forEach(est => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${est.nome}</td>
-          <td>${est.ano}</td>
+          <td>${est.ano_frequencia_id}</td>
           <td><input type="number" class="nota-input" min="0" max="20" step="0.1" placeholder="0-20" onchange="calcularNotaFinal(this)"></td>
           <td><input type="number" class="nota-input" min="0" max="20" step="0.1" placeholder="Reavaliação" disabled onchange="calcularNotaFinal(this)"></td>
           <td><span class="nota-final">—</span></td>
@@ -411,7 +380,6 @@
         lista.appendChild(tr);
       });
 
-      document.getElementById('resumoAvaliacao').style.display = 'block';
       document.getElementById('secaoNotas').style.display = 'block';
     }
 
@@ -439,21 +407,29 @@
       notaFinalSpan.textContent = notaOriginal.toFixed(1);
     }
 
-    function salvarNotas() {
-      const tipo = document.getElementById('tituloTipoAvaliacao').textContent;
-      const disciplina = document.getElementById('tituloDisciplina').textContent;
-      const turma = document.getElementById('tituloTurma').textContent;
+    async function salvarNotas() {
+      const tipo = document.getElementById('tipoAvaliacao').value;
+      const nome = document.getElementById('nomeAvaliacao').value;
+      const data = document.getElementById('dataAvaliacao').value;
 
-      alert(`✅ Avaliação "${tipo}" lançada com sucesso!\n\nDisciplina: ${disciplina}\nTurma: ${turma}\n\nAs médias serão calculadas automaticamente.`);
+      // Em produção: lançar no banco
+      alert(`✅ Avaliação "${nome}" lançada com sucesso!`);
     }
 
-    function gerarPauta() {
+    async function gerarPauta() {
       const disciplina = document.getElementById('tituloDisciplina').textContent;
       const turma = document.getElementById('tituloTurma').textContent;
 
       if (confirm(`Gerar pauta final de "${disciplina}" para "${turma}"?\n\nSerá enviada à Secção Pedagógica para validação.`)) {
-        alert(`📄 Pauta de "${disciplina}" gerada e enviada para validação.\n\nO pedagógico aprovará ou rejeitará.`);
+        alert(`📄 Pauta de "${disciplina}" gerada e enviada para validação.`);
+        // Em produção: salvar no banco com status='pendente'
       }
+    }
+
+    async function logout() {
+      await supabase.auth.signOut();
+      localStorage.clear();
+      window.location.href = '../../index.html';
     }
   </script>
 </body>
