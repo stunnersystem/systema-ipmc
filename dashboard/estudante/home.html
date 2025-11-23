@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Portal do Estudante - IPM Caia</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --primary: #1e40af;
@@ -119,11 +120,6 @@
       box-shadow: var(--shadow-xl);
     }
 
-    .welcome-card h2 {
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -156,8 +152,8 @@
     }
 
     .icon-primary { background: var(--gradient-primary); }
-    .icon-success { background: var(--gradient-success); }
-    .icon-warning { background: var(--gradient-warning); }
+    .icon-success { background: var(--success); }
+    .icon-warning { background: var(--warning); }
     .icon-accent { background: var(--gradient-accent); }
 
     .stat-info h3 {
@@ -204,15 +200,6 @@
       margin-bottom: 10px;
       color: var(--primary-dark);
     }
-
-    .info-box {
-      background: #f0f9ff;
-      border-left: 4px solid var(--primary);
-      padding: 12px;
-      border-radius: 0 var(--radius) var(--radius) 0;
-      margin: 15px 0;
-      font-size: 14px;
-    }
   </style>
 </head>
 <body>
@@ -225,8 +212,8 @@
         <h2>Instituto Politécnico Makhetele - Caia</h2>
         <p>Portal do Estudante</p>
       </div>
-      <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
-        <span style="font-size: 14px;">João Silva</span>
+      <div id="infoUsuario" style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 14px;">Carregando...</span>
         <a href="../../index.html" style="color: white; text-decoration: none;">
           <i class="fas fa-sign-out-alt"></i>
         </a>
@@ -245,35 +232,28 @@
           <a href="minhas-notas.html" class="nav-item">
             <i class="fas fa-chart-bar"></i> Minhas Notas
           </a>
-          <a href="minhas-financas.html" class="nav-item">
-  <i class="fas fa-file-invoice-dollar"></i> Minhas Finanças
-</a>
-          <a href="#" class="nav-item">
-            <i class="fas fa-book-open"></i> Materiais
+          <a href="historico.html" class="nav-item">
+            <i class="fas fa-file-alt"></i> Histórico Escolar
           </a>
-          <a href="#" class="nav-item">
-            <i class="fas fa-calendar-alt"></i> Horário
+          <a href="pagamentos.html" class="nav-item">
+            <i class="fas fa-file-invoice-dollar"></i> Pagamentos
           </a>
-             <a href="historico.html" class="nav-item">
-           <i class="fas fa-archive"></i> Histórico Académico
-             </a>
-          <a href="meus-dados.html" class="nav-item">
-           <i class="fas fa-user"></i> Meus Dados
+          <a href="horario.html" class="nav-item">
+            <i class="fas fa-calendar-alt"></i> Horário de Aulas
+          </a>
+          <a href="documentos.html" class="nav-item">
+            <i class="fas fa-file-certificate"></i> Documentos
           </a>
           <a href="meu-perfil.html" class="nav-item">
-           <i class="fas fa-user-circle"></i> Meu Perfil
+            <i class="fas fa-user"></i> Meu Perfil
           </a>
         </nav>
       </aside>
 
       <section class="content">
         <div class="welcome-card">
-          <h2>Bem-vindo, João Silva!</h2>
-          <p>Curso: Técnico de Informática | Turma: T1-2025 | 2º Ano</p>
-        </div>
-
-        <div class="info-box">
-          <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> A próxima avaliação de Matemática será no dia 20 de Novembro de 2025.
+          <h2 id="tituloBemVindo">Bem-vindo(a), —!</h2>
+          <p id="infoCurso">Curso: — | Turma: — | Ano: —</p>
         </div>
 
         <div class="stats-grid">
@@ -282,34 +262,34 @@
               <i class="fas fa-graduation-cap"></i>
             </div>
             <div class="stat-info">
-              <h3>2º Ano</h3>
-              <p>Técnico de Informática</p>
+              <h3 id="anoFrequencia">—</h3>
+              <p>Ano de Frequência</p>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon icon-success">
-              <i class="fas fa-file-invoice"></i>
+              <i class="fas fa-file-invoice-dollar"></i>
             </div>
             <div class="stat-info">
-              <h3>0 MZN</h3>
+              <h3 id="totalDevido">0 MZN</h3>
               <p>Propinas em Dívida</p>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon icon-warning">
-              <i class="fas fa-clock"></i>
+              <i class="fas fa-book"></i>
             </div>
             <div class="stat-info">
-              <h3>12h</h3>
-              <p>Carga Horária Semanal</p>
+              <h3 id="totalDisciplinas">0</h3>
+              <p>Disciplinas Cursando</p>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon icon-accent">
-              <i class="fas fa-user-graduate"></i>
+              <i class="fas fa-user-check"></i>
             </div>
             <div class="stat-info">
-              <h3>78%</h3>
+              <h3 id="mediaGeral">0.0</h3>
               <p>Média Geral</p>
             </div>
           </div>
@@ -322,49 +302,140 @@
               <i class="fas fa-chart-bar"></i>
             </div>
             <h3>Minhas Notas</h3>
-            <p>Consulte avaliações por disciplina e semestre</p>
+            <p>Consultar avaliações e médias por disciplina</p>
           </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
-            <div class="module-icon">
-              <i class="fas fa-file-invoice-dollar"></i>
-            </div>
-            <h3>Pagamentos</h3>
-            <p>Baixe comprovantes de propinas</p>
-          </div><div class="module-card" onclick="location.href='minhas-financas.html'">
-  <div class="module-icon">
-    <i class="fas fa-file-invoice-dollar"></i>
-  </div>
-  <h3>Minhas Finanças</h3>
-  <p>Controle de mensalidades, taxas e pagamentos</p>
-</div>
-          
-            <h3>Materiais de Apoio</h3>
-            <p>Acesse PDFs e recursos dos formadores</p>
-          </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
-            <div class="module-icon">
-              <i class="fas fa-calendar-alt"></i>
-            </div>
-            <h3>Horário de Aulas</h3>
-            <p>Veja seu horário semanal</p>
-          </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
-            <div class="module-icon">
-              <i class="fas fa-id-card"></i>
-            </div>
-            <h3>Cartão de Estudante</h3>
-            <p>Visualize ou imprima seu cartão</p>
-          </div>
-          <div class="module-card" onclick="alert('Função em desenvolvimento')">
+          <div class="module-card" onclick="location.href='historico.html'">
             <div class="module-icon">
               <i class="fas fa-file-alt"></i>
             </div>
             <h3>Histórico Escolar</h3>
-            <p>Consulte seu histórico académico</p>
+            <p>Ver todas as disciplinas cursadas e médias</p>
+          </div>
+          <div class="module-card" onclick="location.href='pagamentos.html'">
+            <div class="module-icon">
+              <i class="fas fa-file-invoice-dollar"></i>
+            </div>
+            <h3>Meus Pagamentos</h3>
+            <p>Ver propinas pagas e baixar comprovantes</p>
+          </div>
+          <div class="module-card" onclick="location.href='horario.html'">
+            <div class="module-icon">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <h3>Horário de Aulas</h3>
+            <p>Ver dias e horas das aulas</p>
+          </div>
+          <div class="module-card" onclick="location.href='documentos.html'">
+            <div class="module-icon">
+              <i class="fas fa-file-certificate"></i>
+            </div>
+            <h3>Documentos</h3>
+            <p>Declarações, histórico, cartões de estudante</p>
+          </div>
+          <div class="module-card" onclick="location.href='meu-perfil.html'">
+            <div class="module-icon">
+              <i class="fas fa-user"></i>
+            </div>
+            <h3>Meu Perfil</h3>
+            <p>Ver e actualizar dados pessoais</p>
           </div>
         </div>
       </section>
     </div>
   </div>
+
+  <script>
+    // Configuração do Supabase
+    const supabaseUrl = 'https://SEU_PROJETO.supabase.co';
+    const supabaseAnonKey = 'SEU_ANON_KEY';
+    const { createClient } = supabase;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    // Verificar papel real do estudante
+    window.onload = async () => {
+      const {  { session }, error } = await supabase.auth.getSession();
+      if (error || !session) {
+        window.location.href = '../../index.html';
+        return;
+      }
+
+      const userId = session.user.id;
+
+      const { data, error: profileError } = await supabase
+        .from('usuarios')
+        .select('role, nome')
+        .eq('auth_id', userId)
+        .single();
+
+      if (profileError || !data || data.role !== 'estudante') {
+        window.location.href = '../../index.html';
+        return;
+      }
+
+      document.getElementById('infoUsuario').innerHTML = `
+        <span style="font-size: 14px;">${data.nome}</span>
+        <a href="../../index.html" style="color: white; text-decoration: none;">
+          <i class="fas fa-sign-out-alt"></i>
+        </a>
+      `;
+
+      document.getElementById('tituloBemVindo').textContent = `Bem-vindo(a), ${data.nome.split(' ')[0]}!`;
+
+      // Carregar dados do estudante
+      carregarDadosEstudante();
+    };
+
+    async function carregarDadosEstudante() {
+      try {
+        const userId = (await supabase.auth.getUser()).data.user.id;
+
+        // Buscar dados do estudante
+        const { data: estudante, error: estError } = await supabase
+          .from('estudantes')
+          .select(`
+            *,
+            curso: cursos(nome),
+            turma: turmas(nome),
+            ano_frequencia: anos_frequencia(numero_ano)
+          `)
+          .eq('usuario_id', userId)
+          .single();
+
+        if (estError) throw estError;
+
+        document.getElementById('infoCurso').innerHTML = `
+          Curso: <strong>${estudante.curso?.nome || '—'}</strong> | 
+          Turma: <strong>${estudante.turma?.nome || '—'}</strong> | 
+          Ano: <strong>${estudante.ano_frequencia?.numero_ano || '—'}º Ano</strong>
+        `;
+
+        document.getElementById('anoFrequencia').textContent = `${estudante.ano_frequencia?.numero_ano || '—'}º Ano`;
+        document.getElementById('totalDisciplinas').textContent = 12; // Simulado
+
+        // Calcular dívida (em produção: somar valores em atraso)
+        const {  pagamentos, error: pgError } = await supabase
+          .from('pagamentos')
+          .select('valor_pago, multa_aplicada, status')
+          .eq('estudante_id', estudante.id)
+          .eq('status', 'pendente');
+
+        let totalDevido = 0;
+        if (!pgError) {
+          pagamentos.forEach(pg => {
+            totalDevido += pg.valor_pago + (pg.multa_aplicada || 0);
+          });
+        }
+
+        document.getElementById('totalDevido').textContent = totalDevido.toFixed(2) + ' MZN';
+
+        // Calcular média geral (em produção: usar média de todas as disciplinas)
+        const mediaGeral = 14.8; // Simulado
+        document.getElementById('mediaGeral').textContent = mediaGeral.toFixed(2);
+
+      } catch (error) {
+        console.error('Erro ao carregar dados do estudante:', error);
+      }
+    }
+  </script>
 </body>
-  </html>
+</html>
